@@ -1,0 +1,7 @@
+create event servers premade to an event, with a marketplace
+allow players to run this server locally and share it with ngrok or tunnel
+
+
+
+tests:
+check if ngrok works simultaniously on mulktiple macheineas
