@@ -1,2 +1,10 @@
 # Fusion Client
-Fusion is a Minecraft Launcher that sports a nice custom pack that does cool things and doesn't bog you down. Harness the power of the stars and use Fusion as your main launcher. Enjoy many features such as SingularityTM, Soup (not SoupPVP) and many other features.
+Fusion is a Minecraft Launcher that will absolutely fuse you to it with its energetic startup times, feel, and *POWER*!
+
+Enjoy benefits such as a modern UI, fast performance, and special features such as:
+> Soup\
+> Singularity\
+> Starburst Loader
+
+and many more!
+
