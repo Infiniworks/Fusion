@@ -8,3 +8,4 @@ Enjoy benefits such as a modern UI, fast performance, and special features such 
 
 and many more!
 
+Built in Electron & Svelte
