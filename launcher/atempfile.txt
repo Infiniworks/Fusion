@@ -5,3 +5,16 @@ allow players to run this server locally and share it with ngrok or tunnel
 
 tests:
 check if ngrok works simultaniously on mulktiple macheineas
+
+
+<style>
+main {
+    height:50vh;
+    width: 50vw;
+    background-color: aqua;
+}
+</style>
+
+<!--
+    calc([min size]px + ([max size] — [min size]) * ((100vw — [min vw width]px) / ([max vw width] — [min vw width])))
+-->

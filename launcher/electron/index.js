@@ -13,11 +13,11 @@ const platform = process.platform;
 const appFolder = app.getPath("appData")
 const devmode = !app.isPackaged;
 
-async function hi() {
+async function startTunnel() {
     const tunnel = await ngrok.connect({proto: 'tcp', addr: 25565, authtoken: "1r7Om4dKZGppn414jclOabclLsV_5MfjTVsiTBXmwQqZp7QBK"}).catch(e => console.error(e));
-    console.log(tunnel)
+    return tunnel
 };
-hi()
+//
 app.whenReady().then(main)
 
 // var file = 'https://github.com/AarushX/DerivativeMC/releases/download/1.19/HPFS_Setup.exe';
@@ -39,11 +39,16 @@ app.whenReady().then(main)
 //     }
 // )
 
+// --------------------------------- \\
+
 const install = () => exec(path.join(__dirname, "../../1.19/run.bat"), function(err, data) { console.log(err); console.log(data.toString());})
 
 function main () {
     const window = new BrowserWindow ({
-        width: 1200, height: 600, show:false,
+        titleBarStyle: 'hidden',
+        resizable: false,
+        frame: false,
+        width: 1500, height: 1000, show:false,
         autoHideMenuBar: true,
         backgroundColor: 'ffffff',
         webPreferences: {
@@ -66,7 +71,16 @@ ipcMain.on("titlebar", (event, arg) => {
         else window.maximize();
     }
 })
-// Finish code to run here
+ipcMain.handleOnce("startServer", () => {
+    // startServer()
+    (async () => {
+        return await startTunnel()
+    })()
+})
+
+app.on("window-all-closed", () => app.quit())
+
+// --------------------------------- \\
     })
 };
 

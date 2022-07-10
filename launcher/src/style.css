@@ -1,0 +1,18 @@
+button.launch {
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px;
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0px 15px rgba(105, 255, 133, 0.743);
+    background-color: rgb(52, 164, 93);
+    transition: all 0.333s ease-in-out;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-weight: 750;
+}
+
+button.launch:hover {
+    background-color: rgb(63, 197, 112);
+    box-shadow: 0 0px 25px rgba(41, 255, 21, 0.561);
+    transform: scale(1.05);
+}
