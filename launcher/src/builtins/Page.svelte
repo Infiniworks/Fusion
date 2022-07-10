@@ -25,6 +25,7 @@
     <button class="launch" on:click={() => {getServerUrl()}}>
         Start Server</button>
     <p>{serverUrl}</p>
+
 </main>
 
 <style>

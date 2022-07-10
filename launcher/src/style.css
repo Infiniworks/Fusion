@@ -16,16 +16,16 @@ button.launch:hover {
 }
 
 button.exit {
-    border: 5px solid rgb(73, 73, 73);
-    border-radius: 10px;
+    border: 2px solid rgb(73, 73, 73);
+    /*border-radius: 10px;*/
     text-align: center;
     padding: 0px;
     color: rgb(225, 225, 225);
     background-color: rgb(27, 27, 27);
     transition: all 0.333s ease-in-out;
     font-weight: 750;
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
 }
 button.exit:hover {
     background-color: rgb(41, 41, 41);

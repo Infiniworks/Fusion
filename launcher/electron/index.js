@@ -48,9 +48,10 @@ function main () {
         titleBarStyle: 'hidden',
         resizable: false,
         frame: false,
-        width: 1500, height: 1000, show:false,
+        transparent: true,
+        width: 1500, height: 1000, 
+        show:false,
         autoHideMenuBar: true,
-        backgroundColor: 'ffffff',
         webPreferences: {
             preload: path.join(__dirname, "preload.ts")
         }

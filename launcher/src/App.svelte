@@ -2,11 +2,8 @@
 import Footer from "./builtins/Footer.svelte";
 
 import LeftBar from "./builtins/LeftBar.svelte";
-import Feed from "./builtins/LeftBar/Feed.svelte";
-import Header from "./builtins/LeftBar/Header.svelte";
 
 import RightBar from "./builtins/RightBar.svelte";
-import Profile from "./builtins/RightBar/Profile.svelte";
 
 import Page from "./builtins/Page.svelte";
 import TabBar from "./builtins/TabBar.svelte";
@@ -27,7 +24,7 @@ import TitleBar from "./builtins/TitleBar.svelte";
 
 		</TitleBar>
 	</div>
-	<div class = "container" style = "flex-grow: 30;">
+	<div class = "container" style = "flex-grow: 15;">
 		<div id="leftBar" style = "flex-grow: 1; order: 1">
 			<p></p>
 			<LeftBar>
@@ -41,7 +38,7 @@ import TitleBar from "./builtins/TitleBar.svelte";
 			</RightBar>
 		</div>
 		<div class = "pageFill" style = "flex-grow: 2; order: 2">
-			<div id="tabBar" style = "flex-grow: 1;" >
+			<div id="tabBar" style = "flex-shrink: 2;" >
 				<TabBar>
 	
 				</TabBar>
@@ -51,12 +48,12 @@ import TitleBar from "./builtins/TitleBar.svelte";
 	
 				</Page>
 			</div>
-			<div id="footer" style = "flex-grow: 1;">
-				<Footer>
-	
-				</Footer>
-			</div>
 		</div>
+	</div>
+	<div id="footer" style = "flex-grow:1;">
+		<Footer>
+
+		</Footer>
 	</div>
 </div>
 
@@ -70,6 +67,8 @@ main {
 	box-sizing: border-box;
 	border-radius: 10px;
 	font-family: 'Nanum Gothic', sans-serif;
+	-user-select: none;
+	-webkit-user-select: none;
 }
 .high {
 	height: 100%;
@@ -83,34 +82,41 @@ main {
 }
 .pageFill {
 	height: 100%;
+	width: 100%;
 	display: flex;
 	align-items: stretch;
 	flex-direction: column;
 }
 div#titleBar {
-	background-color: rgb(255, 255, 255);
-	color: black;
+	background-color: rgb(0, 0, 0);
+	color: rgba(180, 180, 180, 0.835);
 	-webkit-app-region: drag;
-	-user-select: none;
-	-webkit-user-select: none;
+	border-radius: 10px 10px 0px 0px;
 }
 div#tabBar {
 	background-color: rgb(27, 27, 27);
+	height: max-content;
+	padding: 10px;
 }
 div#rightBar {
-	background-color: rgb(22, 16, 10);
-	border-radius: 0px 25px 25px 0px;
+	background-color: rgb(66, 168, 50);
+	padding: 25px;
+	width: 20%;
 }
 div#page {
 	color: white;
 	background-color: rgb(49, 49, 49);
+	padding: 25px;
+	width: 100%;
 }
 div#leftBar {
-	border-radius: 25px 0px 0px 25px;
-	background-color: rgb(22, 16, 10);
+	background-color: rgb(177, 50, 50);
+	padding: 25px;
+	width: 20%;
 }
 div#footer {
 	color: black;
 	background-color: rgb(27, 27, 27);
+	border-radius: 0px 0px 10px 10px;
 }
 </style>
