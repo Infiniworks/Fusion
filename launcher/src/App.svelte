@@ -20,82 +20,97 @@ import TitleBar from "./builtins/TitleBar.svelte";
 <main>
 	<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="../src/style.css">
-	<div id = "titleBar">
+
+<div class = "high">
+	<div id = "titleBar" style = "flex-shrink: 2;">
 		<TitleBar>
 
 		</TitleBar>
 	</div>
-	<div id="leftBar">
-		<LeftBar>
-
-		</LeftBar>
+	<div class = "container" style = "flex-grow: 30;">
+		<div id="leftBar" style = "flex-grow: 1; order: 1">
+			<p></p>
+			<LeftBar>
+	
+			</LeftBar>
+		</div>
+		<div id="rightBar" style = "flex-grow: 1; order: 3">
+			<p></p>
+			<RightBar>
+	
+			</RightBar>
+		</div>
+		<div class = "pageFill" style = "flex-grow: 2; order: 2">
+			<div id="tabBar" style = "flex-grow: 1;" >
+				<TabBar>
+	
+				</TabBar>
+			</div>
+			<div id="page" style = "flex-grow: 10;">
+				<Page>
+	
+				</Page>
+			</div>
+			<div id="footer" style = "flex-grow: 1;">
+				<Footer>
+	
+				</Footer>
+			</div>
+		</div>
 	</div>
-	<div id="rightBar">
-		<RightBar>
+</div>
 
-		</RightBar>
-	</div>
-	<div id="tabBar">
-		<TabBar>
 
-		</TabBar>
-	</div>
-	<div id="page">
-		<Page>
-
-		</Page>
-	</div>
-	<div id="footer">
-		<Footer>
-
-		</Footer>
-	</div>
 </main>
 
 <style>
 main {
-	color: white;
+	width:100%;
+	height:100%;
+	box-sizing: border-box;
+	border-radius: 10px;
+	font-family: 'Nanum Gothic', sans-serif;
+}
+.high {
 	height: 100%;
-    width: 100%;
-	display: grid;
-	grid-template-areas:
-	'clickArea clickArea clickArea clickArea clickArea'
-    'left header header header right'
-    'left main main main right'
-	'left main main main right'
-	'left main main main right'
-	'left main main main right'
-	'left main main main right'
-	'left main main main right'
-	'left main main main right'
-	'left main main main right'
-    'left footer footer footer right';
+	display: flex;
+	align-items: stretch;
+	flex-direction: column;
+}
+.container {
+	display: flex;
+	align-items: stretch;
+}
+.pageFill {
+	height: 100%;
+	display: flex;
+	align-items: stretch;
+	flex-direction: column;
 }
 div#titleBar {
-	grid-area: clickArea;
-	background-color: rgb(0, 0, 0);
+	background-color: rgb(255, 255, 255);
+	color: black;
 	-webkit-app-region: drag;
 	-user-select: none;
 	-webkit-user-select: none;
 }
 div#tabBar {
-	grid-area: header;
-	background-color: rgb(30, 30, 30);
+	background-color: rgb(27, 27, 27);
 }
 div#rightBar {
-    grid-area: right;
-	background-color: rgb(38, 38, 38);
+	background-color: rgb(22, 16, 10);
+	border-radius: 0px 25px 25px 0px;
 }
 div#page {
-	grid-area: main;
-	background-color: rgb(61, 61, 61);
+	color: white;
+	background-color: rgb(49, 49, 49);
 }
 div#leftBar {
-	grid-area: left;
-	background-color: rgb(38, 38, 38);
+	border-radius: 25px 0px 0px 25px;
+	background-color: rgb(22, 16, 10);
 }
 div#footer {
-	grid-area: footer;
-	background-color: rgb(0, 0, 0);
+	color: black;
+	background-color: rgb(27, 27, 27);
 }
 </style>

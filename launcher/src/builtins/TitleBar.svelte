@@ -1,15 +1,33 @@
+<script>
+let isToggled = false;
+let togVal = "□"
+const toggleState = () => {
+    if (isToggled) {
+        isToggled = false
+        togVal = "❏"
+    }
+    else {
+        isToggled = true
+        togVal = "□"
+    }
+}
+</script>
 
 <main>
-    <button class="launch" on:click={() => window.api.titlebar("resize")}>+</button>
-    <button on:click={() => window.api.titlebar("destroy")}>X</button>
+<div class="flex">
+    <button class="exit" on:click={() => {window.api.titlebar("resize"); toggleState()} }>{togVal}</button>
+    <p class = "title">FUSION</p>
+    <button class="exit" on:click={() => window.api.titlebar("destroy")}>🞭</button>
+</div>
 </main> 
 
 <style>
 button {
-    border-radius: 5px;
-    float: right;
-    text-align: center;
-    padding:15px;
     -webkit-app-region: no-drag;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap
 }
 </style>
