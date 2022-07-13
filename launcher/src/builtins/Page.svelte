@@ -1,6 +1,6 @@
 <script>
     let style = "neutral"
-    let serverUrl
+    let serverUrl;
     const versionsList = ["8","19"]
     const onChange = (the) => {
         version = the.currentTarget.value
@@ -9,10 +9,15 @@
         else style = "incorrect"
     }
     let version = 19;
-   
-    const getServerUrl = async () => {
-        serverUrl = await window.server.start();
+    async function sus () {
+        const foo = await window.api.invoke().then(
+            console.log(foo)
+        )
     }
+    sus()
+    // function getServerUrl () {
+    //     console.log("Page.svelte "+ ipcRenderer.invoke("startServer"))
+    // }
 </script>
 
 <main>
@@ -22,9 +27,8 @@
         {version}
     </button>
     <input type=range on:change={onChange} bind:value={version} min=8 max=19>
-    <button class="launch" on:click={() => {getServerUrl()}}>
-        Start Server</button>
-    <p>{serverUrl}</p>
+    <!-- <button class="launch" on:click={getServerUrl}>
+        Start Server</button> -->
 
 </main>
 

@@ -1,17 +1,11 @@
-const { contextBridge, ipcRenderer, BrowserWindow} = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 // API
-contextBridge.exposeInMainWorld(
-    "api", {
-        titlebar: action => {
-            ipcRenderer.send("titlebar", action);
-        }
-    }
-);
-
-contextBridge.exposeInMainWorld(
-    "server", {
-        start: (channel) => {
-            ipcRenderer.invoke("startServer");
-        },
-    }
-);
+const WAPI = {
+    titlebar: action => {
+        ipcRenderer.send("titlebar", action);
+    },
+    async invoke () {
+        return await ipcRenderer.invoke("startServer")
+    },
+}
+contextBridge.exposeInMainWorld("api", WAPI);
