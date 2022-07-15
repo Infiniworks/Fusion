@@ -1,17 +1,17 @@
 /**
  * @module preload
  */
-export {}
-const { contextBridge, ipcRenderer } = require("electron");
+export {};
+const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld("api", {
+contextBridge.exposeInMainWorld('api', {
     isDevMode: () => {
-        return ipcRenderer.invoke("getDevmode")
+        return ipcRenderer.invoke('getDevmode');
     },
-    titlebar: (action: any) => {
-        ipcRenderer.send("titlebar", action);
+    titlebar: (action: unknown) => {
+        ipcRenderer.send('titlebar', action);
     },
     getUrl: () => {
-        return ipcRenderer.invoke("startServerV2")
+        return ipcRenderer.invoke('startServerV2');
     },
-})
+});

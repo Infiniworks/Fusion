@@ -1,8 +1,8 @@
 <script>
     import { serverUrl } from '../data/stores';
     let URL
-    
-    serverUrl.subscribe(value => {
+
+  serverUrl.subscribe(value => {
 		URL = value;
 	});
 

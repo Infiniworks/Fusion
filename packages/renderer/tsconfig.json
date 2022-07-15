@@ -1,6 +1,15 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Svelte",
+  "_version": "3.0.0",
+
   "compilerOptions": {
+    "moduleResolution": "node",
+    "importsNotUsedAsValues": "error",
+    "preserveValueImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
     "target": "esnext",
     "useDefineForClassFields": true,
     "sourceMap": false,
@@ -19,15 +28,8 @@
     "checkJs": true
   },
   "include": [
-    "src/**/*.svelte",
-    "src/**/*.ts",
-    "src/**/*.tsx",
+    "src/**/*",
     "types/**/*.d.ts",
     "../../types/**/*.d.ts",
-    "../preload/contracts.d.ts"
   ],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-  ]
 }

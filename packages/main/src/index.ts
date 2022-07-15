@@ -1,16 +1,16 @@
-const { app, ipcMain } = require("electron")
+const { app, ipcMain } = require('electron');
 const ngrok = require('ngrok');
 import {restoreOrCreateWindow} from '/@/mainWindow';
 
 const awaitUrl = new Promise(async (resolve, reject) => {
-  let urlServer = await ngrok.connect({   
-      proto: 'tcp', 
-      addr: 25565, 
-      authtoken: "1r7Om4dKZGppn414jclOabclLsV_5MfjTVsiTBXmwQqZp7QBK" 
-  })
-  if (urlServer) return resolve(urlServer)
-  else return reject("urlServer fetch rejected")
-})
+  const urlServer = await ngrok.connect({
+      proto: 'tcp',
+      addr: 25565,
+      authtoken: '1r7Om4dKZGppn414jclOabclLsV_5MfjTVsiTBXmwQqZp7QBK',
+  });
+  if (urlServer) return resolve(urlServer);
+  else return reject('urlServer fetch rejected');
+});
 /**
  * Prevent multiple instances
  */
@@ -51,9 +51,9 @@ if (import.meta.env.PROD) {
 }
 
 // Handlers
-ipcMain.handle("startServerV2", async () => {
-  return await awaitUrl
-}) 
-ipcMain.handle("getDevmode", () => {
+ipcMain.handle('startServerV2', async () => {
+  return await awaitUrl;
+});
+ipcMain.handle('getDevmode', () => {
   return process.env.IS_DEV === 'true';
-}) 
+});

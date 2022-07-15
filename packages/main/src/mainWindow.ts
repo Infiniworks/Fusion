@@ -8,7 +8,7 @@ async function createWindow() {
       resizable: false,
       frame: false,
       transparent: true,
-      width: 1500, height: 1000, 
+      width: 1500, height: 1000,
       show:false,
       autoHideMenuBar: true,
       webPreferences: {
@@ -24,14 +24,14 @@ async function createWindow() {
    * @see https://github.com/electron/electron/issues/25012
    */
   browserWindow.on('ready-to-show', () => {
-    ipcMain.on("titlebar", (event, arg) => {
-      if(arg === "destroy") browserWindow.destroy();
-      else if(arg === "resize") {
+    ipcMain.on('titlebar', (event, arg) => {
+      if(arg === 'destroy') browserWindow.destroy();
+      else if(arg === 'resize') {
           if(browserWindow.isMaximized()) browserWindow.unmaximize();
           else browserWindow.maximize();
       }
-    })
-    console.log("Window Loaded")
+    });
+    console.log('Window Loaded');
 
     browserWindow?.show();
 

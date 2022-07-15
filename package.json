@@ -12,11 +12,6 @@
     "build:preload": "cd ./packages/preload && vite build",
     "build:renderer": "cd ./packages/renderer && vite build",
     "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false",
-    "test": "npm run test:main && npm run test:preload && npm run test:renderer && npm run test:e2e",
-    "test:e2e": "npm run build && vitest run",
-    "test:main": "vitest run -r packages/main --passWithNoTests",
-    "test:preload": "vitest run -r packages/preload --passWithNoTests",
-    "test:renderer": "vitest run -r packages/renderer --passWithNoTests",
     "watch": "node scripts/watch.js",
     "lint": "eslint . --ext js,ts,svelte",
     "typecheck:main": "tsc --noEmit -p packages/main/tsconfig.json",
@@ -26,27 +21,28 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
-    "@tsconfig/svelte": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "5.12.0",
+    "@tsconfig/svelte": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "5.30.6",
     "cross-env": "7.0.3",
-    "electron": "17.0.1",
-    "electron-builder": "22.14.13",
+    "electron": "19.0.8",
+    "electron-builder": "23.1.0",
     "electron-devtools-installer": "3.2.0",
-    "eslint": "8.9.0",
-    "happy-dom": "2.33.1",
-    "nano-staged": "0.5.0",
+    "eslint": "8.19.0",
+    "happy-dom": "6.0.3",
+    "nano-staged": "0.8.0",
     "ngrok": "^4.3.1",
-    "playwright": "1.19.1",
-    "simple-git-hooks": "2.7.0",
+    "playwright": "1.23.3",
+    "simple-git-hooks": "2.8.0",
     "svelte": "^3.44.1",
     "svelte-check": "^2.2.8",
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
-    "typescript": "4.5.5",
-    "vite": "2.8.3",
-    "vitest": "0.3.6"
+    "typescript": "4.7.4",
+    "vite": "3.0.0",
+    "vitest": "0.18.0"
   },
   "dependencies": {
-    "electron-updater": "4.6.5"
+    "@typescript-eslint/parser": "^5.30.6",
+    "electron-updater": "5.0.5"
   }
 }

@@ -16,15 +16,15 @@ const config = {
   root: PACKAGE_ROOT,
   resolve: {
     alias: {
-      '/@/': join(PACKAGE_ROOT, 'src') + '/'
-    }
+      '/@/': join(PACKAGE_ROOT, 'src') + '/',
+    },
   },
   plugins: [svelte()],
   base: '',
   server: {
     fs: {
-      strict: true
-    }
+      strict: true,
+    },
   },
   build: {
     sourcemap: true,
@@ -39,9 +39,6 @@ const config = {
     },
     emptyOutDir: true,
     brotliSize: false,
-  },
-  test: {
-    environment: 'happy-dom',
   },
 };
 

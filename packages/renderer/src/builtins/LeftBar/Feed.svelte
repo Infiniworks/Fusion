@@ -1,11 +1,16 @@
-<div>
-<p>
-    Feed Data Here
-</p>
-</div>
+<script>
+  // Noscript Here!
+  console.log('Loaded feed!')
+</script>
+
+<main>
+  <div>
+    <p> Hello World! </p>
+  </div>
+</main>
 
 <style>
 div {
-    background-color: bisque;
+    background-color: rgb(133, 76, 6);
 }
 </style>
