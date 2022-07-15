@@ -24,10 +24,10 @@ export default defineConfig({
         }
       },
     },
-    electron({
-      main: {
-        entry: 'electron/index.js',
-      }
-    }),
-  ]
+    // electron({
+    //   main: {
+    //     entry: 'electron/index.js',
+    //   }
+    // }),
+  ],
 });

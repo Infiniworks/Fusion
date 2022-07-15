@@ -3,8 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "target": "ESNext",
-    "useDefineForClassFields": true,
     "module": "ESNext",
+    "useDefineForClassFields": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     /**
@@ -13,9 +13,8 @@
      * Note that setting allowJs false does not prevent the use
      * of JS in `.svelte` files.
      */
-    // "allowJs": true,
-    // "checkJs": true,
-    "isolatedModules": true
+    "allowJs": true,
+    "checkJs": true,
   },
   "include": [
     "src/**/*",

@@ -1,12 +1,12 @@
 {
   "name": "fusion",
   "private": true,
-  "version": "0.0.0",
+  "author": "AUS De",
+  "version": "2.0.0",
   "main": "electron/index.js",
   "description": "An Electron + Svelte + Vite app",
   "scripts": {
-    "start": "npm run build",
-    "dev": "concurrently -k \"vite\"",
+    "dev": "concurrently \"vite\" \"yarn electron:dev\"",
     "build": "vite build",
     "preview": "vite preview",
     "electron:dev": "concurrently \"cross-env IS_DEV=true\" \"electron .\"",

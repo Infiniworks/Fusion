@@ -6,8 +6,6 @@ const path = require("path")
 if (require('electron-squirrel-startup')) {
     app.quit();
 }
-const electronReload = require("electron-reload");
-electronReload(__dirname, {})
 
 // Variables
 const devmode = !app.isPackaged;
@@ -59,7 +57,7 @@ function main () {
         }
     })
     // If devmode, load local file, otherwise load the normal file.
-    if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
+    if ( (isDev || devmode) && process.env['ELECTRON_RENDERER_URL']) {
         window.loadURL(process.env['ELECTRON_RENDERER_URL'])
     } else {
         window.loadFile(join(__dirname, "../public/index.html"))
