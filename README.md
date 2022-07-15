@@ -1,4 +1,5 @@
 # Fusion Lanciet
+## Combo V1
 Fusion is a Minecraft Launcher that will absolutely fuse you to it with its energetic startup times, feel, and *POWER*!
 
 Enjoy benefits such as a modern UI, fast performance, and special features such as:
