@@ -1,52 +1,33 @@
 <script>
+    import { serverUrl } from '../data/stores';
+    let sURL
+    
+    serverUrl.subscribe(value => {
+		sURL = value;
+	});
+
     let style = "neutral"
-    let serverUrl;
     const versionsList = ["8","19"]
-    const onChange = (the) => {
-        version = the.currentTarget.value
-        console.log("happened")
-        if (versionsList.includes(version)) style = "correct"
-        else style = "incorrect"
-    }
+    
     let version = 19;
-    async function sus () {
-        const foo = await window.api.invoke().then(
-            console.log(foo)
-        )
+    
+    
+    const getUrl = async () => {
+        let tempVal = await window.api.getUrl()
+        serverUrl.set(tempVal);
+        console.log(sURL)
     }
-    sus()
-    // function getServerUrl () {
-    //     console.log("Page.svelte "+ ipcRenderer.invoke("startServer"))
-    // }
 </script>
 
 <main>
-    <h1>Choose a version:</h1>
-    <p>1.{version}</p>
-    <button class = {style}>
-        {version}
-    </button>
-    <input type=range on:change={onChange} bind:value={version} min=8 max=19>
-    <!-- <button class="launch" on:click={getServerUrl}>
-        Start Server</button> -->
-
+    <button class="launch" on:click={
+        async () => {
+            getUrl()
+        }
+    }> Start Server</button>
+    <p>{sURL}</p>
 </main>
 
 <style>
-button {
-    border-radius: 5px;
-    float: right;
-    text-align: center;
-    padding:15px;
-    -webkit-app-region: no-drag;
-}
-.neutral {
-    background: #f4f4f4;
-}
-.incorrect {
-    background: #ba1818;
-}
-.correct {
-    background: #09ee28;
-}
+
 </style>
