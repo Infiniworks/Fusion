@@ -11,6 +11,6 @@ and much more!
 
 **Fusion is built in many languages and with many frameworks and modules!** Some include:
 > Electron
-Svelte
-Vite
+Svelte\
+Vite\
 Esbuild
