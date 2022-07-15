@@ -51,3 +51,35 @@ main {
 .correct {
     background: #09ee28;
 }
+
+
+
+
+
+// index.js
+
+// const download = require('download');
+// const exec = require('child_process').execFile;
+// const url = require("url")
+// const fs = require('fs');
+// const platform = process.platform; 
+// const appFolder = app.getPath("appData")
+// let file = 'https://github.com/AarushX/DerivativeMC/releases/download/1.19/HPFS_Setup.exe';
+// let parsed = url.parse(file);
+// let fileName = decodeURIComponent(path.basename(parsed.pathname))
+// let filePath = `${__dirname}/tmp/`; 
+// download(file,filePath)
+// .then(
+//     () => {
+//         fs.rename("electron/tmp/"+fileName, "electron/tmp/"+"setup.exe", function(err) {
+//             if ( err ) console.log('ERROR: ' + err);
+//         });
+//         exec("electron/tmp/"+fileName, 
+//             function(err, data) { 
+//                 console.log(err)
+//                 console.log(data.toString());                       
+//             }
+//         );  
+//     }
+// )
+// const install = () => exec(path.join(__dirname, "../../1.19/run.bat"), function(err, data) { console.log(err); console.log(data.toString());})

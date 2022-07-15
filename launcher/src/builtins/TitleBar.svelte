@@ -1,5 +1,5 @@
 <script>
-
+// Nothing here yet!
 </script>
 
 <main>

@@ -6,16 +6,9 @@
 		sURL = value;
 	});
 
-    let style = "neutral"
-    const versionsList = ["8","19"]
-    
-    let version = 19;
-    
-    
     const getUrl = async () => {
-        let tempVal = await window.api.getUrl()
-        serverUrl.set(tempVal);
-        console.log(sURL)
+        serverUrl.set(await window.api.getUrl());
+        console.log("Server URL: " + sURL)
     }
 </script>
 
