@@ -1,14 +1,14 @@
 <script>
     import { serverUrl } from '../data/stores';
-    let sURL
+    let URL
     
     serverUrl.subscribe(value => {
-		sURL = value;
+		URL = value;
 	});
 
     const getUrl = async () => {
         serverUrl.set(await window.api.getUrl());
-        console.log("Server URL: " + sURL)
+        console.log("Server URL: " + URL)
     }
 </script>
 
@@ -18,7 +18,7 @@
             getUrl()
         }
     }> Start Server</button>
-    <p>{sURL}</p>
+    <p>{URL}</p>
 </main>
 
 <style>

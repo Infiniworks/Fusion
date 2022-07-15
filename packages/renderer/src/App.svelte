@@ -45,7 +45,6 @@ import TitleBar from "./builtins/TitleBar.svelte";
 			</div>
 			<div id="page" style = "flex-grow: 10;">
 				<Page>
-	
 				</Page>
 			</div>
 		</div>
@@ -99,7 +98,7 @@ div#tabBar {
 	padding: 10px;
 }
 div#rightBar {
-	background-color: rgb(104, 110, 103);
+	background-color: rgb(115, 133, 112);
 	padding: 25px;
 	width: 20%;
 }

@@ -1,11 +1,13 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "target": "ESNext",
-    "module": "ESNext",
+    "target": "esnext",
     "useDefineForClassFields": true,
-    "resolveJsonModule": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true,
+    "module": "esnext",
     "baseUrl": ".",
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.
@@ -14,17 +16,18 @@
      * of JS in `.svelte` files.
      */
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": true
   },
   "include": [
-    "src/**/*",
-    "electron/**/*"
+    "src/**/*.svelte",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*.d.ts",
+    "../../types/**/*.d.ts",
+    "../preload/contracts.d.ts"
   ],
   "exclude": [
-    "node_modules/*", 
-    "__sapper__/*", 
-    "public/*",
-    "dist"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "**/*.spec.ts",
+    "**/*.test.ts",
+  ]
 }
