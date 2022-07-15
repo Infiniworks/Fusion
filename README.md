@@ -1,4 +1,4 @@
-# Fusion2
+# Fusion 2
 
 Fusion is a Minecraft Launcher that will absolutely fuse you to it with its energetic startup times, feel, and *POWER*!
 
