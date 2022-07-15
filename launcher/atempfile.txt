@@ -83,3 +83,12 @@ main {
 //     }
 // )
 // const install = () => exec(path.join(__dirname, "../../1.19/run.bat"), function(err, data) { console.log(err); console.log(data.toString());})
+
+
+"dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
