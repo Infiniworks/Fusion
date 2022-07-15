@@ -10,7 +10,7 @@ Enjoy benefits such as a modern UI, fast performance, and special features such 
 and much more!
 
 **Fusion is built in many languages and with many frameworks and modules!** Some include:
-> Electron
+> Electron\
 Svelte\
 Vite\
 Esbuild
