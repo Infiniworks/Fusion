@@ -1,16 +1,12 @@
 <script>
-import Feed from "./LeftBar/Feed.svelte";
-import StartBox from "./LeftBar/StartBox.svelte";
+import ClientStart from "./components/ClientStart.svelte";
+
+
 </script>
 
 <main>
 <div class = "flex">
-    <div class = "start">
-        <StartBox />
-    </div>
-    <div class = "feed">
-        <Feed/>
-    </div>
+    <ClientStart/>
 </div>
 </main>
 

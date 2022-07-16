@@ -7,16 +7,16 @@ const useDevTools = false;
 async function createWindow() {
   const browserWindow = new BrowserWindow({
     titleBarStyle: 'hidden',
-      resizable: false,
-      frame: false,
-      transparent: true,
-      width: 1500, height: 1000,
-      show:false,
-      autoHideMenuBar: true,
-      webPreferences: {
-          preload: join(__dirname, '../../preload/dist/index.cjs'),
-          nodeIntegration: true,
-      },
+    frame: false,
+    transparent: true,
+    width: 1500,
+    height: 1000,
+    show: false,
+    autoHideMenuBar: true,
+    webPreferences: {
+        preload: join(__dirname, '../../preload/dist/index.cjs'),
+        nodeIntegration: true,
+    },
   });
 
   /**
@@ -34,8 +34,10 @@ async function createWindow() {
       }
     });
     console.log('Window Loaded');
-
+    browserWindow?.setResizable(false);
+    // browserWindow?.setBackgroundColor('#000000ff');
     browserWindow?.show();
+
 
     if (import.meta.env.DEV && useDevTools) {
       browserWindow?.webContents.openDevTools();

@@ -1,5 +1,4 @@
 <script>
-import Footer from "./builtins/Footer.svelte";
 import LeftBar from "./builtins/LeftBar.svelte";
 import RightBar from "./builtins/RightBar.svelte";
 import Page from "./builtins/Page.svelte";
@@ -28,26 +27,24 @@ import TitleBar from "./builtins/TitleBar.svelte";
         <div id="tabBar" style = "flex-shrink: 2;" >
           <TabBar/>
         </div>
-        <div id="page" style = "flex-grow: 10;">
+        <div id="page" style = "flex-grow: 10; overflow-y:scroll;">
           <Page/>
         </div>
       </div>
-    </div>
-    <div id="footer" style = "flex-grow:1;">
-      <Footer/>
     </div>
   </div>
 </main>
 
 <style>
 main {
+  box-sizing: border-box;
 	width:100%;
-	height:98.44999694vh;
-	box-sizing: border-box;
-	border-radius: 10px;
+	height:calc(100vh);
+	/* border-radius: 10px; */
 	font-family: 'Nanum Gothic', sans-serif;
-	-user-select: none;
-	-webkit-user-select: none;
+	-webkit-app-region: no-drag;
+  color: white;
+  background-color: rgb(41, 41, 41);
 }
 .high {
 	height: 100%;
@@ -67,35 +64,40 @@ main {
 	flex-direction: column;
 }
 div#titleBar {
-	background-color: rgb(255, 255, 255);
-	color: rgba(174, 0, 0, 0.835);
+	background-color: rgb(0, 0, 0);
 	-webkit-app-region: drag;
-	border-radius: 10px 10px 0px 0px;
+	/* border-radius: 10px 10px 0px 0px; */
 }
 div#tabBar {
-	background-color: rgb(203, 54, 118);
+	background-color: rgb(34, 34, 34);
+  box-sizing: border-box;
 	height: max-content;
 	padding: 10px;
+  box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
+  clip-path: inset(0px 0px -15px 0px);
 }
 div#rightBar {
-	background-color: rgb(22, 172, 213);
+	background-color: rgb(41, 41, 41);
 	padding: 25px;
 	width: 20%;
+  box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
+  clip-path: inset(0px 0px 0px -15px);
 }
 div#page {
-	color: white;
-	background-color: rgb(185, 93, 93);
+	background-color: rgb(64, 64, 64);
 	padding: 25px;
 	width: 100%;
 }
 div#leftBar {
-	background-color: rgb(204, 104, 104);
+	background-color: rgb(41, 41, 41);
 	padding: 25px;
 	width: 20%;
+  box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
+  clip-path: inset(0px -15px 0px 0px);
 }
-div#footer {
-	color: black;
-	background-color: rgb(146, 137, 20);
+/* div#footer {
+	background-color: rgb(34, 34, 34);
 	border-radius: 0px 0px 10px 10px;
-}
+}*/
+
 </style>

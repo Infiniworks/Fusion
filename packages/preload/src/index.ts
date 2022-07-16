@@ -16,5 +16,5 @@ contextBridge.exposeInMainWorld('api', {
     },
     unitTest: () => {
       return 44;
-    }
+    },
 });

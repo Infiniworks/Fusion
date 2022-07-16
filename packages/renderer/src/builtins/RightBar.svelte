@@ -1,14 +1,8 @@
 <script>
-import Profile from "./RightBar/Profile.svelte";
-import Social from "./RightBar/Skins.svelte";
+import ServerStart from "./components/ServerStart.svelte";
 
 </script>
 
 <main>
-    <Profile>
-
-    </Profile>
-    <Social>
-
-    </Social>
+  <ServerStart></ServerStart>
 </main>
