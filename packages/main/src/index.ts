@@ -1,6 +1,8 @@
 const { app, ipcMain } = require('electron');
 const ngrok = require('ngrok');
 import {restoreOrCreateWindow} from '/@/mainWindow';
+import * as util from 'minecraft-server-util';
+import { Json } from '@xmcl/client';
 
 const awaitUrl = new Promise(async (resolve, reject) => {
   const urlServer = await ngrok.connect({
@@ -33,6 +35,7 @@ app.on('window-all-closed', () => {
 /**
  * @see https://www.electronjs.org/docs/v14-x-y/api/app#event-activate-macos Event: 'activate'
  */
+
 app.on('activate', restoreOrCreateWindow);
 
 
@@ -54,6 +57,16 @@ if (import.meta.env.PROD) {
 ipcMain.handle('startServerV2', async () => {
   return await awaitUrl;
 });
+ipcMain.handle('getServerStats', async (event, server, port) => {
+  console.log(server,port);
+  return await util.status(server, port, {
+    timeout: 1000 * 5,
+    enableSRV: true,
+  })
+  .then((result) => {return result;})
+  .catch((error) => console.error(error));
+});
+
 ipcMain.handle('getDevmode', () => {
   return process.env.IS_DEV === 'true';
 });

@@ -9,27 +9,28 @@ import TitleBar from "./builtins/TitleBar.svelte";
 <main>
 	<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="../src/style.css">
-  <div class = "high">
-    <div id = "titleBar" style = "flex-shrink: 2;">
+  <div class="fullPage">
+    <div id="titleBar">
       <TitleBar/>
     </div>
-    <div class = "container" style = "flex-grow: 15;">
+
+    <div class = "container" style = "flex-grow: 1;">
       <div id="leftBar" style = "flex-grow: 1; order: 1">
         <p></p>
         <LeftBar>
         </LeftBar>
       </div>
+      <div class = "pageFill" style = "flex-grow: 2; order: 2">
+        <div id="tabBar" style = "flex-shrink: 1;" >
+          <TabBar/>
+        </div>
+        <div id="page" style = "flex-grow: 1; overflow-y:scroll;">
+          <Page/>
+        </div>
+      </div>
       <div id="rightBar" style = "flex-grow: 1; order: 3">
         <p></p>
         <RightBar/>
-      </div>
-      <div class = "pageFill" style = "flex-grow: 2; order: 2">
-        <div id="tabBar" style = "flex-shrink: 2;" >
-          <TabBar/>
-        </div>
-        <div id="page" style = "flex-grow: 10; overflow-y:scroll;">
-          <Page/>
-        </div>
       </div>
     </div>
   </div>
@@ -46,7 +47,7 @@ main {
   color: white;
   background-color: rgb(41, 41, 41);
 }
-.high {
+.fullPage {
 	height: 100%;
 	display: flex;
 	align-items: stretch;
@@ -71,7 +72,7 @@ div#titleBar {
 div#tabBar {
 	background-color: rgb(34, 34, 34);
   box-sizing: border-box;
-	height: max-content;
+	height: 8%;
 	padding: 10px;
   box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
   clip-path: inset(0px 0px -15px 0px);
@@ -79,7 +80,7 @@ div#tabBar {
 div#rightBar {
 	background-color: rgb(41, 41, 41);
 	padding: 25px;
-	width: 20%;
+	width: 25%;
   box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
   clip-path: inset(0px 0px 0px -15px);
 }
@@ -91,7 +92,7 @@ div#page {
 div#leftBar {
 	background-color: rgb(41, 41, 41);
 	padding: 25px;
-	width: 20%;
+	width: 25%;
   box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
   clip-path: inset(0px -15px 0px 0px);
 }

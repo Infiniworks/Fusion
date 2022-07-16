@@ -14,7 +14,7 @@ contextBridge.exposeInMainWorld('api', {
     getUrl: () => {
       return ipcRenderer.invoke('startServerV2');
     },
-    unitTest: () => {
-      return 44;
+    getServerStats: (server, port) => {
+      return ipcRenderer.invoke('getServerStats', server, port);
     },
 });
