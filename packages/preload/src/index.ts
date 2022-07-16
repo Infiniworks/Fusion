@@ -6,12 +6,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
     isDevMode: () => {
-        return ipcRenderer.invoke('getDevmode');
+      return ipcRenderer.invoke('getDevmode');
     },
     titlebar: (action: unknown) => {
-        ipcRenderer.send('titlebar', action);
+      ipcRenderer.send('titlebar', action);
     },
     getUrl: () => {
-        return ipcRenderer.invoke('startServerV2');
+      return ipcRenderer.invoke('startServerV2');
     },
+    unitTest: () => {
+      return 44;
+    }
 });
