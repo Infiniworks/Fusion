@@ -2,6 +2,8 @@ import {BrowserWindow, ipcMain} from 'electron';
 import {join} from 'path';
 import {URL} from 'url';
 
+const useDevTools = false;
+
 async function createWindow() {
   const browserWindow = new BrowserWindow({
     titleBarStyle: 'hidden',
@@ -35,7 +37,7 @@ async function createWindow() {
 
     browserWindow?.show();
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV && useDevTools) {
       browserWindow?.webContents.openDevTools();
     }
   });

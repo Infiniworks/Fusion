@@ -42,7 +42,7 @@ import TitleBar from "./builtins/TitleBar.svelte";
 <style>
 main {
 	width:100%;
-	height:100%;
+	height:98.44999694vh;
 	box-sizing: border-box;
 	border-radius: 10px;
 	font-family: 'Nanum Gothic', sans-serif;

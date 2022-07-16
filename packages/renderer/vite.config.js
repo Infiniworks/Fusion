@@ -2,8 +2,8 @@
 
 import {chrome} from '../../.electron-vendors.cache.json';
 import {join} from 'path';
-import {builtinModules} from 'module';
 import {svelte} from '@sveltejs/vite-plugin-svelte';
+import {renderer} from 'unplugin-auto-expose';
 
 const PACKAGE_ROOT = __dirname;
 
@@ -19,7 +19,6 @@ const config = {
       '/@/': join(PACKAGE_ROOT, 'src') + '/',
     },
   },
-  plugins: [svelte()],
   base: '',
   server: {
     fs: {
@@ -33,13 +32,16 @@ const config = {
     assetsDir: '.',
     rollupOptions: {
       input: join(PACKAGE_ROOT, 'index.html'),
-      external: [
-        ...builtinModules.flatMap(p => [p, `node:${p}`]),
-      ],
     },
     emptyOutDir: true,
     brotliSize: false,
   },
+  plugins: [
+    svelte(),
+    renderer.vite({
+      preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),
+    }),
+  ],
 };
 
 export default config;

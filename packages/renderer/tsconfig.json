@@ -1,14 +1,6 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Svelte",
-  "_version": "3.0.0",
-
+  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "importsNotUsedAsValues": "error",
-    "preserveValueImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "target": "esnext",
     "useDefineForClassFields": true,
@@ -25,7 +17,7 @@
      * of JS in `.svelte` files.
      */
     "allowJs": true,
-    "checkJs": true
+    // "checkJs": true
   },
   "include": [
     "src/**/*",
