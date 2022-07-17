@@ -1,5 +1,5 @@
-import {chrome} from '../../.electron-vendors.cache.json';
-import {builtinModules} from 'module';
+import {chrome} from "../../.electron-vendors.cache.json";
+import {builtinModules} from "module";
 
 const PACKAGE_ROOT = __dirname;
 
@@ -12,22 +12,22 @@ const config = {
   root: PACKAGE_ROOT,
   envDir: process.cwd(),
   build: {
-    sourcemap: 'inline',
+    sourcemap: "inline",
     target: `chrome${chrome}`,
-    outDir: 'dist',
-    assetsDir: '.',
-    minify: process.env.MODE !== 'development',
+    outDir: "dist",
+    assetsDir: ".",
+    minify: process.env.MODE !== "development",
     lib: {
-      entry: 'src/index.ts',
-      formats: ['cjs'],
+      entry: "src/index.ts",
+      formats: ["cjs"],
     },
     rollupOptions: {
       external: [
-        'electron',
+        "electron",
         ...builtinModules.flatMap(p => [p, `node:${p}`]),
       ],
       output: {
-        entryFileNames: '[name].cjs',
+        entryFileNames: "[name].cjs",
       },
     },
     emptyOutDir: true,

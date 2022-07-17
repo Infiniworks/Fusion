@@ -1,8 +1,8 @@
-import {afterEach, expect, test, vi} from 'vitest';
+import {afterEach, expect, test, vi} from "vitest";
 
 
 const exposeInMainWorldMock = vi.fn();
-vi.mock('electron', () => ({
+vi.mock("electron", () => ({
   contextBridge: {exposeInMainWorld: exposeInMainWorldMock},
 }));
 
@@ -12,8 +12,8 @@ afterEach(() => {
 });
 
 
-test('index', async () => {
-  await import('../src/index');
+test("index", async () => {
+  await import("../src/index");
   expect(exposeInMainWorldMock).toBeCalledTimes(1);
-  expect(exposeInMainWorldMock).lastCalledWith('unitTest', 44);
+  expect(exposeInMainWorldMock).lastCalledWith("unitTest", 44);
 });

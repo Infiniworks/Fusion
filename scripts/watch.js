@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 
-const {createServer, build, createLogger} = require('vite');
-const electronPath = require('electron');
-const {spawn} = require('child_process');
+const {createServer, build, createLogger} = require("vite");
+const electronPath = require("electron");
+const {spawn} = require("child_process");
 
 
 /** @type 'production' | 'development'' */
-const mode = process.env.MODE = process.env.MODE || 'development';
+const mode = process.env.MODE = process.env.MODE || "development";
 
 
 /** @type {import('vite').LogLevel} */
-const logLevel = 'info';
+const logLevel = "info";
 
 
 /** Messages on stderr that match any of the contained patterns will be stripped from output */
@@ -34,7 +34,7 @@ const setupMainPackageWatcher = ({resolvedUrls}) => {
   process.env.VITE_DEV_SERVER_URL = resolvedUrls.local[0];
 
   const logger = createLogger(logLevel, {
-    prefix: '[main]',
+    prefix: "[main]",
   });
 
   /** @type {ChildProcessWithoutNullStreams | null} */
@@ -50,25 +50,25 @@ const setupMainPackageWatcher = ({resolvedUrls}) => {
        */
       watch: {},
     },
-    configFile: 'packages/main/vite.config.js',
+    configFile: "packages/main/vite.config.js",
     plugins: [{
-      name: 'reload-app-on-main-package-change',
+      name: "reload-app-on-main-package-change",
       writeBundle() {
         /** Kill electron ff process already exist */
         if (spawnProcess !== null) {
-          spawnProcess.off('exit', process.exit);
-          spawnProcess.kill('SIGINT');
+          spawnProcess.off("exit", process.exit);
+          spawnProcess.kill("SIGINT");
           spawnProcess = null;
         }
 
         /** Spawn new electron process */
-        spawnProcess = spawn(String(electronPath), ['.']);
+        spawnProcess = spawn(String(electronPath), ["."]);
 
         /** Proxy all logs */
-        spawnProcess.stdout.on('data', d => d.toString().trim() && logger.warn(d.toString(), {timestamp: true}));
+        spawnProcess.stdout.on("data", d => d.toString().trim() && logger.warn(d.toString(), {timestamp: true}));
 
         /** Proxy error logs but stripe some noisy messages. See {@link stderrFilterPatterns} */
-        spawnProcess.stderr.on('data', d => {
+        spawnProcess.stderr.on("data", d => {
           const data = d.toString().trim();
           if (!data) return;
           const mayIgnore = stderrFilterPatterns.some((r) => r.test(data));
@@ -77,7 +77,7 @@ const setupMainPackageWatcher = ({resolvedUrls}) => {
         });
 
         /** Stops the watch script when the application has been quit */
-        spawnProcess.on('exit', process.exit);
+        spawnProcess.on("exit", process.exit);
       },
     }],
   });
@@ -102,12 +102,12 @@ const setupPreloadPackageWatcher = ({ws}) =>
        */
       watch: {},
     },
-    configFile: 'packages/preload/vite.config.js',
+    configFile: "packages/preload/vite.config.js",
     plugins: [{
-      name: 'reload-page-on-preload-package-change',
+      name: "reload-page-on-preload-package-change",
       writeBundle() {
         ws.send({
-          type: 'full-reload',
+          type: "full-reload",
         });
       },
     }],
@@ -125,7 +125,7 @@ const setupPreloadPackageWatcher = ({ws}) =>
     const rendererWatchServer = await createServer({
       mode,
       logLevel,
-      configFile: 'packages/renderer/vite.config.js',
+      configFile: "packages/renderer/vite.config.js",
     });
 
     /**

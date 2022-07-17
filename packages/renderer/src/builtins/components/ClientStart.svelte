@@ -8,8 +8,8 @@
     return truncatedNum / multiplier;
   };
   let gameVersions, versions, majorVersions = new Set(), allVersions = new Set(), gameVersion, totalMemory,
-    gameMemory, clientMemoryMin = 128, clientMemoryMax, memoryStep,
-    clientWidth, clientHeight, clientFullscreen, calcMaxMem;
+    clientMemoryMin = 128, clientMemoryMax, memoryStep,
+    clientWidth = 1920, clientHeight = 1080, clientFullscreen = false, trueMaxMemory, clientDisplayMultiplier;
   // for (const version of gameVersions) {
   //   console.log(version)
   // };
@@ -36,12 +36,12 @@
     // console.log(versions);
     gameVersion = gameVersions[0].majorVersion
     totalMemory = truncateDecimals(await window.api.totalMemory()/1048576,0)
-    calcMaxMem = totalMemory - truncateDecimals((totalMemory)/4,0)
-    memoryStep = truncateDecimals(calcMaxMem/50,0)
+    trueMaxMemory = totalMemory - truncateDecimals((totalMemory)/4,0)
+    memoryStep = truncateDecimals(trueMaxMemory/50,0)
     clientMemoryMax = truncateDecimals(memoryStep*25,0)
-    console.log(totalMemory+"M");
-    console.log(calcMaxMem+"M");
-    console.log(memoryStep+"M");
+    // console.log(totalMemory+"M");
+    // console.log(trueMaxMemory+"M");
+    // console.log(memoryStep+"M");
     return gameVersions;
   }
   let gameOptions = {
@@ -52,7 +52,13 @@
     height: clientHeight,
     fullscreen: clientFullscreen,
   }
-  const getData = async () => {
+  const calculateResolution = (multiplier) => {
+    if (multiplier) {
+      clientWidth =  16 * 40 * multiplier;
+      clientHeight =  9 * 40 * multiplier;
+    }
+  }
+  const collectServerData = async () => {
     cliStats.set(await window.api.getServerStats(serverName, parseInt(serverPort)));
     serverIcon = data.favicon;
     serverMOTD = data.motd.html;
@@ -73,51 +79,55 @@
   {#await start()}
   <p>Loading</p>
   {:then res}
-  <button class="launch"
-  on:click={
-    async () => {
-      startClient()
-    }
-  }>
-  Start Client
-  </button>
+  <!-- Begin Client Elements-->
+  <div class = "client">
+    <p>
+      Memory: {clientMemoryMin}/{clientMemoryMax}MB<br>
+      Min: <input type=range bind:value={clientMemoryMin} min=128 max={trueMaxMemory} step={memoryStep}>
+      Max: <input type=range bind:value={clientMemoryMax} min=128 max={trueMaxMemory} step={memoryStep}>
+      <br>Total System Memory: {totalMemory} MB
+    </p>
+    <p>
+      Selected Version: {gameVersion}
+      <input aria-valuetext type=range on:change={existsIn(gameVersion,[...majorVersions])} bind:value={gameVersion} min={parseFloat(res[res.length - 1]["majorVersion"])} max={parseFloat(res[0]["majorVersion"])} step="0.01">
+    </p>
+    <input on:change={calculateResolution(clientDisplayMultiplier)} type=range min=1 max=6 step="1" bind:value={clientDisplayMultiplier}>
+    <input type=checkbox bind:checked={clientFullscreen}>
+    <p>Fullscreen: {clientFullscreen}</p>
+    <p>Dimensions: {clientWidth}x{clientHeight}</p>
 
-  <button class="launch"
-  on:click={
-    async () => {
-      getData()
-    }
-  }>
-  ServerStats
-  </button>
-  <button class="launch"
-  on:click={
-    async () => {
-      console.log(res)
-    }
-  }>
-  Resources
-  </button>
-  <p>{gameVersion}</p>
-  <p>{clientMemoryMin}/{clientMemoryMax}</p>
-  <p>{gameVersion}</p>
-  <p>{totalMemory}</p>
-  <p>{JSON.stringify(res[0]["minecraftVersion"])}</p>
-  <input aria-valuetext type=range on:change={existsIn(gameVersion,[...majorVersions])} bind:value={gameVersion} min={parseFloat(res[res.length - 1]["majorVersion"])} max={parseFloat(res[0]["majorVersion"])} step="0.01">
-  <input type=range bind:value={clientMemoryMin} min=128 max={calcMaxMem} step={memoryStep}>
-  <input type=range bind:value={clientMemoryMax} min=128 max={calcMaxMem} step={memoryStep}>
-  <p>{serverName} {serverPort}</p>
-  <input bind:value={serverName}>
-  <input bind:value={serverPort}>
-  <input type=range step="40" bind:value={clientWidth}>
-  <input type=range step="40" bind:value={clientHeight}>
-  <input type=checkbox bind:checked={clientFullscreen}>
-  {@html serverMOTD}
-  <p>Players: {serverCurrentPlayers}/{serverMaxPlayers}</p>
-  <img src="{serverIcon}" alt="server icon"/>
-  <p>Protocol: {serverProtocol}<br>
-    Versions: {serverVersions}
-  </p>
+    <button class="launch"
+    on:click={
+      async () => {
+        startClient()
+      }
+    }>
+    Start Client
+    </button>
+  </div>
+
+  <!-- Begin Server Elements-->
+
+  <div class = "server">
+    <p>{serverName} {serverPort}</p>
+    <input bind:value={serverName}>
+    <input bind:value={serverPort}>
+    {@html serverMOTD}
+    <p>Players: {serverCurrentPlayers}/{serverMaxPlayers}</p>
+    <img src="{serverIcon}" alt="server icon"/>
+    <p>Protocol: {serverProtocol}<br>
+      Versions: {serverVersions}
+    </p>
+    <button class="launch"
+    on:click={
+      async () => {
+        collectServerData()
+      }
+    }>
+    ServerStats
+    </button>
+  </div>
+
   {:catch error}
 	<p style="color: red">{error.message}</p>
   {/await}
@@ -125,5 +135,9 @@
 
 
 <style>
-
+div.server {
+  overflow: hidden;
+  text-overflow: clip;
+  flex-shrink:0;
+}
 </style>

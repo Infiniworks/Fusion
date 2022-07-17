@@ -1,12 +1,12 @@
-import { session, BrowserWindow, ipcMain} from 'electron';
-import {join} from 'path';
-import {URL} from 'url';
+import { session, BrowserWindow, ipcMain} from "electron";
+import {join} from "path";
+import {URL} from "url";
 
 const useDevTools = true;
 
 async function createWindow() {
   const browserWindow = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    titleBarStyle: "hidden",
     frame: false,
     transparent: true,
     width: 1500,
@@ -14,7 +14,7 @@ async function createWindow() {
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
-        preload: join(__dirname, '../../preload/dist/index.cjs'),
+        preload: join(__dirname, "../../preload/dist/index.cjs"),
         nodeIntegration: true,
     },
   });
@@ -25,16 +25,16 @@ async function createWindow() {
    *
    * @see https://github.com/electron/electron/issues/25012
    */
-  browserWindow.on('ready-to-show', () => {
-    ipcMain.on('titlebar', (event, arg) => {
-      if(arg === 'destroy') browserWindow.destroy();
-      else if(arg === 'resize') {
+  browserWindow.on("ready-to-show", () => {
+    ipcMain.on("titlebar", (event, arg) => {
+      if(arg === "destroy") browserWindow.destroy();
+      else if(arg === "resize") {
           if(browserWindow.isMaximized()) browserWindow.unmaximize();
           else browserWindow.maximize();
       }
     });
-    console.log('Window Loaded');
-    session.defaultSession.loadExtension(join(__dirname + '../../../plugins/chrome/uBlock0'));
+    console.log("Window Loaded");
+    session.defaultSession.loadExtension(join(__dirname + "../../../plugins/chrome/uBlock0"));
     browserWindow?.setResizable(false);
     // browserWindow?.setBackgroundColor('#000000ff');
     browserWindow?.show();
@@ -53,7 +53,7 @@ async function createWindow() {
    */
   const pageUrl = import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
     ? import.meta.env.VITE_DEV_SERVER_URL
-    : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
+    : new URL("../renderer/dist/index.html", "file://" + __dirname).toString();
 
 
   await browserWindow.loadURL(pageUrl);

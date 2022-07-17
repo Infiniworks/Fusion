@@ -10,25 +10,25 @@ import TitleBar from "./builtins/TitleBar.svelte";
 	<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="../src/style.css">
   <div class="fullPage">
-    <div id="titleBar">
+    <div id="titleBar" style = "flex-shrink: 0;">
       <TitleBar/>
     </div>
 
-    <div class = "container" style = "flex-grow: 1;">
-      <div id="leftBar" style = "flex-grow: 1; order: 1">
+    <div class = "container" style = "flex-shrink: 0;">
+      <div id="leftBar" style = "flex-shrink: 0; order: 1">
         <p></p>
         <LeftBar>
         </LeftBar>
       </div>
       <div class = "pageFill" style = "flex-grow: 2; order: 2">
-        <div id="tabBar" style = "flex-shrink: 1;" >
+        <div id="tabBar" style = "flex-shrink: 0;" >
           <TabBar/>
         </div>
         <div id="page" style = "flex-grow: 1; overflow-y:scroll;">
           <Page/>
         </div>
       </div>
-      <div id="rightBar" style = "flex-grow: 1; order: 3">
+      <div id="rightBar" style = "flex-shrink: 0; order: 3">
         <p></p>
         <RightBar/>
       </div>
@@ -52,10 +52,12 @@ main {
 	display: flex;
 	align-items: stretch;
 	flex-direction: column;
+	flex: 1
 }
 .container {
 	display: flex;
 	align-items: stretch;
+	flex: 1
 }
 .pageFill {
 	height: 100%;
@@ -63,6 +65,7 @@ main {
 	display: flex;
 	align-items: stretch;
 	flex-direction: column;
+	flex: 1
 }
 div#titleBar {
 	background-color: rgb(0, 0, 0);

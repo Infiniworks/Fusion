@@ -1,13 +1,13 @@
-import type {MaybeMocked} from 'vitest';
-import {beforeEach, expect, test, vi} from 'vitest';
-import {restoreOrCreateWindow} from '../src/mainWindow';
+import type {MaybeMocked} from "vitest";
+import {beforeEach, expect, test, vi} from "vitest";
+import {restoreOrCreateWindow} from "../src/mainWindow";
 
-import {BrowserWindow} from 'electron';
+import {BrowserWindow} from "electron";
 
 /**
  * Mock real electron BrowserWindow API
  */
-vi.mock('electron', () => {
+vi.mock("electron", () => {
 
   const bw = vi.fn() as MaybeMocked<typeof BrowserWindow>;
   // @ts-expect-error It's work in runtime, but I Haven't idea how to fix this type error
@@ -29,7 +29,7 @@ beforeEach(() => {
 });
 
 
-test('Should create new window', async () => {
+test("Should create new window", async () => {
   const {mock} = vi.mocked(BrowserWindow);
   expect(mock.instances).toHaveLength(0);
 
@@ -40,7 +40,7 @@ test('Should create new window', async () => {
 });
 
 
-test('Should restore existing window', async () => {
+test("Should restore existing window", async () => {
   const {mock} = vi.mocked(BrowserWindow);
 
   // Create Window and minimize it
@@ -55,7 +55,7 @@ test('Should restore existing window', async () => {
 });
 
 
-test('Should create new window if previous was destroyed', async () => {
+test("Should create new window if previous was destroyed", async () => {
   const {mock} = vi.mocked(BrowserWindow);
 
   // Create Window and destroy it
