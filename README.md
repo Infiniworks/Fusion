@@ -1,6 +1,6 @@
 # Fusion 2
 
-Fusion is a Minecraft Launcher that will absolutely fuse you to it with its energetic startup times, feel, and *POWER*!
+🚀 A Minecraft Launcher that fuses performance and usability to achieve high levels of power! 🚀
 
 Enjoy benefits such as a modern UI, fast performance, and special features such as:
 > Soup\
