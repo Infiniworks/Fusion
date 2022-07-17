@@ -2,7 +2,7 @@ import { session, BrowserWindow, ipcMain} from 'electron';
 import {join} from 'path';
 import {URL} from 'url';
 
-const useDevTools = false;
+const useDevTools = true;
 
 async function createWindow() {
   const browserWindow = new BrowserWindow({

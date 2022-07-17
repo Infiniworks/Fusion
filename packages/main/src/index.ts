@@ -2,7 +2,12 @@ const { app, ipcMain } = require('electron');
 const ngrok = require('ngrok');
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import * as util from 'minecraft-server-util';
-import { Json } from '@xmcl/client';
+const { Client, Authenticator } = require('minecraft-launcher-core');
+const launcher = new Client();
+const msmc = require("msmc");
+const os = require('os');
+const mcData = require("minecraft-data");
+let authResult;
 
 const awaitUrl = new Promise(async (resolve, reject) => {
   const urlServer = await ngrok.connect({
@@ -38,7 +43,6 @@ app.on('window-all-closed', () => {
 
 app.on('activate', restoreOrCreateWindow);
 
-
 /**
  * Create app window when background process will be ready
  */
@@ -70,3 +74,46 @@ ipcMain.handle('getServerStats', async (event, server, port) => {
 ipcMain.handle('getDevmode', () => {
   return process.env.IS_DEV === 'true';
 });
+
+ipcMain.on('login', () => {
+  msmc.fastLaunch("electron",
+    (update) => { console.log(update) })
+    .then(result => { authResult = result}
+  );
+})
+
+ipcMain.on('startClient', (event, o) => {
+  if (msmc.errorCheck(authResult)){
+    console.log(authResult.reason)
+    return;
+  }
+  const opts = {
+      authorization: msmc.getMCLC().getAuth(authResult),
+      root: "./minecraft",
+      version: {
+          number: o.version,
+      },
+      memory: {
+          max: o.memMax,
+          min: o.memMin,
+      },
+      window: {
+        width: o.cliWidth,
+        height: o.cliHeight,
+        fullscreen: o.cliFullscreen,
+      }
+  }
+  console.log("Starting!")
+  launcher.launch(opts);
+
+  launcher.on('debug', (e) => console.log(e));
+  launcher.on('data', (e) => console.log(e));
+});
+
+ipcMain.handle('maxMemory', () => {
+  return os.totalmem();
+})
+
+ipcMain.handle('getVersions', () => {
+  return mcData.versions.pc;
+})

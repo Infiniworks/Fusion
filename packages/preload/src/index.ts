@@ -14,7 +14,19 @@ contextBridge.exposeInMainWorld('api', {
     getUrl: () => {
       return ipcRenderer.invoke('startServerV2');
     },
-    getServerStats: (server, port) => {
+    getServerStats: (server:string, port:number) => {
       return ipcRenderer.invoke('getServerStats', server, port);
     },
+    login: () => {
+      ipcRenderer.send('login');
+    },
+    startClient: (o) => {
+      ipcRenderer.send('startClient', o);
+    },
+    totalMemory: () => {
+      return ipcRenderer.invoke('maxMemory');
+    },
+    getVersions: () => {
+      return ipcRenderer.invoke('getVersions');
+    }
 });
