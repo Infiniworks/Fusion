@@ -46,7 +46,7 @@
     "unplugin": "^0.7.2",
     "unplugin-auto-expose": "^0.0.1",
     "vite": "3.0.0",
-    "vitest": "0.18.0"
+    "vitest": "0.18.1"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^5.30.6",
