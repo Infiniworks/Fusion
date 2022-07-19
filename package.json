@@ -33,7 +33,7 @@
     "electron": "19.0.8",
     "electron-builder": "23.1.0",
     "electron-devtools-installer": "3.2.0",
-    "eslint": "8.19.0",
+    "eslint": "8.20.0",
     "happy-dom": "6.0.3",
     "nano-staged": "0.8.0",
     "ngrok": "^4.3.1",
