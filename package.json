@@ -57,7 +57,7 @@
     "minecraft-server-util": "^5.3.0",
     "msmc": "^3.1.2",
     "os": "^0.1.2",
-    "postcss": "8.2.13",
+    "postcss": "8.4.14",
     "tailwindcss": "^3.1.6"
   }
 }
