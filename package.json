@@ -28,12 +28,12 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tsconfig/svelte": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "5.30.6",
+    "@typescript-eslint/eslint-plugin": "5.30.7",
     "cross-env": "7.0.3",
     "electron": "19.0.8",
     "electron-builder": "23.1.0",
     "electron-devtools-installer": "3.2.0",
-    "eslint": "8.19.0",
+    "eslint": "8.20.0",
     "happy-dom": "6.0.3",
     "nano-staged": "0.8.0",
     "ngrok": "^4.3.1",
@@ -46,7 +46,7 @@
     "unplugin": "^0.7.2",
     "unplugin-auto-expose": "^0.0.1",
     "vite": "3.0.0",
-    "vitest": "0.18.0"
+    "vitest": "0.18.1"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^5.30.6",
@@ -64,7 +64,7 @@
     "node-fetch": "^3.2.9",
     "nouislider": "^15.6.0",
     "os": "^0.1.2",
-    "postcss": "8.2.13",
+  "postcss": "8.4.14",
     "postgres": "^3.2.4",
     "simplebar": "^5.3.8",
     "svelte-select": "^4.4.7",
