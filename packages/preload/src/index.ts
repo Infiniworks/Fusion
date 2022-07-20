@@ -14,8 +14,14 @@ contextBridge.exposeInMainWorld("api", {
     getUrl: () => {
       return ipcRenderer.invoke("startServerV2");
     },
+    checkUrl: () => { 
+      return ipcRenderer.invoke("doesExistServerURL");
+    },
     getServerStats: (server:string, port:number) => {
       return ipcRenderer.invoke("getServerStats", server, port);
+    },
+    getMods: (client:string) => {
+      return ipcRenderer.invoke("getMods",client);
     },
     login: () => {
       return ipcRenderer.invoke("login");

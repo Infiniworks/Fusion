@@ -63,3 +63,20 @@ p.title {
     margin: 0;
     padding: 0;
 }
+
+div.block {
+    border-radius: 7px;
+    display: inline-block;
+    padding: 10px;
+    background-color: red;
+    text-shadow: 1px 1px 1px black;
+    background-image:linear-gradient(90deg,#333333 25%, 75%, #111111); 
+    outline: #3986ea solid 10px;
+    margin: 10px;
+}
+img.block {
+    float:left; 
+    margin-right: 10px;
+    height:115px; 
+    border-radius: 15px;
+}

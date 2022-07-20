@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const { app, ipcMain } = require("electron");
 const ngrok = require("ngrok");
 const { Client } = require("minecraft-launcher-core");
@@ -5,7 +6,13 @@ const msmc = require("msmc");
 const os = require("os");
 const DiscordRPC  = require("discord-rpc");
 const mcData = require("minecraft-data");
-const MCPATH = require("minecraft-folder-path");
+const jsonfile = require("jsonfile");
+const fs = require("fs-extra");
+const { createWriteStream } = require("fs-extra");
+const stream = require("stream");
+const { promisify } = require("util");
+const { exec } = require("child_process");
+
 import got from "got";
 
 import * as util from "minecraft-server-util";
@@ -23,8 +30,7 @@ const rpc = new DiscordRPC.Client({ transport: "ipc" });
 const startTimestamp = new Date();
 const isSingleInstance = app.requestSingleInstanceLock();
 
-let currentVersion;
-let authResult;
+let currentVersion, serverUrl, authResult;
 
 // Auto Updater
 if (import.meta.env.PROD) {
@@ -79,14 +85,60 @@ const awaitUrl = async () => {
   if (urlServer) return urlServer;
   else return "urlServer fetch rejected";
 };
+const addSettings = async (clientName, options) => {
+  const file = ".minecraft/instances/"+clientName+"/settings.json";
+  await jsonfile.writeFile(file, options, { flag: "a" }, (e) => console.log(e));
+};
 
 const getJavaVersion = async (mcVersion) => {
   let javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
   if (mcVersion < 1.14) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/8/ga";
   else if (mcVersion <  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/11/ga";
   else if (mcVersion >  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
-  const {result} = await got(javaUrl).then((res) => {return res;});
-  console.log(result);
+  console.log(await got(javaUrl).then((res) => {return res;}));
+};
+
+const download = async (url, dest) => {
+  console.time(`Downloading ${url} took`);
+  const pipeline = promisify(stream.pipeline);
+  fs.ensureFile(dest);
+  const downloadStream = got.stream(url);
+  const fileWriterStream = createWriteStream(dest);
+
+  console.group(`Downloading ${url} to ${dest}`);
+  
+
+  downloadStream.on("downloadProgress", ({ transferred, total, percent }) => {
+    const percentage = Math.round(percent * 100);
+    console.log(`${dest} Download: ${transferred}/${total} (${percentage}%)`);
+  });
+  console.groupEnd();
+  console.timeEnd(`Downloading ${url} took`);
+  
+  await pipeline(downloadStream, fileWriterStream);
+};
+
+const install = async (type, installDir, version, rootDir) => {
+  if (type == "fabric") {
+    const fabricPath = installDir+"/fabric-installer.jar";
+    console.log(`Downloading Fabric to ${fabricPath}`);
+    await download(
+      "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar", 
+      fabricPath,
+    );
+    console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
+    await exec(`java -jar ${fabricPath} client -dir ${rootDir} -mcversion ${version} -noprofile`, (error, stdout, stderr) => {
+      if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+      }
+      if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+      }
+      console.log(`stdout: ${stdout}`);
+    });
+  }
 };
 
 app.on("second-instance", restoreOrCreateWindow);
@@ -95,13 +147,21 @@ app.on("window-all-closed", () => {
 });
 app.on("activate", restoreOrCreateWindow);
 app.whenReady()
-  .then(restoreOrCreateWindow)
+  .then(() => {
+    restoreOrCreateWindow();
+    start();
+  })
   .catch((e) => console.error("Failed create window:", e));
 rpc.login({ clientId }).catch(console.error);
 
 // Handlers
 ipcMain.handle("startServerV2", async () => {
-  return await awaitUrl();
+  serverUrl = await awaitUrl();
+  return serverUrl;
+});
+
+ipcMain.handle("doesExistServerURL", async () => {
+  return await serverUrl;
 });
 
 ipcMain.handle("getServerStats", async (event, server, port) => {
@@ -128,19 +188,25 @@ ipcMain.handle("login", async () => {
   return JSON.stringify(authResult);
 });
 
-ipcMain.on("startClient", (event, o) => {
-  //getJavaVersion(o.version);
+ipcMain.on("startClient", async (event, o) => {
+  const version = o.customVersion || o.version;
+  const rootDir = "./minecraft/instances/"+ (o.clientName || "default");
+  const dir = rootDir + "/versions/"+version;
+  fs.ensureDir(dir);
+
+  await install("fabric", "./minecraft/installers", o.version, dir);
   if (msmc.errorCheck(o.authentication)){
     console.log(o.authentication.reason);
     return;
   }
+  
   const opts = {
     clientPackage: null,
     authorization: msmc.getMCLC().getAuth(o.authentication),
-    root: "./minecraft",
+    root: rootDir,
     version: {
       number: o.version,
-      custom: "fabric-loader-"+"0.14.8"+"-"+o.version,
+      custom: version,
     },
     memory: {
       min: o.memMin,
@@ -153,7 +219,8 @@ ipcMain.on("startClient", (event, o) => {
     },
     javaPath: "javaw",
     overrides: {
-      libraryRoot: MCPATH+"/libraries",
+      libraryRoot: "./minecraft/libraries",
+      maxSockets: (o.maxSockets || 3),
     },
   };
   
@@ -173,3 +240,19 @@ ipcMain.handle("getVersions", () => {
   return mcData.versions.pc;
 });
 
+ipcMain.handle("getMods", async (event, client) => {
+  const jsonfile = require("jsonfile");
+  const file = "./minecraft/instances/"+client+"/settings.json";
+  let result;
+  await addSettings(client, {mods: []});
+  await jsonfile.readFile(file)
+    .then(obj => {
+      console.dir(obj);
+      result = obj.mods;
+    });
+  return result;
+});
+
+const start = async () => {
+  //await getJavaVersion(1.18);
+};

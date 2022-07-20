@@ -16,7 +16,7 @@ import 'simplebar';
     </div>
 
     <div class = "container" style = "flex-shrink: 0;">
-      <div id="leftBar" data-simplebar style = "overflow-y: scroll; flex-shrink: 0; order: 1">
+      <div id="leftBar" data-simplebar style = "flex-shrink: 0; order: 1">
         <p></p>
         <LeftBar>
         </LeftBar>
@@ -25,7 +25,7 @@ import 'simplebar';
         <div id="tabBar" style = "flex-shrink: 0;" >
           <TabBar/>
         </div>
-        <div id="page" style = "flex-grow: 1; overflow-y:scroll;">
+        <div id="page" style = "flex-grow: 1;">
           <Page/>
         </div>
       </div>
@@ -75,19 +75,19 @@ div#titleBar {
 }
 div#tabBar {
 	background-color: rgb(34, 34, 34);
-  box-sizing: border-box;
+	box-sizing: border-box;
 	height: 8%;
 	padding: 10px;
-  box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
-  clip-path: inset(0px 0px -15px 0px);
+	box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
+	clip-path: inset(0px 0px -15px 0px);
 }
 div#rightBar {
-	overflow-y: scroll;
 	background-color: rgb(41, 41, 41);
 	padding: 25px;
 	width: 25%;
-  box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
-  clip-path: inset(0px 0px 0px -15px);
+	box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
+	clip-path: inset(0px 0px 0px -15px);
+	overflow: auto;
 }
 div#page {
 	background-color: rgb(64, 64, 64);
@@ -98,12 +98,9 @@ div#leftBar {
 	background-color: rgb(41, 41, 41);
 	padding: 25px;
 	width: 25%;
-  box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
-  clip-path: inset(0px -15px 0px 0px);
+	height: 100vh;
+	box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
+	clip-path: inset(0px -15px 0px 0px);
+	overflow: auto;
 }
-/* div#footer {
-	background-color: rgb(34, 34, 34);
-	border-radius: 0px 0px 10px 10px;
-}*/
-
 </style>

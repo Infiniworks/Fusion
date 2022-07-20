@@ -1,10 +1,13 @@
 <script>
-  import { serverUrl } from '../../data/stores';
+  import { serverUrl, serverStats } from '../../data/stores';
   let data, serverMOTD, serverIcon, serverCurrentPlayers, serverMaxPlayers, serverVersions, serverProtocol, serverName = "mc.hypixel.net", serverPort = 25565;
   let URL;
 
   serverUrl.subscribe(value => {
     URL = value;
+  });
+  serverStats.subscribe(value => {
+    data = value;
   });
 
   const getUrl = async () => {
@@ -13,7 +16,7 @@
   }
 
   const collectServerData = async () => {
-    serverUrl.set(await window.api.getServerStats(serverName, parseInt(serverPort)));
+    serverStats.set(await window.api.getServerStats(serverName, parseInt(serverPort)));
     serverIcon = data.favicon;
     serverMOTD = data.motd.html;
     serverCurrentPlayers = data.players.online;
@@ -31,35 +34,30 @@
       }
   }>Start Server</button>
   {#if URL}
-	<!--<button class="launch" on:click={
-    async () => {
-      window.open('https://www.youtube.com', '_blank', 'nodeIntegration=no');
-    }
-  }>Open Anonymous Youtube Link</button>-->
-  {/if}
   <p>{URL}</p>
+  {/if}
 
-  <!-- Begin Server Elements-->
+  
+  <p>{serverName} {serverPort}</p>
+  <input bind:value={serverName}>
+  <input bind:value={serverPort}> <br><br><br><br>
 
-  <div class = "server">
-    <p>{serverName} {serverPort}</p>
-    <input bind:value={serverName}>
-    <input bind:value={serverPort}>
+  <div class = "block">  
+    <img class="block" src="{serverIcon}" alt="Server Icon"/>
     {@html serverMOTD}
-    <p>Players: {serverCurrentPlayers}/{serverMaxPlayers}</p>
-    <img src="{serverIcon}" alt="server icon"/>
-    <p>Protocol: {serverProtocol}<br>
+    <p>
+      Players: {serverCurrentPlayers}/{serverMaxPlayers} <br>
       Versions: {serverVersions}
     </p>
-    <button class="launch"
-    on:click={
-      async () => {
-        collectServerData()
-      }
-    }>
-    ServerStats
-    </button>
   </div>
+  <button class="launch"
+  on:click={
+    async () => {
+      collectServerData()
+    }
+  }>
+  ServerStats
+  </button>
 </main>
 
 <style>
