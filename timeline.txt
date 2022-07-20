@@ -1,0 +1,46 @@
+old module for memory selection:
+<!--<p>
+  Memory: {clientMemoryMin}/{clientMemoryMax}MB<br>
+  Min: <input type=range bind:value={clientMemoryMin} min=128 max={trueMaxMemory} step={memoryStep}>
+  Max: <input type=range bind:value={clientMemoryMax} min=128 max={trueMaxMemory} step={memoryStep}>
+  <br>Total System Memory: {totalMemory} MB
+  <input aria-valuetext type=range on:change={existsIn(gameVersion,[...majorVersions])} bind:value={gameVersion} min={parseFloat(res[res.length - 1]["majorVersion"])} max={parseFloat(res[0]["majorVersion"])} step="0.01">
+  <p>Dimensions: {clientWidth}x{clientHeight}</p>
+  <p>Fullscreen: {clientFullscreen}</p>
+  <input on:change={calculateResolution(clientDisplayMultiplier)} type=range min=1 max=6 step="1" bind:value={clientDisplayMultiplier}>
+</p>-->
+
+old resolution example:
+const calculateResolution = (multiplier) => {
+    if (multiplier) {
+      clientWidth =  16 * 40 * multiplier;
+      clientHeight =  9 * 40 * multiplier;
+    }
+}
+calculateResolution(clientDisplayMultiplier)
+
+postgres example:
+// async function insertUser({ name, age }) {
+//   const users = await sql`
+//     insert into users
+//       (name, age)
+//     values
+//       (${ name }, ${ age })
+//     returning name, age
+//   `
+//   // users = Result [{ name: "Murray", age: 68 }]
+//   return users
+// }
+
+Some comments for the start function originally in ClientStart (7PM @ 7/18/22)
+// console.log(JSON.stringify(localData));
+
+// console.log([...majorVersions]);
+// console.log([...allVersions]);
+// console.log(versions);
+// console.log(versionsJSON)
+
+
+// console.log(totalMemory+"M");
+// console.log(trueMaxMemory+"M");
+// console.log(memoryStep+"M");

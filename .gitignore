@@ -4,6 +4,7 @@ dist
 *.local
 thumbs.db
 minecraft
+minecraft/*
 
 .vscode
 .eslintcache

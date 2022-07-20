@@ -1,4 +1,4 @@
-import { session, BrowserWindow, ipcMain} from "electron";
+import { BrowserWindow, ipcMain} from "electron";
 import {join} from "path";
 import {URL} from "url";
 
@@ -33,8 +33,10 @@ async function createWindow() {
           else browserWindow.maximize();
       }
     });
+    ipcMain.on("reloadPage", () => {
+      browserWindow.reload();
+    });
     console.log("Window Loaded");
-    session.defaultSession.loadExtension(join(__dirname + "../../../plugins/chrome/uBlock0"));
     browserWindow?.setResizable(false);
     // browserWindow?.setBackgroundColor('#000000ff');
     browserWindow?.show();

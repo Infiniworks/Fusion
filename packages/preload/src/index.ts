@@ -18,9 +18,9 @@ contextBridge.exposeInMainWorld("api", {
       return ipcRenderer.invoke("getServerStats", server, port);
     },
     login: () => {
-      ipcRenderer.send("login");
+      return ipcRenderer.invoke("login");
     },
-    startClient: (o) => {
+    startClient: (o: JSON) => {
       ipcRenderer.send("startClient", o);
     },
     totalMemory: () => {
@@ -28,5 +28,11 @@ contextBridge.exposeInMainWorld("api", {
     },
     getVersions: () => {
       return ipcRenderer.invoke("getVersions");
+    },
+    getConsoleLogs: () => {
+      return ipcRenderer.invoke("getConsoleLogs");
+    },
+    reloadPage: () => {
+      ipcRenderer.send("reloadPage");
     },
 });

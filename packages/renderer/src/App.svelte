@@ -4,6 +4,7 @@ import RightBar from "./builtins/RightBar.svelte";
 import Page from "./builtins/Page.svelte";
 import TabBar from "./builtins/TabBar.svelte";
 import TitleBar from "./builtins/TitleBar.svelte";
+import 'simplebar';
 </script>
 
 <main>
@@ -15,7 +16,7 @@ import TitleBar from "./builtins/TitleBar.svelte";
     </div>
 
     <div class = "container" style = "flex-shrink: 0;">
-      <div id="leftBar" style = "flex-shrink: 0; order: 1">
+      <div id="leftBar" data-simplebar style = "overflow-y: scroll; flex-shrink: 0; order: 1">
         <p></p>
         <LeftBar>
         </LeftBar>
@@ -38,14 +39,14 @@ import TitleBar from "./builtins/TitleBar.svelte";
 
 <style>
 main {
-  box-sizing: border-box;
+  	box-sizing: border-box;
 	width:100%;
 	height:calc(100vh);
 	/* border-radius: 10px; */
 	font-family: 'Nanum Gothic', sans-serif;
 	-webkit-app-region: no-drag;
-  color: white;
-  background-color: rgb(41, 41, 41);
+  	color: white;
+ 	background-color: rgb(41, 41, 41);
 }
 .fullPage {
 	height: 100%;
@@ -81,6 +82,7 @@ div#tabBar {
   clip-path: inset(0px 0px -15px 0px);
 }
 div#rightBar {
+	overflow-y: scroll;
 	background-color: rgb(41, 41, 41);
 	padding: 25px;
 	width: 25%;
