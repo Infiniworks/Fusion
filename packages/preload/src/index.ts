@@ -12,10 +12,10 @@ contextBridge.exposeInMainWorld("api", {
       ipcRenderer.send("titlebar", action);
     },
     getUrl: () => {
-      return ipcRenderer.invoke("startServerV2");
+      return ipcRenderer.invoke("startServerV3");
     },
     checkUrl: () => { 
-      return ipcRenderer.invoke("doesExistServerURL");
+      return ipcRenderer.invoke("startServerV3");
     },
     getServerStats: (server:string, port:number) => {
       return ipcRenderer.invoke("getServerStats", server, port);

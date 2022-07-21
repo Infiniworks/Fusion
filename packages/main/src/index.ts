@@ -12,6 +12,7 @@ const { createWriteStream } = require("fs-extra");
 const stream = require("stream");
 const { promisify } = require("util");
 const { exec } = require("child_process");
+const extract = require("extract-zip")
 
 import got from "got";
 
@@ -22,7 +23,7 @@ const launcher = new Client();
 const statuses = [
   "Enjoying a lollipop",
   "Parkour with an Orange Fruit",
-  "RIP Techno :(", "Minecraft?",
+  "RIP Techno :(", "Minecraft Anyone?",
   "pure bondoonglery",
 ];
 const clientId = "999073734486925382";
@@ -90,20 +91,27 @@ const addSettings = async (clientName, options) => {
   await jsonfile.writeFile(file, options, { flag: "a" }, (e) => console.log(e));
 };
 
-const getJavaVersion = async (mcVersion) => {
+const installJava = async (mcVersion) => {
   let javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
-  if (mcVersion < 1.14) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/8/ga";
-  else if (mcVersion <  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/11/ga";
-  else if (mcVersion >  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
-  console.log(await got(javaUrl).then((res) => {return res;}));
+  // if (mcVersion < 1.14) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/8/ga";
+  // else if (mcVersion <  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/11/ga";
+  // else if (mcVersion >  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
+  const result:JSON = await got(javaUrl).json();
+  const downloadLink = result[0]["binaries"][11]["package"]["link"];
+  const version = result[0]["binaries"][11]["scm_ref"];
+  const downDir = "./minecraft/java/downloading/"+version+".zip";
+  await download(downloadLink, downDir);
+  await extract(downDir, { dir: "./minecraft/java"+version });
+  await fs.remove(downDir);
 };
 
 const download = async (url, dest) => {
   console.time(`Downloading ${url} took`);
-  const pipeline = promisify(stream.pipeline);
-  fs.ensureFile(dest);
+  const pipeline = await promisify(stream.pipeline);
+  await fs.ensureFile(dest);
+
   const downloadStream = got.stream(url);
-  const fileWriterStream = createWriteStream(dest);
+  const fileWriterStream = await createWriteStream(dest);
 
   console.group(`Downloading ${url} to ${dest}`);
   
@@ -112,6 +120,7 @@ const download = async (url, dest) => {
     const percentage = Math.round(percent * 100);
     console.log(`${dest} Download: ${transferred}/${total} (${percentage}%)`);
   });
+
   console.groupEnd();
   console.timeEnd(`Downloading ${url} took`);
   
@@ -122,21 +131,29 @@ const install = async (type, installDir, version, rootDir) => {
   if (type == "fabric") {
     const fabricPath = installDir+"/fabric-installer.jar";
     console.log(`Downloading Fabric to ${fabricPath}`);
-    await download(
-      "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar", 
+    await fs.ensureFile(fabricPath);
+    // xhr.open("GET", "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"); <-- Gets latest version
+
+    download(
+      "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar",
       fabricPath,
-    );
-    console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
-    await exec(`java -jar ${fabricPath} client -dir ${rootDir} -mcversion ${version} -noprofile`, (error, stdout, stderr) => {
-      if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-      }
-      if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-      }
-      console.log(`stdout: ${stdout}`);
+    ).then(() => {
+      const path = require("path");
+      console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
+      const cmd = `${path.join(__dirname+"../../../../minecraft/java/OpenJDK17U/bin/javaw.exe")} -jar ${fabricPath} client -dir "${rootDir}" -mcversion ${version} -noprofile`;
+      exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+      });
+      return;
+
     });
   }
 };
@@ -155,13 +172,12 @@ app.whenReady()
 rpc.login({ clientId }).catch(console.error);
 
 // Handlers
-ipcMain.handle("startServerV2", async () => {
+ipcMain.handle("startServerV3", async () => {
+  if (serverUrl) {
+    return await serverUrl;
+  }
   serverUrl = await awaitUrl();
   return serverUrl;
-});
-
-ipcMain.handle("doesExistServerURL", async () => {
-  return await serverUrl;
 });
 
 ipcMain.handle("getServerStats", async (event, server, port) => {
@@ -193,13 +209,10 @@ ipcMain.on("startClient", async (event, o) => {
   const rootDir = "./minecraft/instances/"+ (o.clientName || "default");
   const dir = rootDir + "/versions/"+version;
   fs.ensureDir(dir);
-
-  await install("fabric", "./minecraft/installers", o.version, dir);
   if (msmc.errorCheck(o.authentication)){
     console.log(o.authentication.reason);
     return;
   }
-  
   const opts = {
     clientPackage: null,
     authorization: msmc.getMCLC().getAuth(o.authentication),
@@ -219,18 +232,24 @@ ipcMain.on("startClient", async (event, o) => {
     },
     javaPath: "javaw",
     overrides: {
-      libraryRoot: "./minecraft/libraries",
       maxSockets: (o.maxSockets || 3),
     },
   };
-  
   console.log("Starting!");
-  launcher.launch(opts);
+  install("fabric", "./minecraft/installers", o.version, rootDir).then(() => {
+    console.log("Installed Fabric");
+    //launch(opts);  
+  });   
+  
   currentVersion = o.version;
+  
+});
+const launch = (o) => {
+  launcher.launch(o); 
   launcher.on("debug", (e) => console.log(e));
   launcher.on("data", (e) => console.log(e));
   launcher.on("close", (e) => console.log("closed "+e));
-});
+};
 
 ipcMain.handle("maxMemory", () => {
   return os.totalmem();
@@ -254,5 +273,6 @@ ipcMain.handle("getMods", async (event, client) => {
 });
 
 const start = async () => {
-  //await getJavaVersion(1.18);
+  console.log("we should be starting now ;)");
+  // await installJava(1.19);
 };

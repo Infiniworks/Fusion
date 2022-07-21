@@ -68,7 +68,7 @@ let data,
   loader = loaders[0],
   query,
   modResults,
-  maxSockets,
+  maxSockets = 50,
   selectedProfile = 1;
 
 cliStats.subscribe(value => {
