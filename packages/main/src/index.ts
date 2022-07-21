@@ -12,7 +12,7 @@ const { createWriteStream } = require("fs-extra");
 const stream = require("stream");
 const { promisify } = require("util");
 const { exec } = require("child_process");
-const extract = require("extract-zip")
+const extract = require("extract-zip");
 
 import got from "got";
 
@@ -21,10 +21,12 @@ import {restoreOrCreateWindow} from "/@/mainWindow";
 
 const launcher = new Client();
 const statuses = [
-  "Enjoying a lollipop",
-  "Parkour with an Orange Fruit",
-  "RIP Techno :(", "Minecraft Anyone?",
-  "pure bondoonglery",
+  "Enjoying a purple lollipop?",
+  "Parkour with an Orange Fruit.",
+  "Technoblade Never Dies.", 
+  "Minecraft Anyone?",
+  "Pure, powerful bondoonglery",
+  "Disco with a Purple Grape.",
 ];
 const clientId = "999073734486925382";
 const rpc = new DiscordRPC.Client({ transport: "ipc" });
@@ -48,13 +50,13 @@ if (!isSingleInstance) {
 }
 
 // Async Functions
-async function getPlayingVersion() {
+async function getMinecraftVersion() {
   return currentVersion || "Launcher Screen";
 }
 
 async function setActivity() {
   rpc.setActivity({
-    details: `Playing ${await getPlayingVersion()}`,
+    details: `Playing ${await getMinecraftVersion()}`,
     state: `${statuses[Math.floor(Math.random()*statuses.length)]}`,
     buttons: [ 
       { label: "Downloads", url: "https://github.com/AarushX/Fusion" }, 
@@ -74,7 +76,7 @@ rpc.on("ready", () => {
 
   setInterval(() => {
     setActivity();
-  }, 30001);
+  }, 6e4);
 });
 
 const awaitUrl = async () => {
@@ -92,10 +94,13 @@ const addSettings = async (clientName, options) => {
 };
 
 const installJava = async (mcVersion) => {
-  let javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
+  // let javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
   // if (mcVersion < 1.14) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/8/ga";
   // else if (mcVersion <  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/11/ga";
   // else if (mcVersion >  1.16) javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
+
+
+  const javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
   const result:JSON = await got(javaUrl).json();
   const downloadLink = result[0]["binaries"][11]["package"]["link"];
   const version = result[0]["binaries"][11]["scm_ref"];
@@ -178,6 +183,30 @@ ipcMain.handle("startServerV3", async () => {
   }
   serverUrl = await awaitUrl();
   return serverUrl;
+});
+
+ipcMain.handle("get", async (event, arg1, arg2) => {
+  // use break; after non returns
+  switch (arg1) {
+    case "version":
+      switch (arg2) {
+        case "minecraft":
+          return await getMinecraftVersion();
+      }
+      break;
+    case "url":
+      if (serverUrl) {
+        return await serverUrl;
+      }
+      serverUrl = await awaitUrl();
+      return serverUrl;
+  }
+});
+
+// Create new profile json for user
+ipcMain.handle("createProfile", async (event, arg1, arg2) => {
+  const file = ".minecraft/instances/"+arg1+"/profile.json";
+  await jsonfile.writeFile(file, {}, { flag: "w" }, (e) => console.log(e));
 });
 
 ipcMain.handle("getServerStats", async (event, server, port) => {
