@@ -1,56 +1,56 @@
 <script>
 let selectedProfile, loginCredentials;
 const nullValues = [undefined, null, ""];
-const fetchPlayerData = (numIdent) => {
-    let localData = [];
-    if (numIdent == -2) {
-        if (nullValues.includes(localStorage.getItem("credentials"))) {
-            localStorage.setItem("credentials", `{"type": "Undefined"}`)
-        }
-        for (let i=1; i<=2; i++) {
-            let currentAuthName = "auth"+i;
-            if (nullValues.includes(localStorage.getItem(currentAuthName))) {
-                localStorage.setItem(currentAuthName, `{"type": "Undefined"}`)
-            }
-            console.log(i + " has been validated")
-        }
-        return
+let CU_URL, emptyAvatarURL = "https://crafatar.com/avatars/d479b9f8-f8f8-4f8e-b8f8-f8f8f8f8f8f8?overlay", CUID;
+
+
+const fetchPlayerData = () => {
+    let authList = [];
+    let credentials = JSON.parse(localStorage.getItem("credentials"));
+
+    if (nullValues.includes(localStorage.getItem("credentials"))) {
+        localStorage.setItem("credentials", `{"type": "Undefined"}`)
     }
 
-    if (numIdent == -1) {
-        return JSON.parse(localStorage.getItem("credentials"));
-    }
-
-    if (numIdent == 0) {
-        localData.push(
-        {
-            value: JSON.parse(localStorage.getItem("credentials")),
+    for (let i=1; i<=2; i++) {
+        let currentAuthName = "auth"+i;
+        if (nullValues.includes(localStorage.getItem(currentAuthName))) {
+            localStorage.setItem(currentAuthName, `{"type": "Undefined"}`)
         }
-        );
-        console.log(localData);
-        return localData;
     }
 
-    else {
-        let storageValues = [];
-        storageValues = {...localStorage};
-        for (let value in storageValues) {
+    for (let value in {...localStorage}) {
         if (value.includes("auth")) {
-            localData.push(
-            {
-                value: JSON.parse(localStorage.getItem(value)),
-            }
-            );
-        }
-        }
-        return localData;
+            authList.push({ 
+                value: JSON.parse(localStorage.getItem(value)), 
+            });
+        };
+    };  
+
+    return {
+        credentials,
+        authList,
+    };
+}
+
+const getProfile = async (name) => {
+    let JSON;
+    let localUUID = JSON.parse(localStorage.getItem(name || "credentials")).profile
+    await fetch(`https://playerdb.co/api/player/minecraft/uuid/${localUUID}`)
+    .then(res => res.json())
+    .then(out => {data = out})
+    .catch(err => console.log(err));
+    return {
+        name: JSON.data.player.username,
+        avatar: JSON.data.player.avatar,
+        uuid: JSON.data.player.raw_id,
+        dashedUUID: JSON.data.player.id,
+        nameHistory: JSON.data.player.meta.name_history,
     }
 }
 
 const login = async (user) => {
     await window.api.login().then((loginCreds) => {loginCredentials = loginCreds})
-
-    console.log(loginCredentials);
 
     localStorage.setItem("credentials", loginCredentials);
     localStorage.setItem("auth"+user, loginCredentials);
@@ -59,92 +59,69 @@ const login = async (user) => {
 
 const selectLogin = async (num) => {
     let authID = "auth"+num;
-    loginCredentials = localStorage.getItem(authID);
-    loginCredentials = loginCredentials!=null ? loginCredentials : {};
-    console.log(loginCredentials);
+    loginCredentials = localStorage.getItem(authID) !=null ? loginCredentials : `{"type": "NoLogin"}`;
 
     localStorage.setItem("credentials", loginCredentials);
+    
     selectedProfile = num;
-    console.log(loginCredentials)
-    let CCC = getProfileStats(authID).id
-    CU_URL = await getPlayerHead(CCC)
+    CU_URL = getProfile()
 }
 
 const logout = (num) => {
-  localStorage.setItem("auth"+num, "{}");
-  window.api.reloadPage();
+    localStorage.setItem("auth"+num, `{"type": "Logout"}`);
+    window.api.reloadPage();
 }
 
-const getProfileStats = (name) => {
-  let pfstats = JSON.parse(localStorage.getItem(name || "credentials")).profile
-  return pfstats
-}
 
-const getPlayerHead = async (uuid) => {
-  let url = "https://playerdb.co/api/player/minecraft/uuid/"+uuid;
-  let returnedJSON;
-  let avatarURL;
-  await fetch(url) .then(res => res.json())
-  .then(out => {returnedJSON = out})
-  .catch(err => console.log(err));
-  // fetch(url).then((result) => {returnedJSON = result.json()});
-  console.log(returnedJSON);
-  if (returnedJSON.success == true) {
-    avatarURL = returnedJSON.data.player.avatar;
-  } else {
-    avatarURL = emptyAvatarURL;
-  }
-  console.log(avatarURL+" ");
-  return avatarURL;
-} 
-let CU_URL, CUID;
+
 const start = async () => {
-// In start 
-    await fetchPlayerData(-2);
-    await fetchPlayerData();
+    let {credentials, authList} = fetchPlayerData();
+    console.warn(credentials)
     CUID = getProfileStats().id;
     CU_URL = await getPlayerHead(CUID);
-    if (localStorage.getItem("auth1") == localStorage.getItem("credentials")) {
-        selectedProfile = 1;
-    } else {
-        selectedProfile = 2;
-    }
+    if (localStorage.getItem("auth1") == localStorage.getItem("credentials")) selectedProfile = 1;
+    else selectedProfile = 2;
 }
 
 </script>
-{#await start()}
-<p>Starting Login Component</p>
-{:then}
-<img style="display: block;
-        height: 100px;  
-        width: 100px;" 
-        src={CU_URL} alt="Died"/><br>
-{#each fetchPlayerData() as playerData, index}
-    {#if playerData.value.profile}
-    <button 
-        class:selected={selectedProfile==index+1}
-        class="launch"
-        on:click={
-        async () => {
-            selectLogin(index+1)
-        }
-        }>
-    {playerData.value.profile.name} <br>
-    <button style="" on:click={ () => logout(index+1)} class="launch">Logout</button>
-    </button>
-    {:else}
-    <button class="launch"
-    on:click={
-        async () => {
-        await login(index+1)
-        }
-    }>
-    Sign in
-    <img style="display: block;
-        height: 100px;  
-        width: 100px;" 
-    src={emptyAvatarURL} alt=Sign in/>
-    </button>
-    {/if}
-{/each}
-{/await}
+
+<main>
+    <div class="loginBox clearfix">
+        {#await start()}
+            <p>Starting Login Component</p>
+        {:then}
+    
+        <img style="display: block;
+            height: 100px;  
+            float: left;" 
+            src={CU_URL||emptyAvatarURL} alt="Died"
+        />
+            {#each fetchPlayerData() as playerData, index}
+            {#if playerData.value.profile}
+                <button 
+                class:selected={selectedProfile==index+1}
+                class="launch"
+                on:click={
+                async () => {
+                    selectLogin(index+1)
+                }}>
+                {playerData.value.profile.name}
+                    <button style="" on:click={ () => logout(index+1)} class="launch">[X]</button>
+                </button><br>
+            {:else}
+                <button class="launch"
+                on:click={
+                async () => {
+                    await login(index+1)
+                }}>
+                <p class="slate-400">Sign in</p>
+                </button><br>
+            {/if}
+            {/each}
+        {/await}
+    </div>
+</main>
+
+<style>
+
+</style>

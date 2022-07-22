@@ -8,19 +8,23 @@ import ProfileBar from "./components/ProfileBar.svelte";
 import MainPage from "./components/MainPage.svelte";
 </script>
 
-<main class="body font-medium lining-nums">
-	<div class="topBar"><TopBar  style="flex-grow: 0.2;"/></div>
-	<div class="top" style="flex-grow: 1;">
-		Login Here<Login></Login>
-		Profiles Go Here<Profiles></Profiles>
+<main class="body font-medium lining-nums ">
+	<div class="topBar"><TopBar  style="flex: 0.2 0;"/></div>
+	<div class="top" style="flex: 1 0;">
+		<div class="login bg-cyan-700" style="flex: 4 0">
+			<Login></Login>
+		</div>
+		<div class="profiles bg-cyan-600"style="flex: 8 0">
+			Profiles Go Here<Profiles></Profiles>
+		</div>
 	</div>
-	<div class="main" style="flex-grow: 4;">
-		<div class="left" style="flex-grow: 2;">
+	<div class="main" style="flex: 4 0;">
+		<div class="left bg-cyan-600" style="flex: 4 0;">
 			Settings Will Be Here<Settings></Settings>	
 			Servers Here<Servers></Servers>
 		</div>
 
-		<div class="right" style="flex-grow: 8;">
+		<div class="right bg-cyan-500" style="flex: 8 0;">
 			<div>Profile Bar Here<ProfileBar></ProfileBar></div>
 			<div>Actual Page Here<MainPage></MainPage></div>
 		</div>
@@ -59,15 +63,18 @@ main {
 .left {
 	display: inline-flex;
 	flex-direction: column;
-	background-color: #2d65bf;
+	/* background-color: #2d65bf; */
 }
 .right {
 	display: inline-flex;
 	flex-direction: column;
-	background-color: #3e7ed7;
+	/* background-color: #3e7ed7; */
 }
 
 .topBar {
 	-webkit-app-region: drag;
+}
+.login {
+	justify-content: center;
 }
 </style>

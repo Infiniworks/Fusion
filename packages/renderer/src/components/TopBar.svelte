@@ -1,7 +1,7 @@
 <script>
 </script>
 
-<main>
+<main class="bg-cyan-800">
     <button on:click={() => {window.api.titlebar("resize");} }>❏</button>
     <button on:click={() => window.api.titlebar("destroy")}>🞭</button>
 </main>
@@ -15,6 +15,6 @@ main {
     justify-content: right;
     flex-wrap: wrap;
     color: white;
-    background-color: #000000;
+    /* background-color: #000000; */
 }
 </style>

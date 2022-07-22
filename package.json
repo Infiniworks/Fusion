@@ -68,6 +68,7 @@
     "minecraft-launcher-core": "^3.16.13",
     "minecraft-server-util": "^5.3.0",
     "msmc": "^3.1.2",
+    "nconf": "^0.12.0",
     "node-fetch": "^3.2.9",
     "nouislider": "^15.6.0",
     "os": "^0.1.2",
