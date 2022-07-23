@@ -1,223 +1,94 @@
 <script>
 import * as axios from 'axios';
-let profilesAmount = 2, skinURL, changes = 0, playerData, profileData, selected;
+let credentials, name1, name2, auth1, auth2, selectedUser = 0, avatar;
 
-
-// Mini Functions :) Cutie Pies
-const lGet = (id, parse) => {
-    if (parse == "-P") return JSON.parse(localStorage.getItem(id))
-    return localStorage.getItem(id);
-}
-const lSet = (id, content) => {
-    localStorage.setItem(id, content);
-}
-const lRem = (id) => {
-    localStorage.removeItem(id);
-}
-const lNull = (id) => {
-    let content = lGet(id);
-    let undefinedValues = [undefined, null, "Cancelled", "", "undefined", `{type: "Undefined"}`];
-    return undefinedValues.includes(content);
-}
-const lHas = (id) => {
-    let content = lGet(id);
-    let undefinedValues = [undefined, null, "Cancelled", "", "undefined", `{type: "Undefined"}`];
-    return !undefinedValues.includes(content);
-}
-
-const fetchPlayerData = async () => {
-    let localUUID, response, hasCredentials, runSelection = true, credentials, authList = [];
-
-    for (let index = 1; index < profilesAmount + 1; index++) {
-        if (lNull(`auth${index}`)) {
-            lSet(`auth${index}`, `{type: "Undefined"}`);
-        }
-    }
-    if (lHas("credentials") && lGet("credentials","-P").type !== "Cancelled") {
-        hasCredentials = true;
-        credentials = lGet("credentials");
-    } else {
-        hasCredentials = false;
-    }
-    
-    if (selected !== 0) {
-        if (selected == undefined) {
-            selected = 0;
-        }
-        if (lGet(`auth${selected}`) == lGet("credentials")) {
-            runSelection = false;
+const refillData = async () => {
+    let UUID;
+    credentials = localStorage.getItem('credentials');
+    auth1 = localStorage.getItem('auth1');
+    auth2 = localStorage.getItem('auth2');
+    if (credentials != null) {
+        if (credentials === auth1) {
+            selectedUser = 1;
+            UUID = JSON.parse(auth1).profile.id
+        } else if (credentials === auth2) {
+            selectedUser = 2;
+            UUID = JSON.parse(auth2).profile.id
         } else {
-            selected = 0;
+            selectedUser = 0;
+            UUID = undefined;
         }
-        console.log("Selected:", selected);
-    }
-    let index = 1;
-    for (let authName in {...localStorage}) {
-        let auth = lGet(authName);
-        if (authName.includes("auth")) {
-            authList.push({ 
-                name: authName,
-                value: JSON.parse(auth), 
-            });
-            
-            if (runSelection && hasCredentials) {
-                if (auth === lGet("credentials")) {
-                    selected = index;
-                }
-            }
-        };
-        if (auth == `{"type":"Cancelled","translationString":"Cancelled.GUI"}`) {
-            lSet(authName, undefined);
-        }
-        index++;
-    };  
-    console.log(authList)
-    if (selected != 0) {
-        localUUID = JSON.parse(lGet(`auth${selected}`)).profile.id;
-        await axios.get(`https://playerdb.co/api/player/minecraft/uuid/${localUUID}`)
-        .then((out) => {
-            response = out.data.data.player;        
-        });
     } else {
-        return {
-            credentials: lGet("credentials"),
-            authList,
-        }; 
-    };   
-    return {
-        name:           response.username,
-        avatar:         response.avatar,
-        uuid:           response.raw_id,
-        dashedUUID:     response.id,
-        nameHistory:    response.meta.name_history,
-        credentials: JSON.parse(lGet("credentials")),
-        authList,
-    }; 
-}
-
-const getProfile = async (name) => {
-    console.log(selected)
-    let localUUID, response;
-    console.log(lGet(`auth${name || selected}`));
-    localUUID = JSON.parse(lGet(`auth${name || selected}`)).profile.id
-    axios.get(`https://playerdb.co/api/player/minecraft/uuid/${localUUID}`)
-    .then((out) => {response = out.data.player;});
-    return {
-        name:           response.username,
-        avatar:         response.avatar,
-        uuid:           response.raw_id,
-        dashedUUID:     response.id,
-        nameHistory:    response.meta.name_history,
-    };    
-}
-
-const dsLog = async (numberID, type) => {
-    if (type == null) type = "dynamic";
-    console.log(type)
-    let authID = `auth${numberID}`;
-    let altNumberID = numberID == 1 ? 2 : 1;
-    let altID = `auth${altNumberID}`;
-    switch(type) {
-        case "logout":
-            // Logout if localstorage not null for altID
-            if (lHas(authID)) lSet(authID, "");
-            // Set Credentials if another account detected
-            if (lHas(altID)) lSet("credentials", lGet(altID));
-            // Otherwise set the credentials to undefined
-            else lRem("credentials");
-            selected = altNumberID;
-            break;
-
-        case "login":
-            // Login if authID empty
-            if (lNull(authID)) await window.api.login()
-            .then((loginData) => {
-                lSet(authID, loginData)
-                lSet("credentials", loginData)
-            }); 
-            else console.log("Already logged in? An Error Occurred.");
-            selected = numberID;
-            break;
-
-        case "select":
-            // Select if authID empty
-            if (lHas(authID)) {
-                lSet("credentials", lGet(authID))
-                selected = numberID;
-            }
-            else console.log("No login data detected.");
-            break;
-
-        case "dynamic":
-            // Login if authID is empty
-            if (lNull(authID)) {
-                console.log("Login")
-                await window.api.login()
-                .then((loginData) => {
-                    lSet(authID, loginData)
-                }); 
-            }
-            // Then, if it exists, set its credentials! :)
-            if (lHas(authID)) {
-                lSet("credentials", lGet(authID))
-                selected = numberID;
-            };
-            break;
+        selectedUser = 0;
+        UUID = undefined;
     }
+    if (auth1 != null) {
+        console.log(auth1)
+        name1 = JSON.parse(auth1).profile.name;
+    }
+    if (auth2 != null) {
+        name2 = JSON.parse(auth2).profile.name;
+    }
+    if (UUID) {
+        axios.get(`https://playerdb.co/api/player/minecraft/uuid/${UUID}`)
+        .then((out) => {response = out.data.player;});
+        avatar = response.avatar;
+    } else {
+        avatar = "https://crafatar.com/avatars/d479b9f8-f8f8-4f8e-b8f8-f8f8f8f8f8f8";
+    }
+};
+
+const login = async (userID) => {
+    let logDat
+    await window.api.login()
+    .then((loginData) => {
+        logDat = loginData;
+        if (loginData == auth1) {
+            localStorage.setItem('credentials', auth1);
+            selectedUser = 1;
+        } else if (loginData == auth2) {
+            localStorage.setItem('credentials', auth2);
+            selectedUser = 2;
+        } else {
+            localStorage.setItem('credentials', loginData);
+            localStorage.setItem(`auth${userID}`, loginData);
+        }
+    });
+    refillData();
 }
 
-const refresh = async (num) => {
-    let playerData = await fetchPlayerData();
-    skinURL = playerData.avatar;
-    changes++;
+const logout = async (userID) => {
+    localStorage.setItem(`auth${userID}`, undefined)
+    refillData();
 }
 
-const start = async () => {
-}
+refillData()
 </script>
 
 <main>
     <div class="loginBox clearfix">
-    <img style="display: block;
-    height: 100px;  
-    float: left;" 
-    src={skinURL||"https://crafatar.com/avatars/d479b9f8-f8f8-4f8e-b8f8-f8f8f8f8f8f8"} alt="Default Skin URL"/>
+        <img class="avatar" src={avatar} alt="Default Skin URL"/>
+        
+        <button class="launch" on:click={ async () => { await login(1) }}>
+            {name1}
+            <button on:click={ async () => { await logout(1) }}>
+            [X]
+            </button>
+        </button> <br>
     
-    {#key changes}
-    {#await fetchPlayerData()}
-    <p>Loading Player Data!</p>
-    {:then awaitedData}
-    {console.log(awaitedData)}
-    {#each awaitedData.authList as playerData, i}
-        {@const index = i+1}
-        {#if playerData.value.profile}
-            <button class="launch"
-            on:click={
-            async () => {
-                await dsLog(index)
-            }}>
-            {playerData.value.profile.name}
-            <button on:click={
-            async () => {
-                await dsLog(index,"logout")
-            }}>[X]</button>
-
-            </button><br>
-        {:else}
-            <button class="launch"
-            on:click={
-            async () => {
-                await dsLog(index)
-            }}>
-            Sign In
-            </button><br>
-        {/if} 
-    {/each}
-    {/await}
-    {/key}
+        <button class="launch" on:click={ async () => { await login(2) }}>
+            {name2}
+            <button on:click={ async () => { await logout(2) }}>
+            [X]
+            </button>
+        </button> <br>
     </div>
 </main>
 
 <style>
-
+img.avatar {
+    display: block; 
+    height: 100px; 
+    float: left;
+}
 </style>
