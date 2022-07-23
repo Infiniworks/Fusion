@@ -3,17 +3,6 @@ import * as axios from 'axios';
 let profilesAmount = 2, skinURL, changes = 0, playerData, profileData, selected;
 
 
-const cLog = (arr) => {
-    console.time("clog");
-    console.error("CLOG START")
-    console.warn(">>> Clog is starting <<<")
-    for (let thing in arr) {
-        console.log(arr[thing]);
-    }
-    console.timeEnd("clog");
-    console.warn(">>> Clog is ended <<<")
-    console.error("CLOG END")
-}
 // Mini Functions :) Cutie Pies
 const lGet = (id, parse) => {
     if (parse == "-P") return JSON.parse(localStorage.getItem(id))
@@ -40,8 +29,8 @@ const fetchPlayerData = async () => {
     let localUUID, response, hasCredentials, runSelection = true, credentials, authList = [];
 
     for (let index = 1; index < profilesAmount + 1; index++) {
-        if (!lHas(`auth${index}`)) {
-            lSet(`auth${index}`, `undefined`);
+        if (lNull(`auth${index}`)) {
+            lSet(`auth${index}`, `{type: "Undefined"}`);
         }
     }
     if (lHas("credentials") && lGet("credentials","-P").type !== "Cancelled") {
@@ -65,11 +54,12 @@ const fetchPlayerData = async () => {
     let index = 1;
     for (let authName in {...localStorage}) {
         let auth = lGet(authName);
-        if (authName.includes("auth") && lHas(authName)) {
+        if (authName.includes("auth")) {
             authList.push({ 
                 name: authName,
                 value: JSON.parse(auth), 
             });
+            
             if (runSelection && hasCredentials) {
                 if (auth === lGet("credentials")) {
                     selected = index;
@@ -81,7 +71,7 @@ const fetchPlayerData = async () => {
         }
         index++;
     };  
-    console.log(selected)
+    console.log(authList)
     if (selected != 0) {
         localUUID = JSON.parse(lGet(`auth${selected}`)).profile.id;
         await axios.get(`https://playerdb.co/api/player/minecraft/uuid/${localUUID}`)
@@ -179,57 +169,52 @@ const dsLog = async (numberID, type) => {
 const refresh = async (num) => {
     let playerData = await fetchPlayerData();
     skinURL = playerData.avatar;
-    cLog([playerData,skinURL, await fetchPlayerData()]);
     changes++;
 }
 
 const start = async () => {
-    await refresh();
 }
 </script>
 
 <main>
     <div class="loginBox clearfix">
-    {#await start()}
-        <p>Loading Login Components!</p>
-    {:then}
-        <img style="display: block;
-        height: 100px;  
-        float: left;" 
-        src={skinURL||"https://crafatar.com/avatars/d479b9f8-f8f8-4f8e-b8f8-f8f8f8f8f8f8"} alt="Default Skin URL"/>
-        
-        {#key changes}
-        {#await fetchPlayerData()}
-        <p>Loading Player Data!</p>
-        {:then awaitedData}
-        {#each awaitedData.authList as playerData, i}
-            {@const index = i+1}
-            {#if playerData.value.profile}
-                <button class="launch"
-                on:click={
-                async () => {
-                    await dsLog(index)
-                }}>
-                {playerData.value.profile.name}
-                <button on:click={
-                async () => {
-                    await dsLog(index,"logout")
-                }}>[X]</button>
+    <img style="display: block;
+    height: 100px;  
+    float: left;" 
+    src={skinURL||"https://crafatar.com/avatars/d479b9f8-f8f8-4f8e-b8f8-f8f8f8f8f8f8"} alt="Default Skin URL"/>
+    
+    {#key changes}
+    {#await fetchPlayerData()}
+    <p>Loading Player Data!</p>
+    {:then awaitedData}
+    {console.log(awaitedData)}
+    {#each awaitedData.authList as playerData, i}
+        {@const index = i+1}
+        {#if playerData.value.profile}
+            <button class="launch"
+            on:click={
+            async () => {
+                await dsLog(index)
+            }}>
+            {playerData.value.profile.name}
+            <button on:click={
+            async () => {
+                await dsLog(index,"logout")
+            }}>[X]</button>
 
-                </button><br>
-            {:else}
-                <button class="launch"
-                on:click={
-                async () => {
-                    await dsLog(index)
-                }}>
-                Sign In
-                </button><br>
-            {/if} 
-        {/each}
-        {/await}
-        {/key}
+            </button><br>
+        {:else}
+            <button class="launch"
+            on:click={
+            async () => {
+                await dsLog(index)
+            }}>
+            Sign In
+            </button><br>
+        {/if} 
+    {/each}
     {/await}
+    {/key}
     </div>
 </main>
 
