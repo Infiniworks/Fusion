@@ -1,9 +1,22 @@
 <script>
 import * as axios from 'axios';
-let skinURL, changes = 0, playerData, profileData, selected;
+let profilesAmount = 2, skinURL, changes = 0, playerData, profileData, selected;
 
+
+const cLog = (arr) => {
+    console.time("clog");
+    console.error("CLOG START")
+    console.warn(">>> Clog is starting <<<")
+    for (let thing in arr) {
+        console.log(arr[thing]);
+    }
+    console.timeEnd("clog");
+    console.warn(">>> Clog is ended <<<")
+    console.error("CLOG END")
+}
 // Mini Functions :) Cutie Pies
-const lGet = (id) => {
+const lGet = (id, parse) => {
+    if (parse == "-P") return JSON.parse(localStorage.getItem(id))
     return localStorage.getItem(id);
 }
 const lSet = (id, content) => {
@@ -14,45 +27,82 @@ const lRem = (id) => {
 }
 const lNull = (id) => {
     let content = lGet(id);
-    let undefinedValues = [undefined, null, "", "undefined", `{type: "Undefined"}`];
+    let undefinedValues = [undefined, null, "Cancelled", "", "undefined", `{type: "Undefined"}`];
     return undefinedValues.includes(content);
 }
 const lHas = (id) => {
     let content = lGet(id);
-    let undefinedValues = [undefined, null, "", "undefined", `{type: "Undefined"}`];
+    let undefinedValues = [undefined, null, "Cancelled", "", "undefined", `{type: "Undefined"}`];
     return !undefinedValues.includes(content);
 }
 
-const fetchPlayerData = () => {
-    let credentials, authList = [];
+const fetchPlayerData = async () => {
+    let localUUID, response, hasCredentials, runSelection = true, credentials, authList = [];
 
-    for (let value in {...localStorage}) {
-        if (value.includes("auth") && lGet(value) !== "") {
-            authList.push({ 
-                value: JSON.parse(localStorage.getItem(value)), 
-            });
-        };
-    };  
-
-    if (lNull("credentials") && (authList.length > 0)) {
-        credentials = JSON.stringify(authList[0].value);
-        lSet("credentials", credentials);
-    } 
-    // Else should work, but using proprietary function for testing
-    // Ambiguous result expected
-    if (lHas("credentials")) {
-        credentials = JSON.parse(localStorage.getItem("credentials"));
+    for (let index = 1; index < profilesAmount + 1; index++) {
+        if (!lHas(`auth${index}`)) {
+            lSet(`auth${index}`, `undefined`);
+        }
     }
-    for (let i = 0; i < authList.length; i++) {
-        if (lGet(`auth${i+1}`) == lGet(credentials)) {
-            console.log(i)
-            selected = index;
+    if (lHas("credentials") && lGet("credentials","-P").type !== "Cancelled") {
+        hasCredentials = true;
+        credentials = lGet("credentials");
+    } else {
+        hasCredentials = false;
+    }
+    
+    if (selected !== 0) {
+        if (selected == undefined) {
+            selected = 0;
+        }
+        if (lGet(`auth${selected}`) == lGet("credentials")) {
+            runSelection = false;
+        } else {
+            selected = 0;
+        }
+        console.log("Selected:", selected);
+    }
+    let index = 1;
+    for (let authName in {...localStorage}) {
+        let auth = lGet(authName);
+        if (authName.includes("auth") && lHas(authName)) {
+            authList.push({ 
+                name: authName,
+                value: JSON.parse(auth), 
+            });
+            if (runSelection && hasCredentials) {
+                if (auth === lGet("credentials")) {
+                    selected = index;
+                }
+            }
         };
-    };
+        if (auth == `{"type":"Cancelled","translationString":"Cancelled.GUI"}`) {
+            lSet(authName, undefined);
+        }
+        index++;
+    };  
+    console.log(selected)
+    if (selected != 0) {
+        localUUID = JSON.parse(lGet(`auth${selected}`)).profile.id;
+        await axios.get(`https://playerdb.co/api/player/minecraft/uuid/${localUUID}`)
+        .then((out) => {
+            response = out.data.data.player;        
+        });
+    } else {
+        return {
+            credentials: lGet("credentials"),
+            authList,
+        }; 
+    };   
     return {
-        credentials,
+        name:           response.username,
+        avatar:         response.avatar,
+        uuid:           response.raw_id,
+        dashedUUID:     response.id,
+        nameHistory:    response.meta.name_history,
+        credentials: JSON.parse(lGet("credentials")),
         authList,
-    };
+    }; 
 }
 
 const getProfile = async (name) => {
@@ -73,6 +123,7 @@ const getProfile = async (name) => {
 
 const dsLog = async (numberID, type) => {
     if (type == null) type = "dynamic";
+    console.log(type)
     let authID = `auth${numberID}`;
     let altNumberID = numberID == 1 ? 2 : 1;
     let altID = `auth${altNumberID}`;
@@ -109,10 +160,13 @@ const dsLog = async (numberID, type) => {
 
         case "dynamic":
             // Login if authID is empty
-            if (lNull(authID)) await window.api.login()
-            .then((loginData) => {
-                lSet(authID, loginData)
-            }); 
+            if (lNull(authID)) {
+                console.log("Login")
+                await window.api.login()
+                .then((loginData) => {
+                    lSet(authID, loginData)
+                }); 
+            }
             // Then, if it exists, set its credentials! :)
             if (lHas(authID)) {
                 lSet("credentials", lGet(authID))
@@ -123,9 +177,9 @@ const dsLog = async (numberID, type) => {
 }
 
 const refresh = async (num) => {
-    let playerData = fetchPlayerData();
-    profileData = await getProfile();
-    skinURL = profileData.avatar;
+    let playerData = await fetchPlayerData();
+    skinURL = playerData.avatar;
+    cLog([playerData,skinURL, await fetchPlayerData()]);
     changes++;
 }
 
@@ -144,22 +198,37 @@ const start = async () => {
         float: left;" 
         src={skinURL||"https://crafatar.com/avatars/d479b9f8-f8f8-4f8e-b8f8-f8f8f8f8f8f8"} alt="Default Skin URL"/>
         
-        {#key changes}{#each fetchPlayerData().authList as playerData, i}
+        {#key changes}
+        {#await fetchPlayerData()}
+        <p>Loading Player Data!</p>
+        {:then awaitedData}
+        {#each awaitedData.authList as playerData, i}
             {@const index = i+1}
-            <button class="launch"
-            on:click={
-            async () => {
-                dsLog(index)
-            }}>
-            {playerData.value.profile.name||"Sign In"}
-                <button style="" 
+            {#if playerData.value.profile}
+                <button class="launch"
                 on:click={
                 async () => {
+                    await dsLog(index)
+                }}>
+                {playerData.value.profile.name}
+                <button on:click={
+                async () => {
                     await dsLog(index,"logout")
-                }}
-                class="launch">[X]</button>
-            </button><br>
-        {/each}{/key}
+                }}>[X]</button>
+
+                </button><br>
+            {:else}
+                <button class="launch"
+                on:click={
+                async () => {
+                    await dsLog(index)
+                }}>
+                Sign In
+                </button><br>
+            {/if} 
+        {/each}
+        {/await}
+        {/key}
     {/await}
     </div>
 </main>
