@@ -1,34 +1,27 @@
 <script>
-import * as nconf from "nconf"; 
+import _ from "lodash"; 
+import { onMount } from 'svelte';
 
-async function setUsername(id, loginName) {
+async function login(username) {
     let data;
     await window.api.login()
     .then((loginData) => {
         console.log(loginData);
-        data = loginData
+        data = JSON.parse(loginData)
     })
-    loginName = data.profile.name;
+
+    username = data.profile.name;
 
     let users = JSON.parse(localStorage.getItem("users"));
-
-    _.extend(users, JSON.parse(`{${loginName}: ${data}}`));
-    console.log(users)
-
-
-    // users.forEach(function(value, index, array) {
-    //     if (array[index].profile.name === loginName) {
-    //         array[index] = data;
-    //         return;
-    //     }
-    // });
-}
-
-let users = JSON.parse(localStorage.getItem("users"));
-
-const login = async () => {
+    let userSnippet = JSON.parse(`{"${username}": ${JSON.stringify(data)}}`);
     
+    console.log(userSnippet);
+    localStorage.setItem("users", JSON.stringify(_.merge(users, userSnippet)));
 }
+
+onMount(async () => {
+    login()
+});
 
 </script>
 
