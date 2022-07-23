@@ -1,0 +1,22 @@
+// const login = async (user) => {
+//     await window.api.login().then((loginCreds) => {loginCredentials = loginCreds})
+
+//     localStorage.setItem("credentials", loginCredentials);
+//     localStorage.setItem("auth"+user, loginCredentials);
+//     await refresh();
+// }
+
+// const selectLogin = async (num) => {
+//     loginCredentials = ( !nullValues.includes(localStorage.getItem(`auth${num}`)) ) ? localStorage.getItem(`auth${num}`) : `{"type": "NoLogin"}`;
+
+//     localStorage.setItem("credentials", loginCredentials);
+
+//     //@NOTE Should be handled in refresh: selectedProfile = num;
+//     await refresh(num);
+// }
+
+// const logout = async (num) => {
+//     localStorage.removeItem("auth"+num);
+//     localStorage.removeItem("credentials");
+//     await refresh();
+// }

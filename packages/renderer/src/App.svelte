@@ -8,7 +8,7 @@ import ProfileBar from "./components/ProfileBar.svelte";
 import MainPage from "./components/MainPage.svelte";
 </script>
 
-<main class="body font-medium lining-nums ">
+<main class="body font-medium lining-nums">
 	<div class="topBar"><TopBar /></div>
 	<div class="top" style="flex: 1 0;">
 		<div class="login bg-cyan-700" style="flex: 4 0">
