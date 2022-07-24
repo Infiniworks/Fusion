@@ -1,11 +1,12 @@
 <script>
-import TopBar from "./components/TopBar.svelte";
-import Profiles from "./components/Profiles.svelte";
-import Login from "./components/Login.svelte";
-import Settings from "./components/Settings.svelte";
-import Servers from "./components/Servers.svelte";
-import ProfileBar from "./components/ProfileBar.svelte";
-import MainPage from "./components/MainPage.svelte";
+import TopBar from "./Components/TopBar.svelte";
+import Profiles from "./Components/Profiles.svelte";
+import Login from "./Components/Login.svelte";
+import Launch from "./Components/Launch.svelte";
+import Settings from "./Components/Settings.svelte";
+import Servers from "./Components/Servers.svelte";
+import ProfileBar from "./Components/ProfileBar.svelte";
+import MainPage from "./Components/MainPage.svelte";
 </script>
 
 <main class="body font-medium lining-nums">
@@ -17,11 +18,18 @@ import MainPage from "./components/MainPage.svelte";
 		<div class="profiles bg-cyan-600"style="flex: 8 0">
 			Profiles Go Here<Profiles></Profiles>
 		</div>
+		<div class="launch bg-cyan-700"style="flex: 2 0">
+			Launch Here<Launch></Launch>
+		</div>
 	</div>
 	<div class="main" style="flex: 4 0;">
 		<div class="left bg-cyan-600" style="flex: 4 0;">
-			Settings Will Be Here<Settings></Settings>	
-			Servers Here<Servers></Servers>
+			<div class="settings">
+				Settings Will Be Here<Settings></Settings>	
+			</div>
+			<div class="servers">
+				Servers Here<Servers></Servers>
+			</div>
 		</div>
 
 		<div class="right bg-cyan-500" style="flex: 8 0;">
@@ -75,6 +83,9 @@ main {
 	-webkit-app-region: drag;
 }
 .login {
+	justify-content: center;
+}
+.launch {
 	justify-content: center;
 }
 </style>

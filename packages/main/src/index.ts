@@ -71,6 +71,17 @@ async function setActivity() {
   });
 }
 
+const getMods = async (client) => {
+  const file = "./minecraft/instances/"+client+"/settings.json";
+  let result;
+  await addSettings(client, { mods: [] });
+  await jsonfile.readFile(file).then((obj) => {
+    console.dir(obj);
+    result = obj.mods;
+  });
+  return result;
+};
+
 DiscordRPC.register(clientId);
 
 rpc.on("ready", () => {
@@ -132,42 +143,45 @@ const download = async (url, dest) => {
   await pipeline(downloadStream, fileWriterStream);
 };
 
-const install = async (type, installDir, version, rootDir) => {
-  if (type == "fabric") {
-    const fabricPath = installDir + "/fabric-installer.jar";
-    console.log(`Downloading Fabric to ${fabricPath}`);
-    await fs.ensureFile(fabricPath);
-    // xhr.open("GET", "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"); <-- Gets latest version
+// const install = async (type, installDir, version, rootDir) => {
+//   if (type == "fabric") {
+//     const fabricPath = installDir + "/fabric-installer.jar";
+//     console.log(`Downloading Fabric to ${fabricPath}`);
+//     await fs.ensureFile(fabricPath);
+//     // xhr.open("GET", "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"); <-- Gets latest version
 
-    download(
-      "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar",
-      fabricPath,
-    ).then(() => {
-      console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
-      const cmd = `${path.join(
-        __dirname + "../../../../minecraft/java/OpenJDK17U/bin/javaw.exe",
-      )} -jar ${fabricPath} client -dir "${rootDir}" -mcversion ${version} -noprofile`;
-      exec(cmd, (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-      });
-      return;
-    });
-  }
-};
+//     download(
+//       "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar",
+//       fabricPath,
+//     ).then(() => {
+//       console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
+//       const cmd = `${path.join(
+//         __dirname + "../../../../minecraft/java/OpenJDK17U/bin/javaw.exe",
+//       )} -jar ${fabricPath} client -dir "${rootDir}" -mcversion ${version} -noprofile`;
+//       exec(cmd, (error, stdout, stderr) => {
+//         if (error) {
+//           console.log(`error: ${error.message}`);
+//           return;
+//         }
+//         if (stderr) {
+//           console.log(`stderr: ${stderr}`);
+//           return;
+//         }
+//         console.log(`stdout: ${stdout}`);
+//       });
+//       return;
+//     });
+//   }
+// };
 
 app.on("second-instance", restoreOrCreateWindow);
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
+
 app.on("activate", restoreOrCreateWindow);
+
 app
   .whenReady()
   .then(() => {
@@ -175,6 +189,7 @@ app
     start();
   })
   .catch((e) => console.error("Failed create window:", e));
+
 rpc.login({ clientId }).catch(console.error);
 
 // Handlers
@@ -186,9 +201,42 @@ ipcMain.handle("startServerV3", async () => {
   return serverUrl;
 });
 
+
+// // Create new profile json for user
+// ipcMain.handle("createProfile", async (event, arg1, arg2) => {
+//   const file = ".minecraft/instances/" + arg1 + "/profile.json";
+//   await jsonfile.writeFile(file, {}, { flag: "w" }, (e) => console.log(e));
+// });
+
+// ipcMain.handle("getServerStats", async (event, server, port) => {
+//   console.log(server, port);
+//   return await util
+//     .status(server, port, {
+//       timeout: 1000 * 5,
+//       enableSRV: true,
+//     })
+//     .then((result) => {
+//       return result;
+//     })
+//     .catch((error) => console.error(error));
+// });
+
+// ipcMain.handle("getDevmode", () => {
+//   return process.env.IS_DEV === "true";
+// });
+
 ipcMain.handle("get", async (event, arg1, arg2) => {
-  // use break; after non returns
   switch (arg1) {
+    case "getVersions":
+      return mcData.versions.pc;
+    case "maxMemory":
+      return os.totalmem();
+    case "getMods":
+      return await getMods(arg1);
+    case "login":
+      return await login();
+    case "startClient":
+      return await startClient(arg1);
     case "version":
       switch (arg2) {
         case "minecraft":
@@ -201,47 +249,35 @@ ipcMain.handle("get", async (event, arg1, arg2) => {
       }
       serverUrl = await awaitUrl();
       return serverUrl;
+    case "usedMemory":
+      switch (arg2) {
+        case "B": 
+          return os.freemem();
+        case "K":
+          return Math.round(os.freemem() / 1024);
+        case "M":
+          return Math.round(os.freemem() / 1024 / 1024);
+        case "G":
+          return Math.round(os.freemem() / 1024 / 1024 / 1024);
+      }
   }
 });
 
-// Create new profile json for user
-ipcMain.handle("createProfile", async (event, arg1, arg2) => {
-  const file = ".minecraft/instances/" + arg1 + "/profile.json";
-  await jsonfile.writeFile(file, {}, { flag: "w" }, (e) => console.log(e));
-});
-
-ipcMain.handle("getServerStats", async (event, server, port) => {
-  console.log(server, port);
-  return await util
-    .status(server, port, {
-      timeout: 1000 * 5,
-      enableSRV: true,
-    })
-    .then((result) => {
-      return result;
-    })
-    .catch((error) => console.error(error));
-});
-
-ipcMain.handle("getDevmode", () => {
-  return process.env.IS_DEV === "true";
-});
-
-ipcMain.handle("login", async () => {
+const login = async () => {
   await msmc
-    .fastLaunch("electron", (update) => {
-      console.log(update);
-    })
-    .then((result) => {
-      authResult = result;
-    });
+  .fastLaunch("electron", (update) => {
+    console.log(update);
+  })
+  .then((result) => {
+    authResult = result;
+  });
   return JSON.stringify(authResult);
-});
+};
 
-ipcMain.on("startClient", async (event, o) => {
+const startClient = async (o) => {
   const version = o.customVersion || o.version;
-  const rootDir = "./minecraft/instances/" + (o.clientName || "default");
-  const dir = rootDir + "/versions/" + version;
+  const rootDir = path.join(__dirname, "..", "..", "..", "minecraft", "instances", o.clientName || "default");
+  const dir = path.join(rootDir, "versions", version);
   fs.ensureDir(dir);
   if (msmc.errorCheck(o.authentication)) {
     console.log(o.authentication.reason);
@@ -259,49 +295,30 @@ ipcMain.on("startClient", async (event, o) => {
       min: o.memMin,
       max: o.memMax,
     },
-    window: {
-      width: o.width,
-      height: o.height,
-      fullscreen: o.fullscreen,
-    },
-    javaPath: "javaw",
+    // window: {
+    //   width: o.width,
+    //   height: o.height,
+    //   fullscreen: o.fullscreen,
+    // },
+    javaPath: path.join(__dirname, "..", "..", "..", "minecraft", "java", "OpenJDK17U", "bin", "javaw.exe"),
     overrides: {
       maxSockets: o.maxSockets || 3,
     },
   };
   console.log("Starting!");
-  install("fabric", "./minecraft/installers", o.version, rootDir).then(() => {
-    console.log("Installed Fabric");
-    //launch(opts);
-  });
+  // install("fabric", "./minecraft/installers", o.version, rootDir).then(() => {
+  //   console.log("Installed Fabric");
+  //   //launch(opts);
+  // });
 
   currentVersion = o.version;
-});
-const launch = (o) => {
-  launcher.launch(o);
+
+  launcher.launch(opts);
+
   launcher.on("debug", (e) => console.log(e));
   launcher.on("data", (e) => console.log(e));
   launcher.on("close", (e) => console.log("closed " + e));
 };
-
-ipcMain.handle("maxMemory", () => {
-  return os.totalmem();
-});
-
-ipcMain.handle("getVersions", () => {
-  return mcData.versions.pc;
-});
-
-ipcMain.handle("getMods", async (event, client) => {
-  const file = "./minecraft/instances/"+client+"/settings.json";
-  let result;
-  await addSettings(client, { mods: [] });
-  await jsonfile.readFile(file).then((obj) => {
-    console.dir(obj);
-    result = obj.mods;
-  });
-  return result;
-});
 
 const start = async () => {
   console.log("we should be starting now ;)");

@@ -46,6 +46,9 @@ const please = {
   get: (arg1:never, arg2:never) => {
     return ipcRenderer.invoke("get", arg1, arg2);
   },
+  send: (arg1:never) => {
+    return ipcRenderer.invoke(arg1);
+  },
 };
 
 contextBridge.exposeInMainWorld("api", api);

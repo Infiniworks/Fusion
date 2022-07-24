@@ -2,8 +2,8 @@
 </script>
 
 <main class="bg-cyan-800">
-    <button on:click={() => {window.api.titlebar("resize");} }>❏</button>
-    <button on:click={() => window.api.titlebar("destroy")}>🞭</button>
+    <button on:click={() => window.please.send("resize") }>❏</button>
+    <button on:click={() => window.please.send("destroy")}>🞭</button>
 </main>
 
 <style>
