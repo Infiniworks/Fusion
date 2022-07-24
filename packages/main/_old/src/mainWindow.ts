@@ -1,6 +1,6 @@
-import { BrowserWindow, ipcMain} from "electron";
-import {join} from "path";
-import {URL} from "url";
+import { BrowserWindow, ipcMain } from "electron";
+import { join } from "path";
+import { URL } from "url";
 
 const useDevTools = true;
 
@@ -14,8 +14,8 @@ async function createWindow() {
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
-        preload: join(__dirname, "../../preload/dist/index.cjs"),
-        nodeIntegration: true,
+      preload: join(__dirname, "../../preload/dist/index.cjs"),
+      nodeIntegration: true,
     },
   });
 
@@ -27,10 +27,10 @@ async function createWindow() {
    */
   browserWindow.on("ready-to-show", () => {
     ipcMain.on("titlebar", (event, arg) => {
-      if(arg === "destroy") browserWindow.destroy();
-      else if(arg === "resize") {
-          if(browserWindow.isMaximized()) browserWindow.unmaximize();
-          else browserWindow.maximize();
+      if (arg === "destroy") browserWindow.destroy();
+      else if (arg === "resize") {
+        if (browserWindow.isMaximized()) browserWindow.unmaximize();
+        else browserWindow.maximize();
       }
     });
     ipcMain.on("reloadPage", () => {
@@ -40,8 +40,6 @@ async function createWindow() {
     browserWindow?.setResizable(false);
     // browserWindow?.setBackgroundColor('#000000ff');
     browserWindow?.show();
-
-
 
     if (import.meta.env.DEV && useDevTools) {
       browserWindow?.webContents.openDevTools();
@@ -53,10 +51,13 @@ async function createWindow() {
    * Vite dev server for development.
    * `file://../renderer/index.html` for production and test
    */
-  const pageUrl = import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
-    ? import.meta.env.VITE_DEV_SERVER_URL
-    : new URL("../renderer/dist/index.html", "file://" + __dirname).toString();
-
+  const pageUrl =
+    import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
+      ? import.meta.env.VITE_DEV_SERVER_URL
+      : new URL(
+          "../renderer/dist/index.html",
+          "file://" + __dirname
+        ).toString();
 
   await browserWindow.loadURL(pageUrl);
 
@@ -67,7 +68,7 @@ async function createWindow() {
  * Restore existing BrowserWindow or Create new BrowserWindow
  */
 export async function restoreOrCreateWindow() {
-  let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
+  let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
 
   if (window === undefined) {
     window = await createWindow();
