@@ -18,6 +18,11 @@ const config = {
   extraMetadata: {
     version: process.env.VITE_APP_VERSION,
   },
+  appId: com.squirrel.Fusion.Fusion,
+  publish: {
+    provider: "github",
+    
+  },
 };
 
 module.exports = config;

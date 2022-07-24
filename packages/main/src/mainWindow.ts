@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain} from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import {join} from "path";
 import {URL} from "url";
 

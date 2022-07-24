@@ -14,6 +14,7 @@ const { promisify } = require("util");
 const { exec } = require("child_process");
 const extract = require("extract-zip");
 
+import { autoUpdater } from "electron";
 import got from "got";
 
 import * as util from "minecraft-server-util";
@@ -41,6 +42,7 @@ if (import.meta.env.PROD) {
     .then(() => import("electron-updater"))
     .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
     .catch((e) => console.error("Failed check updates:", e));
+  autoUpdater.quitAndInstall();
 }
 
 // Checks
