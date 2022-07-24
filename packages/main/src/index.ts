@@ -14,6 +14,7 @@ const { promisify } = require("util");
 const { exec } = require("child_process");
 const extract = require("extract-zip");
 
+import * as path from "path";
 import { autoUpdater } from "electron";
 import got from "got";
 
@@ -145,7 +146,6 @@ const install = async (type, installDir, version, rootDir) => {
       "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar",
       fabricPath,
     ).then(() => {
-      const path = require("path");
       console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
       const cmd = `${path.join(__dirname+"../../../../minecraft/java/OpenJDK17U/bin/javaw.exe")} -jar ${fabricPath} client -dir "${rootDir}" -mcversion ${version} -noprofile`;
       exec(cmd, (error, stdout, stderr) => {
@@ -291,7 +291,6 @@ ipcMain.handle("getVersions", () => {
 });
 
 ipcMain.handle("getMods", async (event, client) => {
-  const jsonfile = require("jsonfile");
   const file = "./minecraft/instances/"+client+"/settings.json";
   let result;
   await addSettings(client, {mods: []});

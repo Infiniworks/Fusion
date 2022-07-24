@@ -2,7 +2,7 @@
  * @module preload
  */
 export {};
-const { contextBridge, ipcRenderer } = require("electron");
+import { contextBridge, ipcRenderer } from "electron";
 
 const api = {
   isDevMode: () => {

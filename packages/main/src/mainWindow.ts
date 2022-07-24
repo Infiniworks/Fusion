@@ -32,10 +32,10 @@ async function createWindow() {
       browserWindow.reload();
     });
     console.log("Window Loaded");
-    browserWindow?.show();
+    browserWindow.show();
 
     if (import.meta.env.DEV && useDevTools) {
-      browserWindow?.webContents.openDevTools();
+      browserWindow.webContents.openDevTools();
     }
   });
   const pageUrl = import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
