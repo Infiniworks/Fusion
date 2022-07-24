@@ -17,7 +17,7 @@
      * Note that setting allowJs false does not prevent the use
      * of JS in `.svelte` files.
      */
-    "allowJs": true,
+    "allowJs": true
     // "checkJs": true
   },
   "include": [
@@ -26,8 +26,5 @@
     "../../types/**/*.d.ts",
     "../preload/contracts.d.ts"
   ],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts",
-  ]
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

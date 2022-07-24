@@ -1,12 +1,15 @@
-import {mount} from "@vue/test-utils";
-import {expect, test, vi} from "vitest";
+import { mount } from "@vue/test-utils";
+import { expect, test, vi } from "vitest";
 import ReactiveHash from "../src/components/ReactiveHash.vue";
-import type {BinaryLike} from "crypto";
+import type { BinaryLike } from "crypto";
 
 /**
  * Mock expected global api exposed by {@link module:preload}
  */
-(window as Window & typeof globalThis & { nodeCrypto: { sha256sum: (s: BinaryLike) => string } }).nodeCrypto = {
+(
+  window as Window &
+    typeof globalThis & { nodeCrypto: { sha256sum: (s: BinaryLike) => string } }
+).nodeCrypto = {
   sha256sum: vi.fn((s: BinaryLike) => `${s}:HASHED`),
 };
 

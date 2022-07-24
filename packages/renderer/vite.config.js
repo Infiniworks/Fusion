@@ -1,9 +1,9 @@
 /* eslint-env node */
 
-import {chrome} from "../../.electron-vendors.cache.json";
-import {join} from "path";
-import {svelte} from "@sveltejs/vite-plugin-svelte";
-import {renderer} from "unplugin-auto-expose";
+import { chrome } from "../../.electron-vendors.cache.json";
+import { join } from "path";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { renderer } from "unplugin-auto-expose";
 
 const PACKAGE_ROOT = __dirname;
 
