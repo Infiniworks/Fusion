@@ -6,6 +6,7 @@ thumbs.db
 minecraft
 minecraft/*
 .electron-builder.config.js
+old
 
 .vscode
 .eslintcache
