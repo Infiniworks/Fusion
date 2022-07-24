@@ -8,20 +8,20 @@ const api = {
   isDevMode: () => {
     return ipcRenderer.invoke("getDevmode");
   },
-  titlebar: (action: unknown) => { 
+  titlebar: (action: unknown) => {
     ipcRenderer.send("titlebar", action);
   },
   getUrl: () => {
     return ipcRenderer.invoke("startServerV3");
   },
-  checkUrl: () => { 
+  checkUrl: () => {
     return ipcRenderer.invoke("startServerV3");
   },
-  getServerStats: (server:string, port:number) => {
+  getServerStats: (server: string, port: number) => {
     return ipcRenderer.invoke("getServerStats", server, port);
   },
-  getMods: (client:string) => {
-    return ipcRenderer.invoke("getMods",client);
+  getMods: (client: string) => {
+    return ipcRenderer.invoke("getMods", client);
   },
   login: () => {
     return ipcRenderer.invoke("login");
@@ -43,7 +43,7 @@ const api = {
   },
 };
 const please = {
-  get: (arg1:never, arg2:never) => {
+  get: (arg1: never, arg2: never) => {
     return ipcRenderer.invoke("get", arg1, arg2);
   },
 };
