@@ -72,7 +72,7 @@ async function setActivity() {
 }
 
 const getMods = async (client) => {
-  const file = "./minecraft/instances/"+client+"/settings.json";
+  const file = "./minecraft/instances/" + client + "/settings.json";
   let result;
   await addSettings(client, { mods: [] });
   await jsonfile.readFile(file).then((obj) => {
@@ -201,7 +201,6 @@ ipcMain.handle("startServerV3", async () => {
   return serverUrl;
 });
 
-
 // // Create new profile json for user
 // ipcMain.handle("createProfile", async (event, arg1, arg2) => {
 //   const file = ".minecraft/instances/" + arg1 + "/profile.json";
@@ -251,7 +250,7 @@ ipcMain.handle("get", async (event, arg1, arg2) => {
       return serverUrl;
     case "usedMemory":
       switch (arg2) {
-        case "B": 
+        case "B":
           return os.freemem();
         case "K":
           return Math.round(os.freemem() / 1024);
@@ -265,18 +264,26 @@ ipcMain.handle("get", async (event, arg1, arg2) => {
 
 const login = async () => {
   await msmc
-  .fastLaunch("electron", (update) => {
-    console.log(update);
-  })
-  .then((result) => {
-    authResult = result;
-  });
+    .fastLaunch("electron", (update) => {
+      console.log(update);
+    })
+    .then((result) => {
+      authResult = result;
+    });
   return JSON.stringify(authResult);
 };
 
 const startClient = async (o) => {
   const version = o.customVersion || o.version;
-  const rootDir = path.join(__dirname, "..", "..", "..", "minecraft", "instances", o.clientName || "default");
+  const rootDir = path.join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "minecraft",
+    "instances",
+    o.clientName || "default"
+  );
   const dir = path.join(rootDir, "versions", version);
   fs.ensureDir(dir);
   if (msmc.errorCheck(o.authentication)) {
@@ -300,7 +307,17 @@ const startClient = async (o) => {
     //   height: o.height,
     //   fullscreen: o.fullscreen,
     // },
-    javaPath: path.join(__dirname, "..", "..", "..", "minecraft", "java", "OpenJDK17U", "bin", "javaw.exe"),
+    javaPath: path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "minecraft",
+      "java",
+      "OpenJDK17U",
+      "bin",
+      "javaw.exe"
+    ),
     overrides: {
       maxSockets: o.maxSockets || 3,
     },
