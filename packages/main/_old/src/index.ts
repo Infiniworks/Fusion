@@ -4,7 +4,7 @@ const ngrok = require("ngrok");
 const { Client } = require("minecraft-launcher-core");
 const msmc = require("msmc");
 const os = require("os");
-const DiscordRPC  = require("discord-rpc-patch");
+const DiscordRPC  = require("discord-rpc");
 const mcData = require("minecraft-data");
 const jsonfile = require("jsonfile");
 const fs = require("fs-extra");
@@ -14,7 +14,6 @@ const { promisify } = require("util");
 const { exec } = require("child_process");
 const extract = require("extract-zip");
 
-import { autoUpdater } from "electron";
 import got from "got";
 
 import * as util from "minecraft-server-util";
@@ -42,7 +41,6 @@ if (import.meta.env.PROD) {
     .then(() => import("electron-updater"))
     .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
     .catch((e) => console.error("Failed check updates:", e));
-  autoUpdater.quitAndInstall();
 }
 
 // Checks

@@ -5,7 +5,7 @@ dist
 thumbs.db
 minecraft
 minecraft/*
+.electron-builder.config.js
 
 .vscode
 .eslintcache
-*.didntAsk

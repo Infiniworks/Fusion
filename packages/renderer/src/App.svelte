@@ -1,106 +1,80 @@
 <script>
-import LeftBar from "./builtins/LeftBar.svelte";
-import RightBar from "./builtins/RightBar.svelte";
-import Page from "./builtins/Page.svelte";
-import TabBar from "./builtins/TabBar.svelte";
-import TitleBar from "./builtins/TitleBar.svelte";
-import 'simplebar';
+import TopBar from "./components/TopBar.svelte";
+import Profiles from "./components/Profiles.svelte";
+import Login from "./components/Login.svelte";
+import Settings from "./components/Settings.svelte";
+import Servers from "./components/Servers.svelte";
+import ProfileBar from "./components/ProfileBar.svelte";
+import MainPage from "./components/MainPage.svelte";
 </script>
 
-<main>
-	<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="../src/style.css">
-  <div class="fullPage">
-    <div id="titleBar" style = "flex-shrink: 0;">
-      <TitleBar/>
-    </div>
+<main class="body font-medium lining-nums">
+	<div class="topBar"><TopBar /></div>
+	<div class="top" style="flex: 1 0;">
+		<div class="login bg-cyan-700" style="flex: 4 0">
+			<Login></Login>
+		</div>
+		<div class="profiles bg-cyan-600"style="flex: 8 0">
+			Profiles Go Here<Profiles></Profiles>
+		</div>
+	</div>
+	<div class="main" style="flex: 4 0;">
+		<div class="left bg-cyan-600" style="flex: 4 0;">
+			Settings Will Be Here<Settings></Settings>	
+			Servers Here<Servers></Servers>
+		</div>
 
-    <div class = "container" style = "flex-shrink: 0;">
-      <div id="leftBar" data-simplebar style = "flex-shrink: 0; order: 1">
-        <p></p>
-        <LeftBar>
-        </LeftBar>
-      </div>
-      <div class = "pageFill" style = "flex-grow: 2; order: 2">
-        <div id="tabBar" style = "flex-shrink: 0;" >
-          <TabBar/>
-        </div>
-        <div id="page" style = "flex-grow: 1;">
-          <Page/>
-        </div>
-      </div>
-      <div id="rightBar" style = "flex-shrink: 0; order: 3">
-        <p></p>
-        <RightBar/>
-      </div>
-    </div>
-  </div>
+		<div class="right bg-cyan-500" style="flex: 8 0;">
+			<div>Profile Bar Here<ProfileBar></ProfileBar></div>
+			<div>Actual Page Here<MainPage></MainPage></div>
+		</div>
+	</div>
 </main>
+<TopBar/>
 
 <style>
 main {
-  	box-sizing: border-box;
-	width:100%;
-	height:calc(100vh);
-	/* border-radius: 10px; */
-	font-family: 'Nanum Gothic', sans-serif;
-	-webkit-app-region: no-drag;
-  	color: white;
- 	background-color: rgb(41, 41, 41);
-}
-.fullPage {
-	height: 100%;
-	display: flex;
-	align-items: stretch;
-	flex-direction: column;
-	flex: 1
-}
-.container {
-	display: flex;
-	align-items: stretch;
-	flex: 1
-}
-.pageFill {
-	height: 100%;
-	width: 100%;
-	display: flex;
-	align-items: stretch;
-	flex-direction: column;
-	flex: 1
-}
-div#titleBar {
 	background-color: rgb(0, 0, 0);
+	position: fixed;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	left:0px;
+	margin:0px;
+	padding:0px;
+	color: rgb(194, 214, 234);
+}
+.main {
+	display: flex;
+	flex-direction: row;
+}
+.body {
+	display: flex;
+	flex-direction: column;
+	flex: 1 0;
+	align-items: stretch;
+	margin: auto;
+	padding:0;
+}
+.top {
+	display: inline-flex;
+	background-color: #4d25eb;
+}
+.left {
+	display: inline-flex;
+	flex-direction: column;
+	/* background-color: #2d65bf; */
+}
+.right {
+	display: inline-flex;
+	flex-direction: column;
+	/* background-color: #3e7ed7; */
+}
+
+.topBar {
 	-webkit-app-region: drag;
-	/* border-radius: 10px 10px 0px 0px; */
 }
-div#tabBar {
-	background-color: rgb(34, 34, 34);
-	box-sizing: border-box;
-	height: 8%;
-	padding: 10px;
-	box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
-	clip-path: inset(0px 0px -15px 0px);
-}
-div#rightBar {
-	background-color: rgb(41, 41, 41);
-	padding: 25px;
-	width: 25%;
-	box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
-	clip-path: inset(0px 0px 0px -15px);
-	overflow: auto;
-}
-div#page {
-	background-color: rgb(64, 64, 64);
-	padding: 25px;
-	width: 100%;
-}
-div#leftBar {
-	background-color: rgb(41, 41, 41);
-	padding: 25px;
-	width: 25%;
-	height: 100vh;
-	box-shadow: 0 0 15px rgba(31, 31, 31, 0.363);
-	clip-path: inset(0px -15px 0px 0px);
-	overflow: auto;
+.login {
+	justify-content: center;
 }
 </style>
