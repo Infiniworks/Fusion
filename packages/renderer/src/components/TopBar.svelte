@@ -2,8 +2,8 @@
 </script>
 
 <main class="bg-cyan-800">
-    <button on:click={() => window.please.send("resize") }>❏</button>
-    <button on:click={() => window.please.send("destroy")}>🞭</button>
+    <button on:click={() => window.please.send("window","resize") }>❏</button>
+    <button on:click={() => window.please.send("window","destroy")}>🞭</button>
 </main>
 
 <style>

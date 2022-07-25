@@ -21,12 +21,17 @@ async function createWindow() {
   });
 
   browserWindow.on("ready-to-show", () => {
-    ipcMain.on("titlebar", (event, arg) => {
-      if (arg === "destroy") browserWindow.destroy();
-      else if (arg === "resize") {
-        if (browserWindow.isMaximized()) browserWindow.unmaximize();
-        else browserWindow.maximize();
-      }
+    ipcMain.on("greet", (event, command, arg1, arg2) => {
+      switch (command) {
+        case "window":
+          if (arg1 === "destroy") browserWindow.destroy();
+          else if (arg1 === "resize") {
+            if (browserWindow.isMaximized()) browserWindow.unmaximize();
+            else browserWindow.maximize();
+          }
+          arg2;
+          break;
+        }
     });
     ipcMain.on("reloadPage", () => {
       browserWindow.reload();
