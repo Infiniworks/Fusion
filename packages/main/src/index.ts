@@ -31,7 +31,7 @@ const modsList = [
   "ok-zoomer", // replaces "cf/logical-zoom"
   "c2me-fabric",
   "cloth-config",
-  "cull-leaves",
+  // "cull-leaves", 
   "dashloader",
   "entityculling",
   "fabric-api",
@@ -56,10 +56,10 @@ const modsList = [
   "cf/better-sodium-video-settings-button",
   "reeses-sodium-options",
   "cf/recipe-cache",
-  "forgetmechunk",
-  "cf/lazy-language-loader",
+  // "forgetmechunk",
+  //"cf/lazy-language-loader",
   "cf/enhanced-block-entities",
-  "cf/fastopenlinksandfolders",
+  // "cf/fastopenlinksandfolders",
   // cf/clumps@latest <-- any time?
   "appleskin",
   "amecs",
@@ -69,6 +69,17 @@ const modsList = [
   "indium",
   "cf/dark-loading-screen",
   "borderless-mining",
+
+  // Above is tested to work.
+
+  "morechathistory",
+  "cull-less-leaves",
+  "debugify",
+  "purpurclient",
+  "thorium",
+  "continuity",
+  // "midnightcontrols", <-- later update. incompat with bettercontrols
+  "language-reload",
 ];
 const launcher = new Client();
 const statuses = [
