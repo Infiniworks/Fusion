@@ -9,12 +9,10 @@ const msmc = require("msmc");
 const os = require("os");
 const DiscordRPC = require("discord-rpc-patch");
 const mcData = require("minecraft-data");
-const jsonfile = require("jsonfile");
 const fs = require("fs-extra");
 const { createWriteStream } = require("fs-extra");
 const stream = require("stream");
 const { promisify } = require("util");
-const { exec } = require("child_process");
 const extract = require("extract-zip");
 
 import * as path from "path";
@@ -25,12 +23,11 @@ import * as util from "minecraft-server-util";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
 const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
 );
 
 const modsList = [
   "better-controls/cf@1.18.2",
-  "better-rsqrt",
   "c2me-fabric",
   "cloth-config",
   "cull-leaves",
@@ -43,7 +40,7 @@ const modsList = [
   "krypton",
   "lambdynamiclights",
   "lazydfu",
-  "logical-zoom",
+  "logical-zoom/@1.18.2",
   "memoryleakfix",
   "modmenu",
   "moreculling",
@@ -146,7 +143,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default"
+    o.clientName || "default",
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -173,7 +170,7 @@ const startClient = async (o) => {
       "java",
       "OpenJDK17U",
       "bin",
-      "javaw.exe"
+      "javaw.exe",
     ),
     overrides: {
       maxSockets: o.maxSockets || 3,
@@ -225,19 +222,8 @@ const installJava = async (mcVersion) => {
 };
 
 const download = async (url, dest) => {
-  console.time(`Downloading ${url} took`);
-  const pipeline = await promisify(stream.pipeline);
   await fs.ensureFile(dest);
-  const downloadStream = got.stream(url);
-  const fileWriterStream = await createWriteStream(dest);
-  console.group(`Downloading ${url} to ${dest}`);
-  downloadStream.on("downloadProgress", ({ transferred, total, percent }) => {
-    const percentage = Math.round(percent * 100);
-    console.log(`${dest} Download: ${transferred}/${total} (${percentage}%)`);
-  });
-  console.groupEnd();
-  console.timeEnd(`Downloading ${url} took`);
-  await pipeline(downloadStream, fileWriterStream);
+  await promisify(stream.pipeline)(got.stream(url), await createWriteStream(dest));
 };
 
 const install = async (mods) => {
@@ -253,7 +239,7 @@ const install = async (mods) => {
   const versionsPath = path.join(
     instancesPath,
     "versions",
-    `${fabricLoaderName}-${mcVersion}`
+    `${fabricLoaderName}-${mcVersion}`,
   );
 
   // Safeguards
@@ -263,7 +249,8 @@ const install = async (mods) => {
 
   // Install Fabric
   const versionList = await getFabricLoaderArtifact(mcVersion, fabricVersion);
-  await installFabric(versionList, instancesPath);
+  await installFabric(versionList, instancesPath).then((result) => {console.log(result);});
+  console.log("Fabric installed!");
 
   // Install Mods
   for (const modIndex in mods) {
@@ -277,43 +264,49 @@ const install = async (mods) => {
         (splitInfo.length == 1 ? splitInfo[0] : mcVersion);
     }
     const mod0 = splitSource[0];
-    console.log(`${modPlatform} ${modVersion} (${mod0} as ${modIndex})`);
 
     if (modPlatform === "cf") {
-      console.log("Getting CurseForge Mod (its cringe)");
-      console.log(
-        `{searchFilter: ${mod0}, gameVersion: ${modVersion}, sortField: ModsSearchSortField.TOTAL_DOWNLOADS}`
-      );
-      (await cf.get_game("minecraft"))
-        .search_mods({
+      console.log(`Getting CringeForge ${modVersion} Mod!`);
+      (await cf.get_game("minecraft")).search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
           sortField: ModsSearchSortField.NAME,
         })
-        .then((mods) => {
-          for (const mod in mods) {
-            if (mods[mod]["slug"] == mod0) {
-              const latestFiles = mods[mod]["latestFiles"];
-              for (const latestFile in latestFiles) {
-                if (latestFile["downloadUrl"].includes("fabric")) {
-                  const downloadUrl = latestFile["downloadUrl"];
-                  download(downloadUrl, modsPath);
-                }
+      .then((mods) => {
+        for (const mod in mods) {
+          if (mods[mod]["slug"] == mod0) {
+            console.log(`${mod0} <== npm @ (node-curseforge)`);
+            const latestFiles = mods[mod]["latestFiles"];
+            for (const latestFile in latestFiles) {
+              const file = latestFiles[latestFile];
+              if(file["gameVersions"].includes("fabric")) {
+                const downloadURL = file["downloadUrl"];
+                const name = `${file["slug"]}-${file["slug"]}.jar`;
+                const fileName = path.join(modsPath, name);
+                download(downloadURL, fileName);
               }
             }
           }
-        });
+        }
+      });
     } else {
+      console.error(`Getting YayRinth ${modVersion || mcVersion} Mod!`);
       const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
         modVersion || mcVersion
       }"]`;
+      console.log(`${mod0} <== (${url})`);
       const response = await got(url);
-      console.log(`${mod0} @ ${url}`);
-      console.log(JSON.parse(response.body)[0]["files"][0]["url"]);
-      // await download(modsList[mod].url, path.join(versionsPath, mod + ".jar"));
+      const results = JSON.parse(response.body)[0];
+
+      if (results["loaders"].includes("fabric")) {
+        const downloadURL = results["files"][0]["url"];
+        const name = `${mod0}-${results["version_number"]}.jar`;
+        const fileName = path.join(modsPath, name);
+        await download(downloadURL, fileName);
+      }
     }
   }
-
+  console.log("Mods installed!");
   return {
     fabricName: fabName,
   };
