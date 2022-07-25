@@ -24,9 +24,11 @@ import got from "got";
 import * as util from "minecraft-server-util";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
-const cf = new Curseforge("$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW");
+const cf = new Curseforge(
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
+);
 
-const modsList = [ 
+const modsList = [
   "better-controls/cf@1.18.2",
   "better-rsqrt",
   "c2me-fabric",
@@ -126,12 +128,12 @@ const getServerStats = async (server, port) => {
 
 const login = async () => {
   await msmc
-  .fastLaunch("electron", (update) => {
-    console.log(update);
-  })
-  .then((result) => {
-    authResult = result;
-  });
+    .fastLaunch("electron", (update) => {
+      console.log(update);
+    })
+    .then((result) => {
+      authResult = result;
+    });
   return JSON.stringify(authResult);
 };
 
@@ -141,7 +143,11 @@ const startClient = async (o) => {
   // }
 
   // const version = o.customVersion || o.version;
-  const rootDir = path.join(minecraftPath, "instances", o.clientName || "default");
+  const rootDir = path.join(
+    minecraftPath,
+    "instances",
+    o.clientName || "default"
+  );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
 
@@ -162,18 +168,22 @@ const startClient = async (o) => {
       min: o.memMin,
       max: o.memMax,
     },
-    javaPath: path.join(minecraftPath, "java", "OpenJDK17U", "bin", "javaw.exe"),
+    javaPath: path.join(
+      minecraftPath,
+      "java",
+      "OpenJDK17U",
+      "bin",
+      "javaw.exe"
+    ),
     overrides: {
       maxSockets: o.maxSockets || 3,
     },
   };
 
-  
-
   console.log(`Starting Fusion Client ${version}!`);
   currentVersion = o.version;
   launcher.launch(opts);
-  
+
   launcher.on("debug", (e) => console.log(e));
   launcher.on("data", (e) => console.log(e));
   launcher.on("close", (e) => console.log("Closed:", e));
@@ -233,14 +243,18 @@ const download = async (url, dest) => {
 const install = async (mods) => {
   // Variables
   const fabricVersion = "0.14.8";
-  const mcVersion = 1.19+"";
+  const mcVersion = 1.19 + "";
   const fabricLoaderName = `fabric-loader-${fabricVersion}`;
-  const fabName = mcVersion+"-fabric"+fabricVersion;
+  const fabName = mcVersion + "-fabric" + fabricVersion;
 
   // Paths
   const instancesPath = path.join(minecraftPath, "instances", "default");
   const modsPath = path.join(instancesPath, "mods");
-  const versionsPath = path.join(instancesPath, "versions", `${fabricLoaderName}-${mcVersion}`);
+  const versionsPath = path.join(
+    instancesPath,
+    "versions",
+    `${fabricLoaderName}-${mcVersion}`
+  );
 
   // Safeguards
   fs.ensureDir(instancesPath);
@@ -258,31 +272,41 @@ const install = async (mods) => {
     if (splitSource.length > 1) {
       const splitInfo = splitSource[1].split("@");
       modPlatform = splitInfo.length > 1 ? splitInfo[0] : "mr";
-      modVersion =  (splitInfo.length > 1 ? splitInfo[1] : undefined) || (splitInfo.length == 1 ? splitInfo[0] : mcVersion); 
+      modVersion =
+        (splitInfo.length > 1 ? splitInfo[1] : undefined) ||
+        (splitInfo.length == 1 ? splitInfo[0] : mcVersion);
     }
     const mod0 = splitSource[0];
     console.log(`${modPlatform} ${modVersion} (${mod0} as ${modIndex})`);
-    
+
     if (modPlatform === "cf") {
       console.log("Getting CurseForge Mod (its cringe)");
-      console.log(`{searchFilter: ${mod0}, gameVersion: ${modVersion}, sortField: ModsSearchSortField.TOTAL_DOWNLOADS}`);
-      (await cf.get_game("minecraft")).search_mods({searchFilter: mod0, gameVersion: modVersion, sortField: ModsSearchSortField.NAME}).then((mods) => {
-        for (const mod in mods) {
-          if (mods[mod]["slug"] == mod0) {
-            const latestFiles = mods[mod]["latestFiles"];
-            for (const latestFile in latestFiles) {
-              if (latestFile["downloadUrl"].includes("fabric")) {
-                const downloadUrl = latestFile["downloadUrl"];
-                download(downloadUrl, modsPath);
+      console.log(
+        `{searchFilter: ${mod0}, gameVersion: ${modVersion}, sortField: ModsSearchSortField.TOTAL_DOWNLOADS}`
+      );
+      (await cf.get_game("minecraft"))
+        .search_mods({
+          searchFilter: mod0,
+          gameVersion: modVersion,
+          sortField: ModsSearchSortField.NAME,
+        })
+        .then((mods) => {
+          for (const mod in mods) {
+            if (mods[mod]["slug"] == mod0) {
+              const latestFiles = mods[mod]["latestFiles"];
+              for (const latestFile in latestFiles) {
+                if (latestFile["downloadUrl"].includes("fabric")) {
+                  const downloadUrl = latestFile["downloadUrl"];
+                  download(downloadUrl, modsPath);
+                }
               }
             }
-            
           }
-        }
-      });
-    }
-    else {
-      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${modVersion || mcVersion}"]`;
+        });
+    } else {
+      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
+        modVersion || mcVersion
+      }"]`;
       const response = await got(url);
       console.log(`${mod0} @ ${url}`);
       console.log(JSON.parse(response.body)[0]["files"][0]["url"]);
@@ -353,7 +377,6 @@ rpc.on("ready", () => {
 
 rpc.login({ clientId }).catch(console.error);
 
-
 // Big Daddy Handler v1
 // getAPI V1
 // BDH1
@@ -387,7 +410,7 @@ ipcMain.handle("get", async (event, command, arg1, arg2, arg3) => {
       return serverUrl;
     case "freeMemory":
       switch (arg1) {
-        case "B": 
+        case "B":
           return os.freemem();
         case "K":
           return Math.round(os.freemem() / 1024);

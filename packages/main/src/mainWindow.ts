@@ -31,7 +31,7 @@ async function createWindow() {
           }
           arg2;
           break;
-        }
+      }
     });
     ipcMain.on("reloadPage", () => {
       browserWindow.reload();
