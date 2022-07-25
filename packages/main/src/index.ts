@@ -68,6 +68,7 @@ const modsList = [
   "cf/kappa",
   "indium",
   "cf/dark-loading-screen",
+  "borderless-mining",
 ];
 const launcher = new Client();
 const statuses = [
