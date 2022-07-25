@@ -1,6 +1,8 @@
 # Fusion 2
 
-## UI version 2
+At a glance:
+Version: 0.2.4
+[![Linting 🧹](https://github.com/AarushX/Fusion/actions/workflows/lint.yml/badge.svg)](https://github.com/AarushX/Fusion/actions/workflows/lint.yml)
 
 🚀 A Minecraft Launcher that fuses performance and usability to achieve high levels of power! 🚀
 
