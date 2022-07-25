@@ -19,7 +19,7 @@ import MainPage from "./Components/MainPage.svelte";
 			Profiles Go Here<Profiles></Profiles>
 		</div>
 		<div class="launch bg-cyan-700"style="flex: 2 0">
-			Launch Here<Launch></Launch>
+			<Launch></Launch>
 		</div>
 	</div>
 	<div class="main" style="flex: 4 0;">
