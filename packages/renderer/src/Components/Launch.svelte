@@ -21,7 +21,7 @@ const getAuth = () => {
 }}>Start Client</button>
 
 <button class="mods" on:click={async () => {
-    window.please.get("installMods")
+    window.please.get("install")
 }}>CLOG mods</button>
 
 <style>

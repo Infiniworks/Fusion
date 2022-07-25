@@ -397,8 +397,8 @@ ipcMain.handle("get", async (event, command, arg1, arg2, arg3) => {
           return Math.round(os.freemem() / 1024 / 1024 / 1024);
       }
       break;
-    case "installMods":
-      await installMods(modsList);
+    case "install":
+      await install(modsList);
       break;
   }
 });
