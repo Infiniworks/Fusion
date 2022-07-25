@@ -23,7 +23,7 @@ import * as util from "minecraft-server-util";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
 const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
 );
 
 const modsList = [
@@ -143,7 +143,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default",
+    o.clientName || "default"
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -170,7 +170,7 @@ const startClient = async (o) => {
       "java",
       "OpenJDK17U",
       "bin",
-      "javaw.exe",
+      "javaw.exe"
     ),
     overrides: {
       maxSockets: o.maxSockets || 3,
@@ -223,7 +223,10 @@ const installJava = async (mcVersion) => {
 
 const download = async (url, dest) => {
   await fs.ensureFile(dest);
-  await promisify(stream.pipeline)(got.stream(url), await createWriteStream(dest));
+  await promisify(stream.pipeline)(
+    got.stream(url),
+    await createWriteStream(dest)
+  );
 };
 
 const install = async (mods) => {
@@ -242,7 +245,9 @@ const install = async (mods) => {
 
   // Install Fabric
   const versionList = await getFabricLoaderArtifact(mcVersion, fabricVersion);
-  await installFabric(versionList, instancesPath).then((result) => {console.log(result);});
+  await installFabric(versionList, instancesPath).then((result) => {
+    console.log(result);
+  });
   console.log("Fabric installed!");
 
   // Install Mods
@@ -259,34 +264,38 @@ const install = async (mods) => {
     const mod0 = splitSource[0];
 
     if (modPlatform === "cf") {
-      (await cf.get_game("minecraft")).search_mods({
+      (await cf.get_game("minecraft"))
+        .search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
           sortField: ModsSearchSortField.NAME,
         })
-      .then((mods) => {
-        for (const mod in mods) {
-          if (mods[mod]["slug"] == mod0) {
-            
-            const latestFiles = mods[mod]["latestFiles"];
-            for (const latestFile in latestFiles) {
-              const file = latestFiles[latestFile];
-              if(file["gameVersions"].includes("fabric")) {
-                const downloadURL = file["downloadUrl"];
-                const name = `${file["slug"]}-${file["slug"]}.jar`;
-                const fileName = path.join(modsPath, name);
-                if (!fs.pathExistsSync(fileName)) {
-                  console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
-                  console.log(`${mod0} <== npm @ (node-curseforge)`);
-                  download(downloadURL, fileName);
-                } else {
-                  console.error(`File ${fileName}} already exists! *CF`);
+        .then((mods) => {
+          for (const mod in mods) {
+            if (mods[mod]["slug"] == mod0) {
+              const latestFiles = mods[mod]["latestFiles"];
+              for (const latestFile in latestFiles) {
+                const file = latestFiles[latestFile];
+                if (file["gameVersions"].includes("fabric")) {
+                  const downloadURL = file["downloadUrl"];
+                  const name = `${file["slug"]}-${file["slug"]}.jar`;
+                  const fileName = path.join(modsPath, name);
+                  if (!fs.pathExistsSync(fileName)) {
+                    console.error(
+                      `Downloading CringeForge ${
+                        modVersion || mcVersion
+                      } Mod! *CF`
+                    );
+                    console.log(`${mod0} <== npm @ (node-curseforge)`);
+                    download(downloadURL, fileName);
+                  } else {
+                    console.error(`File ${fileName}} already exists! *CF`);
+                  }
                 }
               }
             }
           }
-        }
-      });
+        });
     } else {
       const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
         modVersion || mcVersion
@@ -299,7 +308,9 @@ const install = async (mods) => {
           const downloadURL = file["files"][0]["url"];
           const filename = path.join(modsPath, file["files"][0]["filename"]);
           if (!(await fs.pathExists(filename))) {
-            console.error(`Downloading YayRinth ${modVersion || mcVersion} Mod!`);
+            console.error(
+              `Downloading YayRinth ${modVersion || mcVersion} Mod!`
+            );
             console.log(`${mod0} <== (${url})`);
             download(downloadURL, filename);
           } else {
@@ -308,7 +319,6 @@ const install = async (mods) => {
           break;
         }
       }
-      
     }
   }
   console.log("Mods installed!");
