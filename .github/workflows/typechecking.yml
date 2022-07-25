@@ -1,4 +1,4 @@
-name: Typechecking
+name: Typechecks ☑️
 on:
   push:
     branches:
