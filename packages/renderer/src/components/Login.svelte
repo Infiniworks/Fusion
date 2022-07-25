@@ -6,7 +6,7 @@ let users, selected;
 
 async function login(username) {
     let data;
-    await window.api.login()
+    await window.please.get("login")
     .then((loginData) => {
         data = JSON.parse(loginData)
     })
@@ -23,6 +23,8 @@ async function login(username) {
         
         localStorage.setItem("users", users);
         localStorage.setItem("selected", username)
+
+        userListify();
         console.log("Sign-in Successful!");
     } 
 }
@@ -43,7 +45,7 @@ const logout = async (name) => {
     delete users[name]
     
     localStorage.setItem("users", JSON.stringify(users));
-    users = JSON.parse(localStorage.getItem("users"));
+    userListify();
 }
 
 const userListify = () => {

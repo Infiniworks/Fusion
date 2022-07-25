@@ -27,7 +27,7 @@ const cf = new Curseforge(
 );
 
 const modsList = [
-  "better-controls/cf@1.18.2",
+  "better-controls/cf",
   "c2me-fabric",
   "cloth-config",
   "cull-leaves",
@@ -230,22 +230,15 @@ const install = async (mods) => {
   // Variables
   const fabricVersion = "0.14.8";
   const mcVersion = 1.19 + "";
-  const fabricLoaderName = `fabric-loader-${fabricVersion}`;
   const fabName = mcVersion + "-fabric" + fabricVersion;
 
   // Paths
   const instancesPath = path.join(minecraftPath, "instances", "default");
   const modsPath = path.join(instancesPath, "mods");
-  const versionsPath = path.join(
-    instancesPath,
-    "versions",
-    `${fabricLoaderName}-${mcVersion}`,
-  );
 
   // Safeguards
   fs.ensureDir(instancesPath);
   fs.ensureDir(modsPath);
-  fs.ensureDir(versionsPath);
 
   // Install Fabric
   const versionList = await getFabricLoaderArtifact(mcVersion, fabricVersion);
@@ -266,7 +259,6 @@ const install = async (mods) => {
     const mod0 = splitSource[0];
 
     if (modPlatform === "cf") {
-      console.log(`Getting CringeForge ${modVersion} Mod!`);
       (await cf.get_game("minecraft")).search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
@@ -275,7 +267,7 @@ const install = async (mods) => {
       .then((mods) => {
         for (const mod in mods) {
           if (mods[mod]["slug"] == mod0) {
-            console.log(`${mod0} <== npm @ (node-curseforge)`);
+            
             const latestFiles = mods[mod]["latestFiles"];
             for (const latestFile in latestFiles) {
               const file = latestFiles[latestFile];
@@ -283,27 +275,40 @@ const install = async (mods) => {
                 const downloadURL = file["downloadUrl"];
                 const name = `${file["slug"]}-${file["slug"]}.jar`;
                 const fileName = path.join(modsPath, name);
-                download(downloadURL, fileName);
+                if (!fs.pathExistsSync(fileName)) {
+                  console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
+                  console.log(`${mod0} <== npm @ (node-curseforge)`);
+                  download(downloadURL, fileName);
+                } else {
+                  console.error(`File ${fileName}} already exists! *CF`);
+                }
               }
             }
           }
         }
       });
     } else {
-      console.error(`Getting YayRinth ${modVersion || mcVersion} Mod!`);
       const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
         modVersion || mcVersion
       }"]`;
-      console.log(`${mod0} <== (${url})`);
       const response = await got(url);
-      const results = JSON.parse(response.body)[0];
-
-      if (results["loaders"].includes("fabric")) {
-        const downloadURL = results["files"][0]["url"];
-        const name = `${mod0}-${results["version_number"]}.jar`;
-        const fileName = path.join(modsPath, name);
-        await download(downloadURL, fileName);
+      const results = JSON.parse(response.body);
+      for (const result in results) {
+        const file = results[result];
+        if (file["loaders"].includes("fabric")) {
+          const downloadURL = file["files"][0]["url"];
+          const filename = path.join(modsPath, file["files"][0]["filename"]);
+          if (!(await fs.pathExists(filename))) {
+            console.error(`Downloading YayRinth ${modVersion || mcVersion} Mod!`);
+            console.log(`${mod0} <== (${url})`);
+            download(downloadURL, filename);
+          } else {
+            console.error(`File ${filename}} already exists!`);
+          }
+          break;
+        }
       }
+      
     }
   }
   console.log("Mods installed!");
