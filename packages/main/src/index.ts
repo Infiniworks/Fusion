@@ -154,7 +154,13 @@ const login = async () => {
 const startClient = async (o) => {
   const installation = await install(modsList);
   const version = installation.fabricName;
-  const javaw = path.join(installation.javaPath, "bin", "javaw.exe");
+  let java;
+  if (process.platform === "darwin") {
+    java = path.join(installation.javaPath, "Contents", "Home", "bin", "java");
+  } else {
+    java = path.join(installation.javaPath, "bin", "javaw");
+  }
+  
   // }
 
   // const version = o.customVersion || o.version;
@@ -183,7 +189,7 @@ const startClient = async (o) => {
       min: o.memMin,
       max: o.memMax,
     },
-    javaPath: javaw,
+    javaPath: java,
     overrides: {
       maxSockets: o.maxSockets || 3,
     },
