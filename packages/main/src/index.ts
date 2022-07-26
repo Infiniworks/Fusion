@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
 import { Curseforge } from "node-curseforge";
+import _ from "lodash"; 
 
+const decompress = require("decompress");
 const { app, ipcMain } = require("electron");
 const ngrok = require("ngrok");
 const { Client } = require("minecraft-launcher-core");
@@ -13,7 +15,6 @@ const fs = require("fs-extra");
 const { createWriteStream } = require("fs-extra");
 const stream = require("stream");
 const { promisify } = require("util");
-const extract = require("extract-zip");
 
 import * as path from "path";
 import { autoUpdater } from "electron";
@@ -28,7 +29,6 @@ const cf = new Curseforge(
 
 const modsList = [
   "cf/better-controls",
-  "ok-zoomer", // replaces "cf/logical-zoom"
   "c2me-fabric",
   "cloth-config",
   // "cull-leaves", 
@@ -48,19 +48,18 @@ const modsList = [
   "no-chat-reports",
   "not-enough-animations",
   "notenoughcrashes",
+  "cf/logical-zoom", // replaces "cf/wi-zoom$3834808", // replaces "ok-zoomer$1.18.2$5.0.0-beta.5+1.18.2", 
   "smoothboot-fabric",
   "sodium",
   "sodium-extra",
   "starlight",
-
   "cf/better-sodium-video-settings-button",
   "reeses-sodium-options",
   "cf/recipe-cache",
   // "forgetmechunk",
-  //"cf/lazy-language-loader",
+  //"cf/lazy-language-loader", <-- replaced by language-reload
   "cf/enhanced-block-entities",
-  // "cf/fastopenlinksandfolders",
-  // cf/clumps@latest <-- any time?
+  // "cf/fastopenlinksandfolders", <-- replaced by debugify
   "appleskin",
   "amecs",
   "cf/perspective-mod-redux",
@@ -69,9 +68,6 @@ const modsList = [
   "indium",
   "cf/dark-loading-screen",
   "borderless-mining",
-
-  // Above is tested to work.
-
   "morechathistory",
   "cull-less-leaves",
   "debugify",
@@ -80,7 +76,23 @@ const modsList = [
   "continuity",
   // "midnightcontrols", <-- later update. incompat with bettercontrols
   "language-reload",
+  "cf/sodium-shadowy-path-blocks",
+
+  ////// EXTREMELY EXPERIMENTAL
+
+  "cf/vulkanmod", //added to if statements below for windows only
+
+  // add "windows_cf/vulkanmod" <-- example-- only for windows...'
+  // cf/clumps@latest <-- any time?
 ];
+
+if (process.platform === "win32") {
+  modsList.push("cf/vulkanmod");
+}
+if (process.platform === "darwin") {
+  // Do nothing
+}
+
 const launcher = new Client();
 const statuses = [
   "Enjoying a purple lollipop?",
@@ -115,9 +127,9 @@ if (!isSingleInstance) {
 }
 
 // Async Functions
-async function setActivity() {
+async function setActivity(activity) {
   rpc.setActivity({
-    details: `Playing ${currentVersion || "Launcher Screen"}`,
+    details: `Playing ${activity || "Launcher Screen"}`,
     state: `${statuses[Math.floor(Math.random() * statuses.length)]}`,
     buttons: [{ label: "Downloads", url: "https://github.com/AarushX/Fusion" }],
     startTimestamp,
@@ -153,8 +165,9 @@ const login = async () => {
 };
 
 const startClient = async (o) => {
-  // if (!(await fs.exists(path.join(dir)))) {
-  const version = (await install(modsList)).fabricName;
+  const installation = await install(modsList);
+  const version = installation.fabricName;
+  const javaw = path.join(installation.javaPath, "bin", "javaw.exe");
   // }
 
   // const version = o.customVersion || o.version;
@@ -183,13 +196,7 @@ const startClient = async (o) => {
       min: o.memMin,
       max: o.memMax,
     },
-    javaPath: path.join(
-      minecraftPath,
-      "java",
-      "OpenJDK17U",
-      "bin",
-      "javaw.exe",
-    ),
+    javaPath: javaw,
     overrides: {
       maxSockets: o.maxSockets || 3,
     },
@@ -197,11 +204,16 @@ const startClient = async (o) => {
 
   console.log(`Starting Fusion Client ${version}!`);
   currentVersion = o.version;
+  await setActivity(o.version);
   launcher.launch(opts);
-
+  console.log(`Total launch time: ${timerStop(true)}`);
   launcher.on("debug", (e) => console.log(e));
   launcher.on("data", (e) => console.log(e));
-  launcher.on("close", (e) => console.log("Closed:", e));
+  launcher.on("close", (e) => {
+    console.log("Closed:", e);
+    currentVersion = "Launcher Screen";
+    setActivity(currentVersion);
+  });
 };
 
 const start = async () => {
@@ -218,15 +230,25 @@ const awaitUrl = async () => {
   else return "urlServer fetch rejected";
 };
 
-const installJava = async () => {
-  const javaUrl = "https://api.adoptium.net/v3/assets/feature_releases/17/ga";
-  const result: JSON = await got(javaUrl).json();
-  const downloadLink = result[0]["binaries"][11]["package"]["link"];
-  const version = result[0]["binaries"][11]["scm_ref"];
-  const downDir = "./minecraft/java/downloading/" + version + ".zip";
-  await download(downloadLink, downDir);
-  await extract(downDir, { dir: "./minecraft/java" + version });
-  await fs.remove(downDir);
+let HRTimer = process.hrtime();
+
+const timerStart = () => {
+  HRTimer = process.hrtime(); // reset the timer
+};
+
+const timerStop = (c) => {
+  const time = `${HRTimer[0]} seconds ${(HRTimer[1]/1e6).toFixed(2)} milliseconds`;
+  if (c === true) {
+    HRTimer = process.hrtime(); // reset the timer
+    return time;
+  }
+  if (c === false) {
+    return time;
+  } else {
+    console.log(time);
+    return time;
+  }
+  
 };
 
 const download = async (url, dest) => {
@@ -235,10 +257,21 @@ const download = async (url, dest) => {
 };
 
 const install = async (mods) => {
+  timerStart();
   // Variables
   const fabricVersion = "0.14.8";
+  const javaVersion = "17";
+  const arch = process.arch.replace("arm", "aarch");
+
+  let os = process.platform + "";
   const mcVersion = 1.19 + "";
   let fabName = mcVersion + "-fabric" + fabricVersion;
+
+  if (os == "win32") {
+    os = "windows";
+  } else if (os == "darwin") {
+    os = "mac";
+  }
 
   // Paths
   const instancesPath = path.join(minecraftPath, "instances", "default");
@@ -253,12 +286,28 @@ const install = async (mods) => {
   await installFabric(versionList, instancesPath).then((result) => {
     fabName = result;
   });
-
   console.log("Fabric installed!");
+
+  // Install Java
+  const response = await got(
+    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
+  );
+  const info = JSON.parse(response.body)[0];
+  const filename = `jdk-${info.version.semver}-jre`;
+  
+  const javaTemp = path.join(minecraftPath, "java", "temp");
+  const javaPath = path.join(minecraftPath, "java", javaVersion);
+  if(!(await fs.pathExists(javaPath))){
+    await download(info.binary.package.link, path.join(javaTemp, `${filename}.zip`));
+    await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
+    await fs.move(path.join(javaTemp, filename), javaPath);
+    await fs.remove(path.join(javaTemp));
+  }
+  console.log("Java installed!");
 
   // Install Mods
   for (const modIndex in mods) {
-    let mod0, modPlatform, modVersion;
+    let mod0, modPlatform, modVersion, complexVersion;
 
     // Parse mod info
     const platformSPLT = mods[modIndex].split("cf/");
@@ -269,20 +318,28 @@ const install = async (mods) => {
       mod0 = platformSPLT[0];
       modPlatform = "mr";
     }
+    const complexSPLT = mod0.split("$");
     const versionSPLT = mod0.split("@");
     if (versionSPLT.length > 1) {
       modVersion = versionSPLT[1];
       mod0 = versionSPLT[0];
-    } else {
+    } else if (complexSPLT.length > 1) {
+      complexVersion = complexSPLT[2];
+      modVersion = complexSPLT[1];
+      mod0 = complexSPLT[0];
+    }
+    else {
       modVersion = mcVersion;
     }
-
+    
     // Check platforms and download accordingly
     if (modPlatform === "cf") {
       (await cf.get_game("minecraft")).search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
-          sortField: ModsSearchSortField.NAME,
+          sortField: 8,
+          index: 0,
+          pageSize: 5,
         })
       .then((mods) => {
         for (const mod in mods) {
@@ -299,7 +356,7 @@ const install = async (mods) => {
                   console.log(`${mod0} <== npm @ (node-curseforge)`);
                   download(downloadURL, filename);
                 } else {
-                  console.error(`File ${filename}} already exists! *CF`);
+                  console.error(`File ${filename} already exists! *CF`);
                 }
               }
             }
@@ -307,22 +364,21 @@ const install = async (mods) => {
         }
       });
     } else {
-      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
-        modVersion || mcVersion
-      }"]`;
+      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${modVersion || mcVersion}"]
+      &loaders=["fabric"]`;
       const response = await got(url);
       const results = JSON.parse(response.body);
       for (const result in results) {
         const file = results[result];
-        if (file["loaders"].includes("fabric")) {
-          let files = file["files"];
-          if (files.length > 1) {
-            files = file["files"].filter(x => x["primary"] == true);
+        if (!complexVersion || file["version_number"].includes(complexVersion)) { // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
+          let files = file["files"].filter(x => x["primary"] == true);
+          if (files.length < 1) {
+            files = file["files"];
           }
           const downloadURL = files[0]["url"];
           const filename = path.join(modsPath, files[0]["filename"]);
           if (!(await fs.pathExists(filename))) {
-            console.error(`Downloading YayRinth ${modVersion || mcVersion} Mod!`);
+            console.error(`Downloading Modrinth ${modVersion || mcVersion} Mod!`);
             console.log(`${mod0} <== (${url})`);
             download(downloadURL, filename);
           } else {
@@ -335,7 +391,12 @@ const install = async (mods) => {
     }
   }
   console.log("Mods installed!");
+  // Timer
+  console.log(`Installation time: ${timerStop(false)}`);
+
+  // Returns
   return {
+    javaPath: javaPath,
     fabricName: fabName,
   };
 };
@@ -389,10 +450,10 @@ app
 DiscordRPC.register(clientId);
 
 rpc.on("ready", () => {
-  setActivity();
+  setActivity(currentVersion);
 
   setInterval(() => {
-    setActivity();
+    setActivity(currentVersion);
   }, 6e4);
 });
 

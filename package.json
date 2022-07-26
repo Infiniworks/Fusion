@@ -57,6 +57,7 @@
     "autoprefixer": "^10.4.7",
     "axios": "^0.27.2",
     "core-js": "^3.24.0",
+    "decompress": "^4.2.1",
     "discord-rpc-patch": "^4.0.1",
     "electron-updater": "5.0.5",
     "fs-extra": "^10.1.0",

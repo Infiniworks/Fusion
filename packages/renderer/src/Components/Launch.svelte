@@ -19,6 +19,10 @@ const getAuth = () => {
     window.please.get("startClient", await getGameOpts())
 }}>Start Client</button>
 
+<button class="mods" on:click={async () => {
+    window.please.get("install")
+}}>CLOG mods</button>
+
 <style>
 button.launch {
     background-color: red;

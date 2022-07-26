@@ -1,12 +1,12 @@
 <script>
-import TopBar from "./Components/TopBar.svelte";
-import Profiles from "./Components/Profiles.svelte";
-import Login from "./Components/Login.svelte";
-import Launch from "./Components/Launch.svelte";
-import Settings from "./Components/Settings.svelte";
-import Servers from "./Components/Servers.svelte";
-import ProfileBar from "./Components/ProfileBar.svelte";
-import MainPage from "./Components/MainPage.svelte";
+import TopBar from "./components/TopBar.svelte";
+import Profiles from "./components/Profiles.svelte";
+import Login from "./components/Login.svelte";
+import Launch from "./components/Launch.svelte";
+import Settings from "./components/Settings.svelte";
+import Servers from "./components/Servers.svelte";
+import ProfileBar from "./components/ProfileBar.svelte";
+import MainPage from "./components/MainPage.svelte";
 </script>
 
 <main class="body font-medium lining-nums">
