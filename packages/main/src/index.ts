@@ -1,33 +1,32 @@
-const ngrok = require("ngrok");
-const os = require("os");
-const mcData = require("minecraft-data");
-const fs = require("fs-extra");
-const stream = require("stream");
-
+// ES Imports
+import got from "got";
 import * as path from "path";
 import * as util from "minecraft-server-util";
-
-// import _ from "lodash"; 
-import got from "got";
-import decompress from "decompress";
-import * as msmc from "msmc";
-import DiscordRPC from "discord-rpc-patch";
-
-import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
 import { Curseforge } from "node-curseforge";
-import { app, ipcMain } from "electron";
-import { Client } from "minecraft-launcher-core";
-import { createWriteStream } from "fs-extra";
-import { autoUpdater } from "electron-updater";
-import { promisify } from "util";
+import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
 import { restoreOrCreateWindow } from "/@/mainWindow";
+// Const Imports
+const decompress = require("decompress");
+const DiscordRPC = require("discord-rpc-patch");
+const fs = require("fs-extra");
+const mcData = require("minecraft-data");
+const msmc = require("msmc");
+const ngrok = require("ngrok");
+const os = require("os");
+const stream = require("stream");
+const { autoUpdater } = require("electron-updater");
+const { app, ipcMain } = require("electron");
+const { Client } = require("minecraft-launcher-core");
+const { createWriteStream } = require("fs-extra");
+const { promisify } = require("util");
+
 
 const cf = new Curseforge(
   "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
 );
 
 const modsList = [
-  "cf/better-controls",
+  "cf/better-controls", 
   "c2me-fabric",
   "cloth-config",
   // "cull-leaves", 
@@ -173,7 +172,7 @@ const startClient = async (o) => {
   }
 
   const opts = {
-    clientPackage: "Fusion",
+    clientPackage: null,
     authorization: msmc.getMCLC().getAuth(o.authentication),
     root: rootDir,
     version: {
@@ -422,7 +421,7 @@ rpc.on("ready", () => {
 rpc.login({ clientId }).catch(console.error);
 
 // Big Daddy Handler v1
-ipcMain.handle("get", async (event, command, arg1, arg2, arg3) => {
+ipcMain.handle("get", async (event, command, arg1, arg2) => {
   switch (command) {
     case "devmode":
       return process.env.IS_DEV === "true";
