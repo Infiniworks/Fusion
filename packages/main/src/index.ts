@@ -1,26 +1,25 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
-import { Curseforge } from "node-curseforge";
-import _ from "lodash"; 
-
-const decompress = require("decompress");
-const { app, ipcMain } = require("electron");
 const ngrok = require("ngrok");
-const { Client } = require("minecraft-launcher-core");
-const msmc = require("msmc");
 const os = require("os");
-const DiscordRPC = require("discord-rpc-patch");
 const mcData = require("minecraft-data");
 const fs = require("fs-extra");
-const { createWriteStream } = require("fs-extra");
 const stream = require("stream");
-const { promisify } = require("util");
-const { autoUpdater } = require("electron-builder");
 
 import * as path from "path";
-import got from "got";
-
 import * as util from "minecraft-server-util";
+
+// import _ from "lodash"; 
+import got from "got";
+import decompress from "decompress";
+import * as msmc from "msmc";
+import DiscordRPC from "discord-rpc-patch";
+
+import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
+import { Curseforge } from "node-curseforge";
+import { app, ipcMain } from "electron";
+import { Client } from "minecraft-launcher-core";
+import { createWriteStream } from "fs-extra";
+import { autoUpdater } from "electron-updater";
+import { promisify } from "util";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 
 const cf = new Curseforge(
@@ -174,7 +173,7 @@ const startClient = async (o) => {
   }
 
   const opts = {
-    clientPackage: null,
+    clientPackage: "Fusion",
     authorization: msmc.getMCLC().getAuth(o.authentication),
     root: rootDir,
     version: {

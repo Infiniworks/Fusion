@@ -3,6 +3,7 @@
   "author": "Alpha Upstream Corporation",
   "description": "A Minecraft client for the best experience.",
   "private": true,
+  "version": "1.0.0",
   "engines": {
     "node": ">=v16.13",
     "npm": ">=8.1"
