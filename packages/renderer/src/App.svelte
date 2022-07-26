@@ -67,25 +67,35 @@ main {
 .top {
 	display: inline-flex;
 	background-color: #4d25eb;
+	box-shadow: 0 0 15px rgba(0,0,0,0.75);
+	clip-path: inset(0px 0px -15px 0px);
 }
 .left {
 	display: inline-flex;
 	flex-direction: column;
+	padding:10px;
 	/* background-color: #2d65bf; */
 }
 .right {
 	display: inline-flex;
 	flex-direction: column;
+	padding:10px;
 	/* background-color: #3e7ed7; */
 }
 
 .topBar {
 	-webkit-app-region: drag;
+	box-shadow: 0 0 15px rgba(0,0,0,0.75);
+	clip-path: inset(0px 0px -15px 0px);
 }
 .login {
 	justify-content: center;
 }
 .launch {
+	justify-content: center;
+}
+.profiles {
+	padding:10px;
 	justify-content: center;
 }
 </style>

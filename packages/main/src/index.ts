@@ -15,14 +15,14 @@ const fs = require("fs-extra");
 const { createWriteStream } = require("fs-extra");
 const stream = require("stream");
 const { promisify } = require("util");
+const { autoUpdater } = require("electron-builder");
 
 import * as path from "path";
-import { autoUpdater } from "electron";
 import got from "got";
 
 import * as util from "minecraft-server-util";
 import { restoreOrCreateWindow } from "/@/mainWindow";
-import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
+
 const cf = new Curseforge(
   "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
 );
@@ -56,7 +56,7 @@ const modsList = [
   "cf/better-sodium-video-settings-button",
   "reeses-sodium-options",
   "cf/recipe-cache",
-  // "forgetmechunk",
+  // "forgetmechunk", <-- replaced by debugify
   //"cf/lazy-language-loader", <-- replaced by language-reload
   "cf/enhanced-block-entities",
   // "cf/fastopenlinksandfolders", <-- replaced by debugify
@@ -80,14 +80,14 @@ const modsList = [
 
   ////// EXTREMELY EXPERIMENTAL
 
-  "cf/vulkanmod", //added to if statements below for windows only
+  //"cf/vulkanmod@1.18.2", //added to if statements below for windows only
 
   // add "windows_cf/vulkanmod" <-- example-- only for windows...'
   // cf/clumps@latest <-- any time?
 ];
 
 if (process.platform === "win32") {
-  modsList.push("cf/vulkanmod");
+  modsList.push("cf/vulkanmod@1.18.2");
 }
 if (process.platform === "darwin") {
   // Do nothing
@@ -110,15 +110,6 @@ const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 
 let currentVersion, serverUrl, authResult;
 
-// Auto Updater
-if (import.meta.env.PROD) {
-  app
-    .whenReady()
-    .then(() => import("electron-updater"))
-    .then(({ autoUpdater }) => autoUpdater.checkForUpdatesAndNotify())
-    .catch((e) => console.error("Failed check updates:", e));
-  autoUpdater.quitAndInstall();
-}
 
 // Checks
 if (!isSingleInstance) {
@@ -155,9 +146,7 @@ const getServerStats = async (server, port) => {
 
 const login = async () => {
   await msmc
-    .fastLaunch("electron", (update) => {
-      console.log(update);
-    })
+    .fastLaunch("electron")
     .then((result) => {
       authResult = result;
     });
@@ -400,36 +389,6 @@ const install = async (mods) => {
     fabricName: fabName,
   };
 };
-// const install = async (type, installDir, version, rootDir) => {
-//   if (type == "fabric") {
-//     const fabricPath = installDir + "/fabric-installer.jar";
-//     console.log(`Downloading Fabric to ${fabricPath}`);
-//     await fs.ensureFile(fabricPath);
-//     // xhr.open("GET", "https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml"); <-- Gets latest version
-
-//     download(
-//       "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.11.0/fabric-installer-0.11.0.jar",
-//       fabricPath,
-//     ).then(() => {
-//       console.log(`Installing Fabric from ${installDir} to ${rootDir}`);
-//       const cmd = `${path.join(
-//         __dirname + "../../../../minecraft/java/OpenJDK17U/bin/javaw.exe",
-//       )} -jar ${fabricPath} client -dir "${rootDir}" -mcversion ${version} -noprofile`;
-//       exec(cmd, (error, stdout, stderr) => {
-//         if (error) {
-//           console.log(`error: ${error.message}`);
-//           return;
-//         }
-//         if (stderr) {
-//           console.log(`stderr: ${stderr}`);
-//           return;
-//         }
-//         console.log(`stdout: ${stdout}`);
-//       });
-//       return;
-//     });
-//   }
-// };
 
 app.on("second-instance", restoreOrCreateWindow);
 
@@ -442,10 +401,14 @@ app.on("activate", restoreOrCreateWindow);
 app
   .whenReady()
   .then(() => {
+    if (import.meta.env.PROD) {
+      autoUpdater.checkForUpdatesAndNotify();
+    }
+    
     restoreOrCreateWindow();
     start();
   })
-  .catch((e) => console.error("Failed create window:", e));
+  .catch((e) => console.error("Failed:", e));
 
 DiscordRPC.register(clientId);
 
@@ -460,8 +423,6 @@ rpc.on("ready", () => {
 rpc.login({ clientId }).catch(console.error);
 
 // Big Daddy Handler v1
-// getAPI V1
-// BDH1
 ipcMain.handle("get", async (event, command, arg1, arg2, arg3) => {
   switch (command) {
     case "devmode":
@@ -501,9 +462,6 @@ ipcMain.handle("get", async (event, command, arg1, arg2, arg3) => {
         case "G":
           return Math.round(os.freemem() / 1024 / 1024 / 1024);
       }
-      break;
-    case "install":
-      await install(modsList);
       break;
   }
 });

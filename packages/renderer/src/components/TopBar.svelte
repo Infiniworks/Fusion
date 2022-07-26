@@ -15,6 +15,7 @@ main {
     justify-content: right;
     flex-wrap: wrap;
     color: white;
-    /* background-color: #000000; */
+    box-shadow: 0 0 5px rgba(0,0,0,0.75);
+	clip-path: inset(0px 0px -5px 0px);
 }
 </style>

@@ -71,16 +71,18 @@ onMount(() => {
     {#key users}
         {#if users}
             {#each users as [name, data]}
-                <button on:click={
+            <div class:selected="{name == selected}">
+                <button class="user" on:click={
                     async () => {
                         select(name)
                     }
-                } class:selected="{name == selected}">{name}</button>
-                <button on:click={
+                }>{name}</button>
+                <button class="logout" on:click={
                     async () => {
                         logout(name)
                     }
-                } class:selectedModifier="{name == selected}">Logout</button><br>
+                }>Logout</button><br>
+            </div>
             {/each}
         {/if}
     {/key}
@@ -88,18 +90,32 @@ onMount(() => {
 
 <style>
 .login {
-    background-color: aquamarine;
-    color: black;
+    background-color: #0d6076;
+    color: white;
+    width:100%;
+    transition: all 1.75s;
+}
+.login:hover {
+    background-color: #0d5062;
+    color: white;
+    width:100%;
 }
 .selected {
-    background-color: red;
-}
-.selectedModifier {
-    background-color: orangered;
+    background-color: #0a86a8;
+    box-shadow: 0 0 4px rgba(0,0,0,0.75);
 }
 .userHead {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 100%;
     float: left;
+}
+.logout {
+    float:right;
+    background-color: #0b7593;
+    padding: 5px;
+}
+.user {
+    font-weight: bold;
+    padding: 5px;
 }
 </style>
