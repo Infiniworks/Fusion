@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
 import { Curseforge } from "node-curseforge";
-import _ from "lodash"; 
+import _ from "lodash";
 
 const decompress = require("decompress");
 const { app, ipcMain } = require("electron");
@@ -24,14 +24,14 @@ import * as util from "minecraft-server-util";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
 const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
 );
 
 const modsList = [
   "cf/better-controls",
   "c2me-fabric",
   "cloth-config",
-  // "cull-leaves", 
+  // "cull-leaves",
   "dashloader",
   "entityculling",
   "fabric-api",
@@ -48,7 +48,7 @@ const modsList = [
   "no-chat-reports",
   "not-enough-animations",
   "notenoughcrashes",
-  "cf/logical-zoom", // replaces "cf/wi-zoom$3834808", // replaces "ok-zoomer$1.18.2$5.0.0-beta.5+1.18.2", 
+  "cf/logical-zoom", // replaces "cf/wi-zoom$3834808", // replaces "ok-zoomer$1.18.2$5.0.0-beta.5+1.18.2",
   "smoothboot-fabric",
   "sodium",
   "sodium-extra",
@@ -174,7 +174,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default",
+    o.clientName || "default"
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -237,7 +237,9 @@ const timerStart = () => {
 };
 
 const timerStop = (c) => {
-  const time = `${HRTimer[0]} seconds ${(HRTimer[1]/1e6).toFixed(2)} milliseconds`;
+  const time = `${HRTimer[0]} seconds ${(HRTimer[1] / 1e6).toFixed(
+    2
+  )} milliseconds`;
   if (c === true) {
     HRTimer = process.hrtime(); // reset the timer
     return time;
@@ -248,12 +250,14 @@ const timerStop = (c) => {
     console.log(time);
     return time;
   }
-  
 };
 
 const download = async (url, dest) => {
   await fs.ensureFile(dest);
-  await promisify(stream.pipeline)(got.stream(url), await createWriteStream(dest));
+  await promisify(stream.pipeline)(
+    got.stream(url),
+    await createWriteStream(dest)
+  );
 };
 
 const install = async (mods) => {
@@ -290,15 +294,18 @@ const install = async (mods) => {
 
   // Install Java
   const response = await got(
-    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
+    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`
   );
   const info = JSON.parse(response.body)[0];
   const filename = `jdk-${info.version.semver}-jre`;
-  
+
   const javaTemp = path.join(minecraftPath, "java", "temp");
   const javaPath = path.join(minecraftPath, "java", javaVersion);
-  if(!(await fs.pathExists(javaPath))){
-    await download(info.binary.package.link, path.join(javaTemp, `${filename}.zip`));
+  if (!(await fs.pathExists(javaPath))) {
+    await download(
+      info.binary.package.link,
+      path.join(javaTemp, `${filename}.zip`)
+    );
     await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
     await fs.move(path.join(javaTemp, filename), javaPath);
     await fs.remove(path.join(javaTemp));
@@ -327,58 +334,70 @@ const install = async (mods) => {
       complexVersion = complexSPLT[2];
       modVersion = complexSPLT[1];
       mod0 = complexSPLT[0];
-    }
-    else {
+    } else {
       modVersion = mcVersion;
     }
-    
+
     // Check platforms and download accordingly
     if (modPlatform === "cf") {
-      (await cf.get_game("minecraft")).search_mods({
+      (await cf.get_game("minecraft"))
+        .search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
           sortField: 8,
           index: 0,
           pageSize: 5,
         })
-      .then((mods) => {
-        for (const mod in mods) {
-          if (mods[mod]["slug"] == mod0) {
-            const latestFiles = mods[mod]["latestFiles"];
-            for (const latestFile in latestFiles) {
-              const file = latestFiles[latestFile];
-              if(file["gameVersions"].includes("Fabric")) {
-                const downloadURL = file["downloadUrl"];
-                const name = file["fileName"];
-                const filename = path.join(modsPath, name);
-                if (!fs.pathExistsSync(filename)) {
-                  console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
-                  console.log(`${mod0} <== npm @ (node-curseforge)`);
-                  download(downloadURL, filename);
-                } else {
-                  console.error(`File ${filename} already exists! *CF`);
+        .then((mods) => {
+          for (const mod in mods) {
+            if (mods[mod]["slug"] == mod0) {
+              const latestFiles = mods[mod]["latestFiles"];
+              for (const latestFile in latestFiles) {
+                const file = latestFiles[latestFile];
+                if (file["gameVersions"].includes("Fabric")) {
+                  const downloadURL = file["downloadUrl"];
+                  const name = file["fileName"];
+                  const filename = path.join(modsPath, name);
+                  if (!fs.pathExistsSync(filename)) {
+                    console.error(
+                      `Downloading CringeForge ${
+                        modVersion || mcVersion
+                      } Mod! *CF`
+                    );
+                    console.log(`${mod0} <== npm @ (node-curseforge)`);
+                    download(downloadURL, filename);
+                  } else {
+                    console.error(`File ${filename} already exists! *CF`);
+                  }
                 }
               }
             }
           }
-        }
-      });
+        });
     } else {
-      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${modVersion || mcVersion}"]
+      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
+        modVersion || mcVersion
+      }"]
       &loaders=["fabric"]`;
       const response = await got(url);
       const results = JSON.parse(response.body);
       for (const result in results) {
         const file = results[result];
-        if (!complexVersion || file["version_number"].includes(complexVersion)) { // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
-          let files = file["files"].filter(x => x["primary"] == true);
+        if (
+          !complexVersion ||
+          file["version_number"].includes(complexVersion)
+        ) {
+          // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
+          let files = file["files"].filter((x) => x["primary"] == true);
           if (files.length < 1) {
             files = file["files"];
           }
           const downloadURL = files[0]["url"];
           const filename = path.join(modsPath, files[0]["filename"]);
           if (!(await fs.pathExists(filename))) {
-            console.error(`Downloading Modrinth ${modVersion || mcVersion} Mod!`);
+            console.error(
+              `Downloading Modrinth ${modVersion || mcVersion} Mod!`
+            );
             console.log(`${mod0} <== (${url})`);
             download(downloadURL, filename);
           } else {
@@ -387,7 +406,6 @@ const install = async (mods) => {
           break;
         }
       }
-      
     }
   }
   console.log("Mods installed!");
