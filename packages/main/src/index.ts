@@ -400,7 +400,10 @@ app
   .whenReady()
   .then(() => {
     if (import.meta.env.PROD) {
+      console.log("Checking for updates:");
       autoUpdater.checkForUpdatesAndNotify();
+    } else {
+      console.log("Running in development mode.");
     }
     
     restoreOrCreateWindow();

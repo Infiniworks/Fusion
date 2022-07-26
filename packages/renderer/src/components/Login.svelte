@@ -93,7 +93,7 @@ onMount(() => {
     background-color: #0d6076;
     color: white;
     width:100%;
-    transition: all 1.75s;
+    transition: background-color 1.75s;
 }
 .login:hover {
     background-color: #0d5062;
@@ -114,8 +114,15 @@ onMount(() => {
     background-color: #0b7593;
     padding: 5px;
 }
+.logout:hover {
+    color: white;
+}
 .user {
     font-weight: bold;
     padding: 5px;
+}
+.user:hover {
+    background-color: #08b2e100;
+    color: white;
 }
 </style>
