@@ -1,9 +1,9 @@
 # Fusion 2
 
 At a glance:
-Version: 0.2.4
+Version: 0.2.5\
 [![Linting 🧹](https://github.com/AarushX/Fusion/actions/workflows/lint.yml/badge.svg)](https://github.com/AarushX/Fusion/actions/workflows/lint.yml)
-
+[![DeepSource](https://deepsource.io/gh/AarushX/Fusion.svg/?label=active+issues&show_trend=true&token=dyOe6GJWZL3NswABhXgW9MyR)](https://deepsource.io/gh/AarushX/Fusion/?ref=repository-badge)\
 🚀 A Minecraft Launcher that fuses performance and usability to achieve high levels of power! 🚀
 
 Enjoy benefits such as a modern UI, fast performance, and special features such as:
