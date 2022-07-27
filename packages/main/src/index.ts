@@ -22,7 +22,7 @@ const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 
 const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
 );
 
 const modsList = [
@@ -143,7 +143,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default"
+    o.clientName || "default",
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -210,8 +210,7 @@ const download = async (url, dest) => {
   await fs.ensureFile(dest);
   await promisify(stream.pipeline)(
     got.stream(url),
-    await createWriteStream(dest)
-  );
+    await createWriteStream(dest));
 };
 
 const install = async (mods) => {
@@ -247,7 +246,7 @@ const install = async (mods) => {
 
   // Install Java
   const response = await got(
-    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`
+    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
   );
   const info = JSON.parse(response.body)[0];
   const filename = `jdk-${info.version.semver}-jre`;
@@ -257,7 +256,7 @@ const install = async (mods) => {
   if (!(await fs.pathExists(javaPath))) {
     await download(
       info.binary.package.link,
-      path.join(javaTemp, `${filename}.zip`)
+      path.join(javaTemp, `${filename}.zip`),
     );
     await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
     await fs.move(path.join(javaTemp, filename), javaPath);
@@ -308,7 +307,7 @@ const install = async (mods) => {
             for (const latestFile in latestFiles) {
               const file = mods[mod][latestFile];
               console.log(file);
-              if(file["gameVersions"].includes("Fabric") || file["gameVersions"].includes("fabric")) {
+              if(file["gameVersions"].includes("Fabric")) {
                 const downloadURL = file["downloadUrl"];
                 const name = file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
                 const filename = path.join(modsPath, name);
@@ -345,7 +344,7 @@ const install = async (mods) => {
           const filename = path.join(modsPath, files[0]["filename"]);
           if (!(await fs.pathExists(filename))) {
             console.error(
-              `Downloading Modrinth ${modVersion || mcVersion} Mod!`
+              `Downloading Modrinth ${modVersion || mcVersion} Mod!`,
             );
             console.log(`${mod0} <== (${url})`);
             download(downloadURL, filename);
