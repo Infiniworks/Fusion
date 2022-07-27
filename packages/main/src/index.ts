@@ -451,7 +451,7 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     case "version":
       switch (arg1) {
         case "minecraft":
-          return currentVersion || "Launcher Screen";
+          return currentVersion || "Launcher";
       }
       break;
     case "url":
