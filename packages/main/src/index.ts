@@ -186,8 +186,8 @@ const startClient = async (o) => {
       custom: version,
     },
     memory: {
-      min: o.memMin,
-      max: o.memMax,
+      min: 1024 || o.memMin,
+      max: 3072 || o.memMax,
     },
     javaPath: java,
     overrides: {
