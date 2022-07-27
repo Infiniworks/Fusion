@@ -26,7 +26,7 @@ const cf = new Curseforge(
 );
 
 const modsList = [
-  "cf/better-controls", 
+  "cf/better-controls",
   "cf/sodium-shadowy-path-blocks",
   "cf/custom-splash-screen@1.18.2",
   "cf/vulkanmod",
@@ -180,9 +180,12 @@ const startClient = async (o) => {
   launcher.on("data", (e) => {
     console.log(e);
     if (e.includes("Sound engine started")) {
-      console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
+      console.error(
+        `Total Launch Time taken: ${(performance.now() - startTime).toFixed(
+          2
+        )}ms`
+      );
     }
-    
   });
   launcher.on("close", (e) => {
     console.log("Closed:", e);
@@ -204,7 +207,6 @@ const awaitUrl = async () => {
   if (urlServer) return urlServer;
   else return "urlServer fetch rejected";
 };
-
 
 const download = async (url, dest) => {
   await fs.ensureFile(dest);
@@ -301,28 +303,37 @@ const install = async (mods) => {
           sortField: ModsSearchSortField.NAME,
           //slug: mod0,
         })
-      .then((mods) => {
-        for (const mod in mods) {
-          if (mods[mod]["slug"] == mod0) {
-            const latestFiles = mods[mod]["latestFiles"];
-            for (const latestFile in latestFiles) {
-              const file = mods[mod][latestFile];
-              console.log(file);
-              if(file["gameVersions"].includes("Fabric") || file["gameVersions"].includes("fabric")) {
-                const downloadURL = file["downloadUrl"];
-                const name = file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
-                const filename = path.join(modsPath, name);
-                if (!fs.pathExistsSync(filename)) {
-                  console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
-                  console.log(`${mod0} <== npm @ (node-curseforge)`);
-                  download(downloadURL, filename);
-                } else {
-                  console.error(`File ${filename} already exists! *CF`);
+        .then((mods) => {
+          for (const mod in mods) {
+            if (mods[mod]["slug"] == mod0) {
+              const latestFiles = mods[mod]["latestFiles"];
+              for (const latestFile in latestFiles) {
+                const file = mods[mod][latestFile];
+                console.log(file);
+                if (
+                  file["gameVersions"].includes("Fabric") ||
+                  file["gameVersions"].includes("fabric")
+                ) {
+                  const downloadURL = file["downloadUrl"];
+                  const name =
+                    file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
+                  const filename = path.join(modsPath, name);
+                  if (!fs.pathExistsSync(filename)) {
+                    console.error(
+                      `Downloading CringeForge ${
+                        modVersion || mcVersion
+                      } Mod! *CF`
+                    );
+                    console.log(`${mod0} <== npm @ (node-curseforge)`);
+                    download(downloadURL, filename);
+                  } else {
+                    console.error(`File ${filename} already exists! *CF`);
+                  }
                 }
               }
             }
           }
-      }});
+        });
     } else {
       const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
         modVersion || mcVersion
