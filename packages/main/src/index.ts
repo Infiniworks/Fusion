@@ -27,9 +27,10 @@ const cf = new Curseforge(
 
 const modsList = [
   "cf/better-controls", 
+  "cf/sodium-shadowy-path-blocks",
+  "cf/custom-splash-screen@1.18.2",
   "c2me-fabric",
   "cloth-config",
-  // "cull-leaves", 
   "dashloader",
   "entityculling",
   "fabric-api",
@@ -46,7 +47,7 @@ const modsList = [
   "no-chat-reports",
   "not-enough-animations",
   "notenoughcrashes",
-  "cf/logical-zoom", // replaces "cf/wi-zoom$3834808", // replaces "ok-zoomer$1.18.2$5.0.0-beta.5+1.18.2", 
+  "cf/logical-zoom",
   "smoothboot-fabric",
   "sodium",
   "sodium-extra",
@@ -54,10 +55,7 @@ const modsList = [
   "cf/better-sodium-video-settings-button",
   "reeses-sodium-options",
   "cf/recipe-cache",
-  // "forgetmechunk", <-- replaced by debugify
-  //"cf/lazy-language-loader", <-- replaced by language-reload
   "cf/enhanced-block-entities",
-  // "cf/fastopenlinksandfolders", <-- replaced by debugify
   "appleskin",
   "amecs",
   "cf/perspective-mod-redux",
@@ -72,16 +70,7 @@ const modsList = [
   "purpurclient",
   "thorium",
   "continuity",
-  // "midnightcontrols", <-- later update. incompat with bettercontrols
   "language-reload",
-  "cf/sodium-shadowy-path-blocks",
-
-  ////// EXTREMELY EXPERIMENTAL
-
-  //"cf/vulkanmod@1.18.2", //added to if statements below for windows only
-
-  // add "windows_cf/vulkanmod" <-- example-- only for windows...'
-  // cf/clumps@latest <-- any time?
 ];
 
 if (process.platform === "win32") {
@@ -107,7 +96,6 @@ const isSingleInstance = app.requestSingleInstanceLock();
 const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 
 let currentVersion, serverUrl, authResult;
-
 
 // Checks
 if (!isSingleInstance) {
@@ -152,6 +140,7 @@ const login = async () => {
 };
 
 const startClient = async (o) => {
+  const startTime = performance.now();
   const installation = await install(modsList);
   const version = installation.fabricName;
   let java;
@@ -160,8 +149,6 @@ const startClient = async (o) => {
   } else {
     java = path.join(installation.javaPath, "bin", "javaw");
   }
-  
-  // }
 
   // const version = o.customVersion || o.version;
   const rootDir = path.join(
@@ -195,13 +182,20 @@ const startClient = async (o) => {
     },
   };
 
-  console.log(`Starting Fusion Client ${version}!`);
+  console.error(`Starting Fusion Client ${version}!`);
   currentVersion = o.version;
   await setActivity(o.version);
+  console.error(`Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
   launcher.launch(opts);
-  console.log(`Total launch time: ${timerStop(true)}`);
   launcher.on("debug", (e) => console.log(e));
-  launcher.on("data", (e) => console.log(e));
+  launcher.on("data", (e) => {
+    console.log(e);
+    if (e.includes("Sound engine started")) {
+      console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
+    }
+    
+  }
+  );
   launcher.on("close", (e) => {
     console.log("Closed:", e);
     currentVersion = "Launcher Screen";
@@ -223,26 +217,6 @@ const awaitUrl = async () => {
   else return "urlServer fetch rejected";
 };
 
-let HRTimer = process.hrtime();
-
-const timerStart = () => {
-  HRTimer = process.hrtime(); // reset the timer
-};
-
-const timerStop = (c) => {
-  const time = `${HRTimer[0]} seconds ${(HRTimer[1]/1e6).toFixed(2)} milliseconds`;
-  if (c === true) {
-    HRTimer = process.hrtime(); // reset the timer
-    return time;
-  }
-  if (c === false) {
-    return time;
-  } else {
-    console.log(time);
-    return time;
-  }
-  
-};
 
 const download = async (url, dest) => {
   await fs.ensureFile(dest);
@@ -250,7 +224,6 @@ const download = async (url, dest) => {
 };
 
 const install = async (mods) => {
-  timerStart();
   // Variables
   const fabricVersion = "0.14.8";
   const javaVersion = "17";
@@ -385,7 +358,6 @@ const install = async (mods) => {
   }
   console.log("Mods installed!");
   // Timer
-  console.log(`Installation time: ${timerStop(false)}`);
 
   // Returns
   return {
@@ -405,6 +377,7 @@ app.on("activate", restoreOrCreateWindow);
 app
   .whenReady()
   .then(() => {
+    console.log("App is ready!");
     if (import.meta.env.PROD) {
       console.log("Checking for updates:");
       autoUpdater.checkForUpdatesAndNotify();
