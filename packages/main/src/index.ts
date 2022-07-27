@@ -203,6 +203,17 @@ const download = async (url, dest) => {
   await pipeline(downloadStream, fileWriterStream);
 };
 
+// const arrayOfPromises = foo.map((n)  => {
+//   return yourDownloadFunction(n);
+// })
+
+// console.log("arrayOfPromises", arrayOfPromises)
+
+// Promise.all(arrayOfPromises).then((values) => {
+// console.log(values);
+// });
+
+
 const install = async (mods) => {
   // Variables
   const fabricVersion = "0.14.8";
@@ -222,28 +233,20 @@ const install = async (mods) => {
   // Paths
   const instancesPath = path.join(minecraftPath, "instances", "default");
   const modsPath = path.join(instancesPath, "mods");
+  const javaTemp = path.join(minecraftPath, "java", "temp");
+  const javaPath = path.join(minecraftPath, "java", javaVersion);
 
   // Safeguards
   fs.ensureDir(instancesPath);
   fs.ensureDir(modsPath);
 
-  // Install Fabric
-  const versionList = await getFabricLoaderArtifact(mcVersion, fabricVersion);
-  await installFabric(versionList, instancesPath).then((result) => {
-    fabName = result;
-  });
-  console.log("Fabric installed!");
-
   // Install Java
-  const response = await got(
-    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
-  );
-  const info = JSON.parse(response.body)[0];
-  const filename = `jdk-${info.version.semver}-jre`;
-
-  const javaTemp = path.join(minecraftPath, "java", "temp");
-  const javaPath = path.join(minecraftPath, "java", javaVersion);
   if (!(await fs.pathExists(javaPath))) {
+    const response = await got(
+      `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
+    );
+    const info = JSON.parse(response.body)[0];
+    const filename = `jdk-${info.version.semver}-jre`;
     await download(
       info.binary.package.link,
       path.join(javaTemp, `${filename}.zip`),
@@ -253,6 +256,13 @@ const install = async (mods) => {
     await fs.remove(path.join(javaTemp));
   }
   console.log("Java installed!");
+
+  // Install Fabric
+  const versionList = await getFabricLoaderArtifact(mcVersion, fabricVersion);
+  await installFabric(versionList, instancesPath).then((result) => {
+    fabName = result;
+  });
+  console.log("Fabric installed!");
 
   // Install Mods
   for (const modIndex in mods) {
@@ -280,67 +290,13 @@ const install = async (mods) => {
     } else {
       modVersion = mcVersion;
     }
+    const versions = [modVersion, complexVersion, mcVersion];
 
     // Check platforms and download accordingly
     if (modPlatform === "cf") {
-      const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${modVersion}&modLoaderType=fabric&slug=${mod0}`;
-      const response = await got(url,{
-        headers: {
-          "x-api-key": "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
-        },
-      });
-      const mods = JSON.parse(response.body);
-      const data = mods["data"][0];
-      if (data["slug"] == mod0) {
-        const latestFiles = data["latestFiles"];
-        for (const latestFile in latestFiles) {
-          const file = data["latestFiles"][latestFile];
-          if(file["gameVersions"].includes("Fabric")) {
-            const downloadURL = file["downloadUrl"];
-            const name = file["fileName"] || `${file["slug"]}-${file["id"]}.jar`;
-            const filename = path.join(modsPath, name);
-            if (!fs.pathExistsSync(filename)) {
-              console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
-              console.log(`${mod0} <== npm @ (node-curseforge)`);
-              download(downloadURL, filename);
-            } else {
-              console.error(`File ${filename} already exists! *CF`);
-            }
-          }
-        }
-      }
+      await getCurseforgeMod(mod0, modsPath, versions);
     } else {
-      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
-        modVersion || mcVersion
-      }"]
-      &loaders=["fabric"]`;
-      const response = await got(url);
-      const results = JSON.parse(response.body);
-      for (const result in results) {
-        const file = results[result];
-        if (
-          !complexVersion ||
-          file["version_number"].includes(complexVersion)
-        ) {
-          // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
-          let files = file["files"].filter((x) => x["primary"] == true);
-          if (files.length < 1) {
-            files = file["files"];
-          }
-          const downloadURL = files[0]["url"];
-          const filename = path.join(modsPath, files[0]["filename"]);
-          if (!(await fs.pathExists(filename))) {
-            console.error(
-              `Downloading Modrinth ${modVersion || mcVersion} Mod!`,
-            );
-            console.log(`${mod0} <== (${url})`);
-            download(downloadURL, filename);
-          } else {
-            console.error(`File ${filename} already exists!`);
-          }
-          break;
-        }
-      }
+      await getModrinthMod(mod0, modsPath, versions);
     }
   }
   console.log("Mods installed!");
@@ -388,6 +344,79 @@ rpc.on("ready", () => {
 });
 
 rpc.login({ clientId }).catch(console.error);
+
+const getCurseforgeMod = async (mod0, modsPath, versions) => {
+  const modVersion = versions[0];
+  const complexVersion = versions[1];
+  const mcVersion = versions[2];
+
+  if (complexVersion) {
+    console.warn("Complex Versioning is incompatible for Curseforge Mods.");
+  }
+  const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${modVersion}&slug=${mod0}`;
+  const response = await got(url,{
+    headers: {
+      "x-api-key": "$2a$10$rb7JRBpgV5mt33y9zxOcouYDxQFE4jj9xK5bZsKd.uky8LdZTgTuO",
+    },
+  });
+  const mods = JSON.parse(response.body);
+  const data = mods["data"][0];
+  if (data["slug"] == mod0) {
+    const latestFiles = data["latestFiles"];
+    for (const latestFile in latestFiles) {
+      const file = data["latestFiles"][latestFile];
+      if(file["gameVersions"].includes("Fabric")) {
+        const downloadURL = file["downloadUrl"];
+        const name = file["fileName"] || `${file["slug"]}-${file["id"]}.jar`;
+        const filename = path.join(modsPath, name);
+        if (!fs.pathExistsSync(filename)) {
+          console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
+          console.log(`${mod0} <== npm @ (node-curseforge)`);
+          download(downloadURL, filename);
+        } else {
+          console.error(`File ${filename} already exists! *CF`);
+        }
+      }
+    }
+  }
+};
+
+const getModrinthMod = async (mod0, modsPath, versions) => {
+  const modVersion = versions[0];
+  const complexVersion = versions[1];
+  const mcVersion = versions[2];
+  const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
+    modVersion || mcVersion
+  }"]
+  &loaders=["fabric"]`;
+  const response = await got(url);
+  const results = JSON.parse(response.body);
+  for (const result in results) {
+    const file = results[result];
+    if (
+      !complexVersion ||
+      file["version_number"].includes(complexVersion)
+    ) {
+      // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
+      let files = file["files"].filter((x) => x["primary"] == true);
+      if (files.length < 1) {
+        files = file["files"];
+      }
+      const downloadURL = files[0]["url"];
+      const filename = path.join(modsPath, files[0]["filename"]);
+      if (!(await fs.pathExists(filename))) {
+        console.error(
+          `Downloading Modrinth ${modVersion || mcVersion} Mod!`,
+        );
+        console.log(`${mod0} <== (${url})`);
+        download(downloadURL, filename);
+      } else {
+        console.error(`File ${filename} already exists!`);
+      }
+      break;
+    }
+  }
+};
 
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
