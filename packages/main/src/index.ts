@@ -29,6 +29,16 @@ const modsList = [
   "cf/better-controls", 
   "cf/sodium-shadowy-path-blocks",
   "cf/custom-splash-screen@1.18.2",
+  "cf/vulkanmod",
+  // "gh/xCollateral_VulkanMod$latest",
+  "cf/logical-zoom",
+  "cf/better-sodium-video-settings-button",
+  "cf/recipe-cache",
+  "cf/enhanced-block-entities",
+  "cf/perspective-mod-redux",
+  "cf/kappa",
+  "cf/dark-loading-screen",
+
   "c2me-fabric",
   "cloth-config",
   "dashloader",
@@ -47,22 +57,15 @@ const modsList = [
   "no-chat-reports",
   "not-enough-animations",
   "notenoughcrashes",
-  "cf/logical-zoom",
   "smoothboot-fabric",
   "sodium",
   "sodium-extra",
   "starlight",
-  "cf/better-sodium-video-settings-button",
   "reeses-sodium-options",
-  "cf/recipe-cache",
-  "cf/enhanced-block-entities",
   "appleskin",
   "amecs",
-  "cf/perspective-mod-redux",
   "dynamic-fps",
-  "cf/kappa",
   "indium",
-  "cf/dark-loading-screen",
   "borderless-mining",
   "morechathistory",
   "cull-less-leaves",
@@ -194,8 +197,7 @@ const startClient = async (o) => {
       console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
     }
     
-  }
-  );
+  });
   launcher.on("close", (e) => {
     console.log("Closed:", e);
     currentVersion = "Launcher Screen";
@@ -276,16 +278,17 @@ const install = async (mods) => {
     let mod0, modPlatform, modVersion, complexVersion;
 
     // Parse mod info
-    const platformSPLT = mods[modIndex].split("cf/");
+    const platformSPLT = mods[modIndex].split("/");
     if (platformSPLT.length > 1) {
       mod0 = platformSPLT[1];
-      modPlatform = "cf";
+      modPlatform = platformSPLT[0];
     } else {
       mod0 = platformSPLT[0];
       modPlatform = "mr";
     }
     const complexSPLT = mod0.split("$");
     const versionSPLT = mod0.split("@");
+
     if (versionSPLT.length > 1) {
       modVersion = versionSPLT[1];
       mod0 = versionSPLT[0];
