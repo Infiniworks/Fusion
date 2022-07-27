@@ -5,6 +5,7 @@ import * as util from "minecraft-server-util";
 import { Curseforge } from "node-curseforge";
 import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
 import { restoreOrCreateWindow } from "/@/mainWindow";
+import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
 // Const Imports
 const decompress = require("decompress");
 const DiscordRPC = require("discord-rpc-patch");
@@ -306,19 +307,18 @@ const install = async (mods) => {
       (await cf.get_game("minecraft")).search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
-          sortField: 8,
-          index: 0,
-          pageSize: 5,
+          sortField: ModsSearchSortField.NAME,
         })
       .then((mods) => {
         for (const mod in mods) {
           if (mods[mod]["slug"] == mod0) {
             const latestFiles = mods[mod]["latestFiles"];
             for (const latestFile in latestFiles) {
-              const file = latestFiles[latestFile];
-              if(file["gameVersions"].includes("Fabric")) {
+              const file = mods[mod][latestFile];
+              console.log(file);
+              if(file["gameVersions"].includes("Fabric") || file["gameVersions"].includes("fabric")) {
                 const downloadURL = file["downloadUrl"];
-                const name = file["fileName"];
+                const name = file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
                 const filename = path.join(modsPath, name);
                 if (!fs.pathExistsSync(filename)) {
                   console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
