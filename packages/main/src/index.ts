@@ -93,7 +93,7 @@ const statuses = [
   "Pure, powerful bondoonglery",
   "Disco with a Purple Grape.",
 ];
-const clientId = "999073734486925382";
+const clientId =  "1001858478618447952";
 const rpc = new DiscordRPC.Client({ transport: "ipc" });
 const startTimestamp = new Date();
 const isSingleInstance = app.requestSingleInstanceLock();
@@ -115,9 +115,6 @@ async function setActivity(activity) {
     buttons: [{ label: "Downloads", url: "https://github.com/AarushX/Fusion" }],
     startTimestamp,
     largeImageKey: "fusion",
-    largeImageText: "Try Fusion out!",
-    smallImageKey: "sun",
-    smallImageText: "Starlike Performance!",
   });
 }
 
@@ -308,6 +305,7 @@ const install = async (mods) => {
           searchFilter: mod0,
           gameVersion: modVersion,
           sortField: ModsSearchSortField.NAME,
+          slug: mod0,
         })
       .then((mods) => {
         for (const mod in mods) {
