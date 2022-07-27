@@ -92,14 +92,6 @@ if (process.platform === "darwin") {
 }
 
 const launcher = new Client();
-const statuses = [
-  "Enjoying a purple lollipop?",
-  "Parkour with an Orange Fruit.",
-  "Technoblade Never Dies.",
-  "Minecraft Anyone?",
-  "Pure, powerful bondoonglery",
-  "Disco with a Purple Grape.",
-];
 const clientId = "999073734486925382";
 const rpc = new DiscordRPC.Client({ transport: "ipc" });
 const startTimestamp = new Date();
@@ -119,13 +111,9 @@ if (!isSingleInstance) {
 async function setActivity(activity) {
   rpc.setActivity({
     details: `Playing ${activity || "Launcher Screen"}`,
-    state: `${statuses[Math.floor(Math.random() * statuses.length)]}`,
     buttons: [{ label: "Downloads", url: "https://github.com/AarushX/Fusion" }],
     startTimestamp,
     largeImageKey: "fusion",
-    largeImageText: "Try Fusion out!",
-    smallImageKey: "sun",
-    smallImageText: "Starlike Performance!",
   });
 }
 
@@ -197,7 +185,7 @@ const startClient = async (o) => {
 
   console.log(`Starting Fusion Client ${version}!`);
   currentVersion = o.version;
-  await setActivity(o.version);
+  await setActivity('Minecraft ' + o.version);
   launcher.launch(opts);
   console.log(`Total launch time: ${timerStop(true)}`);
   launcher.on("debug", (e) => console.log(e));
