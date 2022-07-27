@@ -2,10 +2,8 @@
 import got from "got";
 import * as path from "path";
 import * as util from "minecraft-server-util";
-import { Curseforge } from "node-curseforge";
 import { installFabric, getFabricLoaderArtifact } from "@xmcl/installer";
 import { restoreOrCreateWindow } from "/@/mainWindow";
-import { ModsSearchSortField } from "node-curseforge/dist/objects/enums";
 // Const Imports
 const decompress = require("decompress");
 const DiscordRPC = require("discord-rpc-patch");
@@ -21,23 +19,14 @@ const { Client } = require("minecraft-launcher-core");
 const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 
-const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
-);
-
 const modsList = [
-  "cf/better-controls", 
+  // "cf/better-controls", 
   "cf/sodium-shadowy-path-blocks",
   "cf/custom-splash-screen@1.18.2",
-  "cf/vulkanmod",
-  // "gh/xCollateral_VulkanMod$latest",
   "cf/logical-zoom",
-  "cf/better-sodium-video-settings-button",
   "cf/recipe-cache",
   "cf/enhanced-block-entities",
-  "cf/perspective-mod-redux",
   "cf/kappa",
-  "cf/dark-loading-screen",
 
   "c2me-fabric",
   "cloth-config",
@@ -77,7 +66,7 @@ const modsList = [
 ];
 
 if (process.platform === "win32") {
-  modsList.push("cf/vulkanmod@1.18.2");
+  // Also do nothing
 }
 if (process.platform === "darwin") {
   // Do nothing
@@ -207,10 +196,11 @@ const awaitUrl = async () => {
 
 
 const download = async (url, dest) => {
+  const pipeline = await promisify(stream.pipeline);
   await fs.ensureFile(dest);
-  await promisify(stream.pipeline)(
-    got.stream(url),
-    await createWriteStream(dest));
+  const downloadStream = got.stream(url);
+  const fileWriterStream = await createWriteStream(dest);
+  await pipeline(downloadStream, fileWriterStream);
 };
 
 const install = async (mods) => {
@@ -293,35 +283,32 @@ const install = async (mods) => {
 
     // Check platforms and download accordingly
     if (modPlatform === "cf") {
-      (await cf.get_game("minecraft"))
-        .search_mods({
-          searchFilter: mod0,
-          gameVersion: modVersion,
-          sortField: ModsSearchSortField.NAME,
-          //slug: mod0,
-        })
-      .then((mods) => {
-        for (const mod in mods) {
-          if (mods[mod]["slug"] == mod0) {
-            const latestFiles = mods[mod]["latestFiles"];
-            for (const latestFile in latestFiles) {
-              const file = mods[mod][latestFile];
-              console.log(file);
-              if(file["gameVersions"].includes("Fabric")) {
-                const downloadURL = file["downloadUrl"];
-                const name = file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
-                const filename = path.join(modsPath, name);
-                if (!fs.pathExistsSync(filename)) {
-                  console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
-                  console.log(`${mod0} <== npm @ (node-curseforge)`);
-                  download(downloadURL, filename);
-                } else {
-                  console.error(`File ${filename} already exists! *CF`);
-                }
-              }
+      const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${modVersion}&modLoaderType=fabric&slug=${mod0}`;
+      const response = await got(url,{
+        headers: {
+          "x-api-key": "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
+        },
+      });
+      const mods = JSON.parse(response.body);
+      const data = mods["data"][0];
+      if (data["slug"] == mod0) {
+        const latestFiles = data["latestFiles"];
+        for (const latestFile in latestFiles) {
+          const file = data["latestFiles"][latestFile];
+          if(file["gameVersions"].includes("Fabric")) {
+            const downloadURL = file["downloadUrl"];
+            const name = file["fileName"] || `${file["slug"]}-${file["id"]}.jar`;
+            const filename = path.join(modsPath, name);
+            if (!fs.pathExistsSync(filename)) {
+              console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
+              console.log(`${mod0} <== npm @ (node-curseforge)`);
+              download(downloadURL, filename);
+            } else {
+              console.error(`File ${filename} already exists! *CF`);
             }
           }
-      }});
+        }
+      }
     } else {
       const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
         modVersion || mcVersion
