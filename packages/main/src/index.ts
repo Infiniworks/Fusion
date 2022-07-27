@@ -21,9 +21,8 @@ const { Client } = require("minecraft-launcher-core");
 const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 
-
 const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
 );
 
 const modsList = [
@@ -85,15 +84,7 @@ if (process.platform === "darwin") {
 }
 
 const launcher = new Client();
-const statuses = [
-  "Enjoying a purple lollipop?",
-  "Parkour with an Orange Fruit.",
-  "Technoblade Never Dies.",
-  "Minecraft Anyone?",
-  "Pure, powerful bondoonglery",
-  "Disco with a Purple Grape.",
-];
-const clientId =  "1001858478618447952";
+const clientId = "1001858478618447952";
 const rpc = new DiscordRPC.Client({ transport: "ipc" });
 const startTimestamp = new Date();
 const isSingleInstance = app.requestSingleInstanceLock();
@@ -111,7 +102,6 @@ if (!isSingleInstance) {
 async function setActivity(activity) {
   rpc.setActivity({
     details: `Playing ${activity || "Launcher Screen"}`,
-    state: `${statuses[Math.floor(Math.random() * statuses.length)]}`,
     buttons: [{ label: "Downloads", url: "https://github.com/AarushX/Fusion" }],
     startTimestamp,
     largeImageKey: "fusion",
@@ -132,11 +122,9 @@ const getServerStats = async (server, port) => {
 };
 
 const login = async () => {
-  await msmc
-    .fastLaunch("electron")
-    .then((result) => {
-      authResult = result;
-    });
+  await msmc.fastLaunch("electron").then((result) => {
+    authResult = result;
+  });
   return JSON.stringify(authResult);
 };
 
@@ -155,7 +143,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default",
+    o.clientName || "default"
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -174,8 +162,8 @@ const startClient = async (o) => {
       custom: version,
     },
     memory: {
-      min: o.memMin,
-      max: o.memMax,
+      min: 1024 || o.memMin,
+      max: 3072 || o.memMax,
     },
     javaPath: java,
     overrides: {
@@ -185,7 +173,7 @@ const startClient = async (o) => {
 
   console.error(`Starting Fusion Client ${version}!`);
   currentVersion = o.version;
-  await setActivity(o.version);
+  await setActivity("Minecraft " + o.version);
   console.error(`Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
   launcher.launch(opts);
   launcher.on("debug", (e) => console.log(e));
@@ -220,7 +208,10 @@ const awaitUrl = async () => {
 
 const download = async (url, dest) => {
   await fs.ensureFile(dest);
-  await promisify(stream.pipeline)(got.stream(url), await createWriteStream(dest));
+  await promisify(stream.pipeline)(
+    got.stream(url),
+    await createWriteStream(dest)
+  );
 };
 
 const install = async (mods) => {
@@ -256,15 +247,18 @@ const install = async (mods) => {
 
   // Install Java
   const response = await got(
-    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
+    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`
   );
   const info = JSON.parse(response.body)[0];
   const filename = `jdk-${info.version.semver}-jre`;
-  
+
   const javaTemp = path.join(minecraftPath, "java", "temp");
   const javaPath = path.join(minecraftPath, "java", javaVersion);
-  if(!(await fs.pathExists(javaPath))){
-    await download(info.binary.package.link, path.join(javaTemp, `${filename}.zip`));
+  if (!(await fs.pathExists(javaPath))) {
+    await download(
+      info.binary.package.link,
+      path.join(javaTemp, `${filename}.zip`)
+    );
     await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
     await fs.move(path.join(javaTemp, filename), javaPath);
     await fs.remove(path.join(javaTemp));
@@ -294,18 +288,18 @@ const install = async (mods) => {
       complexVersion = complexSPLT[2];
       modVersion = complexSPLT[1];
       mod0 = complexSPLT[0];
-    }
-    else {
+    } else {
       modVersion = mcVersion;
     }
-    
+
     // Check platforms and download accordingly
     if (modPlatform === "cf") {
-      (await cf.get_game("minecraft")).search_mods({
+      (await cf.get_game("minecraft"))
+        .search_mods({
           searchFilter: mod0,
           gameVersion: modVersion,
           sortField: ModsSearchSortField.NAME,
-          slug: mod0,
+          //slug: mod0,
         })
       .then((mods) => {
         for (const mod in mods) {
@@ -328,24 +322,31 @@ const install = async (mods) => {
               }
             }
           }
-        }
-      });
+      }});
     } else {
-      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${modVersion || mcVersion}"]
+      const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
+        modVersion || mcVersion
+      }"]
       &loaders=["fabric"]`;
       const response = await got(url);
       const results = JSON.parse(response.body);
       for (const result in results) {
         const file = results[result];
-        if (!complexVersion || file["version_number"].includes(complexVersion)) { // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
-          let files = file["files"].filter(x => x["primary"] == true);
+        if (
+          !complexVersion ||
+          file["version_number"].includes(complexVersion)
+        ) {
+          // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
+          let files = file["files"].filter((x) => x["primary"] == true);
           if (files.length < 1) {
             files = file["files"];
           }
           const downloadURL = files[0]["url"];
           const filename = path.join(modsPath, files[0]["filename"]);
           if (!(await fs.pathExists(filename))) {
-            console.error(`Downloading Modrinth ${modVersion || mcVersion} Mod!`);
+            console.error(
+              `Downloading Modrinth ${modVersion || mcVersion} Mod!`
+            );
             console.log(`${mod0} <== (${url})`);
             download(downloadURL, filename);
           } else {
@@ -354,7 +355,6 @@ const install = async (mods) => {
           break;
         }
       }
-      
     }
   }
   console.log("Mods installed!");
@@ -385,7 +385,7 @@ app
     } else {
       console.log("Running in development mode.");
     }
-    
+
     restoreOrCreateWindow();
     start();
   })
