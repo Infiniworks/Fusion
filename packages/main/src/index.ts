@@ -22,11 +22,11 @@ const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 
 const cf = new Curseforge(
-  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW",
+  "$2a$10$Qdq6OGz.jQstDijKEkly0ee.XXygyKvZIakSvUyRcc1NLad7rT6fW"
 );
 
 const modsList = [
-  "cf/better-controls", 
+  "cf/better-controls",
   "cf/sodium-shadowy-path-blocks",
   "cf/custom-splash-screen@1.18.2",
   "cf/vulkanmod",
@@ -143,7 +143,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default",
+    o.clientName || "default"
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -180,9 +180,12 @@ const startClient = async (o) => {
   launcher.on("data", (e) => {
     console.log(e);
     if (e.includes("Sound engine started")) {
-      console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
+      console.error(
+        `Total Launch Time taken: ${(performance.now() - startTime).toFixed(
+          2
+        )}ms`
+      );
     }
-    
   });
   launcher.on("close", (e) => {
     console.log("Closed:", e);
@@ -205,12 +208,12 @@ const awaitUrl = async () => {
   else return "urlServer fetch rejected";
 };
 
-
 const download = async (url, dest) => {
   await fs.ensureFile(dest);
   await promisify(stream.pipeline)(
     got.stream(url),
-    await createWriteStream(dest));
+    await createWriteStream(dest)
+  );
 };
 
 const install = async (mods) => {
@@ -246,7 +249,7 @@ const install = async (mods) => {
 
   // Install Java
   const response = await got(
-    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
+    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`
   );
   const info = JSON.parse(response.body)[0];
   const filename = `jdk-${info.version.semver}-jre`;
@@ -256,7 +259,7 @@ const install = async (mods) => {
   if (!(await fs.pathExists(javaPath))) {
     await download(
       info.binary.package.link,
-      path.join(javaTemp, `${filename}.zip`),
+      path.join(javaTemp, `${filename}.zip`)
     );
     await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
     await fs.move(path.join(javaTemp, filename), javaPath);
@@ -300,28 +303,34 @@ const install = async (mods) => {
           sortField: ModsSearchSortField.NAME,
           //slug: mod0,
         })
-      .then((mods) => {
-        for (const mod in mods) {
-          if (mods[mod]["slug"] == mod0) {
-            const latestFiles = mods[mod]["latestFiles"];
-            for (const latestFile in latestFiles) {
-              const file = mods[mod][latestFile];
-              console.log(file);
-              if(file["gameVersions"].includes("Fabric")) {
-                const downloadURL = file["downloadUrl"];
-                const name = file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
-                const filename = path.join(modsPath, name);
-                if (!fs.pathExistsSync(filename)) {
-                  console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
-                  console.log(`${mod0} <== npm @ (node-curseforge)`);
-                  download(downloadURL, filename);
-                } else {
-                  console.error(`File ${filename} already exists! *CF`);
+        .then((mods) => {
+          for (const mod in mods) {
+            if (mods[mod]["slug"] == mod0) {
+              const latestFiles = mods[mod]["latestFiles"];
+              for (const latestFile in latestFiles) {
+                const file = mods[mod][latestFile];
+                console.log(file);
+                if (file["gameVersions"].includes("Fabric")) {
+                  const downloadURL = file["downloadUrl"];
+                  const name =
+                    file["fileName"] || `${file["slug"]}-${file["slug"]}.jar`;
+                  const filename = path.join(modsPath, name);
+                  if (!fs.pathExistsSync(filename)) {
+                    console.error(
+                      `Downloading CringeForge ${
+                        modVersion || mcVersion
+                      } Mod! *CF`
+                    );
+                    console.log(`${mod0} <== npm @ (node-curseforge)`);
+                    download(downloadURL, filename);
+                  } else {
+                    console.error(`File ${filename} already exists! *CF`);
+                  }
                 }
               }
             }
           }
-      }});
+        });
     } else {
       const url = `https://api.modrinth.com/v2/project/${mod0}/version?game_versions=["${
         modVersion || mcVersion
@@ -344,7 +353,7 @@ const install = async (mods) => {
           const filename = path.join(modsPath, files[0]["filename"]);
           if (!(await fs.pathExists(filename))) {
             console.error(
-              `Downloading Modrinth ${modVersion || mcVersion} Mod!`,
+              `Downloading Modrinth ${modVersion || mcVersion} Mod!`
             );
             console.log(`${mod0} <== (${url})`);
             download(downloadURL, filename);
