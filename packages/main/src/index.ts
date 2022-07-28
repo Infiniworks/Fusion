@@ -131,7 +131,7 @@ const startClient = async (o) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    o.clientName || "default",
+    o.clientName || "default"
   );
   // const dir = path.join(rootDir, "versions", version);
   // fs.ensureDir(dir);
@@ -168,9 +168,12 @@ const startClient = async (o) => {
   launcher.on("data", (e) => {
     console.log(e);
     if (e.includes("Sound engine started")) {
-      console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
+      console.error(
+        `Total Launch Time taken: ${(performance.now() - startTime).toFixed(
+          2
+        )}ms`
+      );
     }
-    
   });
   launcher.on("close", (e) => {
     console.log("Closed:", e);
@@ -193,7 +196,6 @@ const awaitUrl = async () => {
   else return "urlServer fetch rejected";
 };
 
-
 const download = async (url, dest) => {
   const pipeline = await promisify(stream.pipeline);
   await fs.ensureFile(dest);
@@ -211,7 +213,6 @@ const download = async (url, dest) => {
 // Promise.all(arrayOfPromises).then((values) => {
 // console.log(values);
 // });
-
 
 const install = async (mods) => {
   // Variables
@@ -242,13 +243,13 @@ const install = async (mods) => {
   // Install Java
   if (!(await fs.pathExists(javaPath))) {
     const response = await got(
-      `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`,
+      `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${os}&architecture=${arch}`
     );
     const info = JSON.parse(response.body)[0];
     const filename = `jdk-${info.version.semver}-jre`;
     await download(
       info.binary.package.link,
-      path.join(javaTemp, `${filename}.zip`),
+      path.join(javaTemp, `${filename}.zip`)
     );
     await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
     await fs.move(path.join(javaTemp, filename), javaPath);
@@ -353,9 +354,10 @@ const getCurseforgeMod = async (mod0, modsPath, versions) => {
     console.warn("Complex Versioning is incompatible for Curseforge Mods.");
   }
   const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${modVersion}&slug=${mod0}`;
-  const response = await got(url,{
+  const response = await got(url, {
     headers: {
-      "x-api-key": "$2a$10$rb7JRBpgV5mt33y9zxOcouYDxQFE4jj9xK5bZsKd.uky8LdZTgTuO",
+      "x-api-key":
+        "$2a$10$rb7JRBpgV5mt33y9zxOcouYDxQFE4jj9xK5bZsKd.uky8LdZTgTuO",
     },
   });
   const mods = JSON.parse(response.body);
@@ -364,12 +366,14 @@ const getCurseforgeMod = async (mod0, modsPath, versions) => {
     const latestFiles = data["latestFiles"];
     for (const latestFile in latestFiles) {
       const file = data["latestFiles"][latestFile];
-      if(file["gameVersions"].includes("Fabric")) {
+      if (file["gameVersions"].includes("Fabric")) {
         const downloadURL = file["downloadUrl"];
         const name = file["fileName"] || `${file["slug"]}-${file["id"]}.jar`;
         const filename = path.join(modsPath, name);
         if (!fs.pathExistsSync(filename)) {
-          console.error(`Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`);
+          console.error(
+            `Downloading CringeForge ${modVersion || mcVersion} Mod! *CF`
+          );
           console.log(`${mod0} <== npm @ (node-curseforge)`);
           download(downloadURL, filename);
         } else {
@@ -392,10 +396,7 @@ const getModrinthMod = async (mod0, modsPath, versions) => {
   const results = JSON.parse(response.body);
   for (const result in results) {
     const file = results[result];
-    if (
-      !complexVersion ||
-      file["version_number"].includes(complexVersion)
-    ) {
+    if (!complexVersion || file["version_number"].includes(complexVersion)) {
       // || file["loaders"].includes("quilt") <-- removed quilt support temporarily
       let files = file["files"].filter((x) => x["primary"] == true);
       if (files.length < 1) {
@@ -404,9 +405,7 @@ const getModrinthMod = async (mod0, modsPath, versions) => {
       const downloadURL = files[0]["url"];
       const filename = path.join(modsPath, files[0]["filename"]);
       if (!(await fs.pathExists(filename))) {
-        console.error(
-          `Downloading Modrinth ${modVersion || mcVersion} Mod!`,
-        );
+        console.error(`Downloading Modrinth ${modVersion || mcVersion} Mod!`);
         console.log(`${mod0} <== (${url})`);
         download(downloadURL, filename);
       } else {
