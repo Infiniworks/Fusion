@@ -20,7 +20,6 @@ const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 
 const modsList = [
-  // "cf/better-controls", 
   "cf/sodium-shadowy-path-blocks",
   "cf/custom-splash-screen@1.18.2",
   "cf/logical-zoom",
@@ -40,7 +39,7 @@ const modsList = [
   "lambdynamiclights",
   "lazydfu",
   "lithium",
-  // "memoryleakfix",
+  "memoryleakfix",
   "modmenu",
   "moreculling",
   "no-chat-reports",
@@ -156,7 +155,7 @@ const startClient = async (o) => {
     },
     javaPath: java,
     overrides: {
-      maxSockets: o.maxSockets || 3,
+      maxSockets: o.maxSockets || 8,
     },
   };
 
