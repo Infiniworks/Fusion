@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 if (process.env.VITE_APP_VERSION === undefined) {
   const now = new Date;
   process.env.VITE_APP_VERSION = `${now.getUTCFullYear() - 2000}.${now.getUTCMonth() + 1}.${now.getUTCDate()}-${now.getUTCHours() * 60 + now.getUTCMinutes()}`;
@@ -21,6 +23,7 @@ const config = {
   appId: "com.squirrel.Fusion.Fusion",
   publish: {
     provider: "github",
+    token: process.env.GH_TOKEN,
   },
 };
 

@@ -8,6 +8,8 @@
     "skipLibCheck": true,
     "strict": true,
     "isolatedModules": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
 
     "types" : ["node"],
 

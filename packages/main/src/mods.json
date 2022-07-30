@@ -1,0 +1,316 @@
+[
+    {
+        "modloader": "fabric",
+        "versions": [
+            {
+                "version": "1.19",
+                "loaderVersion": "0.14.8",
+                "java": "17",
+                "mods": [ 
+                    {
+                        "name": "Shadowy Path Blocks",
+                        "usage": "Displays nicer looking path and other blocks than sodium.",
+                        "slug": "sodium-shadowy-path-blocks",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Logical Zoom",
+                        "usage": "Allows you to zoom in using C like optifine.",
+                        "slug": "logical-zoom",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Kappa",
+                        "usage": "Displays Optifine Capes",
+                        "slug": "kappa",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Enhanced Block Entities",
+                        "usage": "Better block models for entities like chests.",
+                        "slug": "enhanced-block-entities",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Recipe Cache",
+                        "usage": "Caches recipes for faster load times.",
+                        "slug": "recipe-cache",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Custom Splash Screen",
+                        "usage": "Displays a custom background on startup.",
+                        "slug": "custom-splash-screen",
+                        "version": "1.18.2",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "c2me-fabric",
+                        "slug": "c2me-fabric",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "cloth-config",
+                        "slug": "cloth-config",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "dashloader",
+                        "slug": "dashloader",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "entityculling",
+                        "slug": "entityculling",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "fabric-api",
+                        "slug": "fabric-api",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "fastload",
+                        "slug": "fastload",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "ferrite-core",
+                        "slug": "ferrite-core",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "iris",
+                        "slug": "iris",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "krypton",
+                        "slug": "krypton",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "lambdynamiclights",
+                        "slug": "lambdynamiclights",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "lazydfu",
+                        "slug": "lazydfu",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "continuity",
+                        "slug": "continuity",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "language-reload",
+                        "slug": "language-reload",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "thorium",
+                        "slug": "thorium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "debugify",
+                        "slug": "debugify",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "cull-less-leaves",
+                        "slug": "cull-less-leaves",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "morechathistory",
+                        "slug": "morechathistory",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "borderless-mining",
+                        "slug": "borderless-mining",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "indium",
+                        "slug": "indium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "dynamic-fps",
+                        "slug": "dynamic-fps",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "amecs",
+                        "slug": "amecs",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "appleskin",
+                        "slug": "appleskin",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "reeses-sodium-options",
+                        "slug": "reeses-sodium-options",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "starlight",
+                        "slug": "starlight",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "sodium-extra",
+                        "slug": "sodium-extra",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "sodium",
+                        "slug": "sodium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "smoothboot-fabric",
+                        "slug": "smoothboot-fabric",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "notenoughcrashes",
+                        "slug": "notenoughcrashes",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "not-enough-animations",
+                        "slug": "not-enough-animations",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "no-chat-reports",
+                        "slug": "no-chat-reports",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "moreculling",
+                        "slug": "moreculling",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "modmenu",
+                        "slug": "modmenu",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "memoryleakfix",
+                        "slug": "memoryleakfix",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "lithium",
+                        "slug": "lithium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "forcecloseworldloadingscreen",
+                        "slug": "forcecloseworldloadingscreen",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "no-fade",
+                        "slug": "no-fade",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "antighost",
+                        "slug": "antighost",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "dont-clear-chat-history",
+                        "slug": "dont-clear-chat-history",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "yosbr",
+                        "slug": "yosbr",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "zoomify",
+                        "slug": "zoomify",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "colormatic",
+                        "slug": "colormatic",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "optigui",
+                        "slug": "optigui",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "tooltipfix",
+                        "slug": "tooltipfix",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "cit-resewn",
+                        "slug": "cit-resewn",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "advancementinfo",
+                        "slug": "advancementinfo",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "puzzle",
+                        "slug": "puzzle",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "lambdabettergrass",
+                        "slug": "lambdabettergrass",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "item-model-fix",
+                        "slug": "item-model-fix",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "capes",
+                        "slug": "capes",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "fabric-language-kotlin",
+                        "slug": "fabric-language-kotlin",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "midnightlib",
+                        "slug": "midnightlib",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "stop",
+                        "slug": "stop",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "animatica",
+                        "slug": "animatica",
+                        "source": "curseforge"
+                    }
+                ]
+            }
+        ]
+    }
+]

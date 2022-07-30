@@ -6,6 +6,6 @@ thumbs.db
 minecraft
 minecraft/*
 old
-
+.env
 .vscode
 .eslintcache
