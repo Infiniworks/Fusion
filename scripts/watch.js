@@ -62,7 +62,7 @@ const setupMainPackageWatcher = ({resolvedUrls}) => {
         }
 
         /** Spawn new electron process */
-        spawnProcess = spawn(String(electronPath), [".", "trace-warnings"]);
+        spawnProcess = spawn(String(electronPath), [".", "--trace-warnings"]);
 
         /** Proxy all logs */
         spawnProcess.stdout.on("data", d => d.toString().trim() && logger.warn(d.toString(), {timestamp: true}));

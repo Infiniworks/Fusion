@@ -25,7 +25,7 @@ import MainPage from "./components/MainPage.svelte";
 	<div class="main" style="flex: 4 0;">
 		<div class="left bg-cyan-600" style="flex: 4 0;">
 			<div class="settings">
-				Settings Will Be Here<Settings></Settings>	
+				<Settings></Settings>	
 			</div>
 			<div class="servers">
 				Servers Here<Servers></Servers>

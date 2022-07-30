@@ -74,7 +74,7 @@ const login = async () => {
 const startClient = async (options) => {
   const startTime = performance.now();
 
-  const installation = await install("fabric", "1.19");
+  const installation = await install("fabric", options.version, options.clientName);
   const version = installation.versionName;
   let java = path.join(installation.javaPath, "bin", "javaw");
   if (process.platform === "darwin") {
@@ -85,13 +85,8 @@ const startClient = async (options) => {
   const rootDir = path.join(
     minecraftPath,
     "instances",
-    options.clientName || "default",
+    options.clientName,
   );
-
-  if (msmc.errorCheck(options.authentication)) {
-    console.log(options.authentication.reason);
-    return;
-  }
 
   const opts = {
     clientPackage: null,
@@ -107,7 +102,7 @@ const startClient = async (options) => {
     },
     javaPath: java,
     overrides: {
-      maxSockets: options.maxSockets || 8,
+      maxSockets: options.maxSockets,
     },
   };
 
@@ -117,11 +112,14 @@ const startClient = async (options) => {
 
   console.error(`Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
   launcher.launch(opts);
+  launcher.on("debug", (e) => {
+    console.log(e);
+  });
   launcher.on("data", (e) => {
+    console.log(e);
     if (e.includes("Sound engine started")) {
       console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
     }
-    
   });
   launcher.on("close", (e) => {
     console.log("Closed:", e);
@@ -148,7 +146,7 @@ const download = async (url, dest) => {
   await pipeline(downloadStream, fileWriterStream);
 };
 
-const install = async (modloader, version) => {
+const install = async (modloader, version, instance) => {
   // Variables
   let versionName;
   
@@ -169,7 +167,7 @@ const install = async (modloader, version) => {
   }
 
   // Paths
-  const instancesPath = path.join(minecraftPath, "instances", "default");
+  const instancesPath = path.join(minecraftPath, "instances", instance);
   const modsPath = path.join(instancesPath, "mods");
   const javaTemp = path.join(minecraftPath, "java", "temp");
   const javaPath = path.join(minecraftPath, "java", javaVersion);
@@ -219,6 +217,7 @@ app
     }
 
     restoreOrCreateWindow();
+    getVersions();
   })
   .catch((e) => console.error("Failed:", e));
 
@@ -317,19 +316,41 @@ const getModrinthMod = async (mod, version, modsPath) => {
   }
 };
 
+const getVersions = () => {
+  const versions = mods.filter(data => data.modloader == "fabric")[0].versions;
+  const versionList : string[] = [];
+  versions.forEach((version) => versionList.push(version.version));
+  return versionList;
+};
+
+const memoryGet = async (memory, identifier) => {
+  switch (identifier) {
+    case "B":
+      return memory;
+    case "K":
+      return Math.round(memory / 1024);
+    case "M":
+      return Math.round(memory / 1024 / 1024);
+    case "G":
+      return Math.round(memory / 1024 / 1024 / 1024);
+  }
+};
+
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
   switch (command) {
     case "devmode":
       return process.env.IS_DEV === "true";
+    case "versions":
+      return getVersions();
     case "serverStats":
       return await getServerStats(arg1, arg2);
     case "minecraftVersions":
       return mcData.versions.pc;
+    case "freeMemory":
+      return memoryGet(os.freemem(), arg1);
     case "maxMemory":
-      return os.totalmem();
-    // case "clientMods":
-    //   return await getMods(arg1);
+      return memoryGet(os.totalmem(), arg1);
     case "login":
       return await login();
     case "startClient":
@@ -346,17 +367,5 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       }
       serverUrl = await awaitUrl();
       return serverUrl;
-    case "freeMemory":
-      switch (arg1) {
-        case "B":
-          return os.freemem();
-        case "K":
-          return Math.round(os.freemem() / 1024);
-        case "M":
-          return Math.round(os.freemem() / 1024 / 1024);
-        case "G":
-          return Math.round(os.freemem() / 1024 / 1024 / 1024);
-      }
-      break;
   }
 });

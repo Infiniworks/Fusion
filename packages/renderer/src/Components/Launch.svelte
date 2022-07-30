@@ -1,17 +1,20 @@
 <script>
 let typeClass = localStorage.getItem("selected") !==null ? "launch" : "angwy";
 let clientMSG = typeClass == "launch" ? "Launch Client" : "Login First!";
+let closed = true;
+import LinearProgress from '@smui/linear-progress';
+
 const getGameOpts = async () => {
     return { 
-        clientName: "default",
-        version: "1.19",
-        memMax: await window.please.get("freeMemory","M"), //slider.noUiSlider.get()[1]+"M",
-        memMin: await window.please.get("freeMemory","M"), //slider.noUiSlider.get()[0]+"M",
+        clientName: localStorage.getItem("version"),
+        version: localStorage.getItem("version"),
+        memMax: localStorage.getItem("maxMemory")+"M",
+        memMin: localStorage.getItem("minMemory")+"M",
         authentication: getAuth(),
-        maxSockets: 5,
-        customVersion: "fabric-loader-0.14.8-1.19", // cv,
+        maxSockets: 8,
     }
 }
+
 const getAuth = () => {
     return JSON.parse(localStorage.getItem("users"))[localStorage.getItem("selected")];
 }
@@ -19,7 +22,10 @@ const getAuth = () => {
 
 <button class={typeClass} on:click={async () => {
     if (localStorage.getItem("selected")) {
-        window.please.get("startClient", await getGameOpts())
+        closed = false;
+        window.please.get("startClient", await getGameOpts()).then(() => {
+            closed = true;
+        });
     }
     else {
         alert = ("Login First!");
@@ -27,6 +33,7 @@ const getAuth = () => {
     
 }}>
 {clientMSG}
+<LinearProgress indeterminate {closed}/>
 </button>
 
 <style>
@@ -40,12 +47,14 @@ button.launch {
     box-shadow: 0 0 1px rgba(0,0,0,0.75);
     clip-path: inset(0px 0px -15px 0px);
 }
+
 button.launch:hover {
     background-color: #0ac850;
     color: #ffffff;
     box-shadow: 0 0 30px rgba(0,0,0,0.75);
     clip-path: inset(0px 0px -30px 0px);
 }
+
 button.angwy {
     background-color: #a31616;
     color: rgb(197, 197, 197);

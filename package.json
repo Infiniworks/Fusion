@@ -54,6 +54,9 @@
   "dependencies": {
     "@rgossiaux/svelte-headlessui": "^1.0.2",
     "@rgossiaux/svelte-heroicons": "^0.1.2",
+    "@smui/linear-progress": "^6.0.0",
+    "@smui/select": "^6.0.0",
+    "@smui/slider": "^6.0.0",
     "@typescript-eslint/parser": "^5.30.6",
     "@xmcl/core": "^2.10.1",
     "@xmcl/installer": "^4.4.0",
