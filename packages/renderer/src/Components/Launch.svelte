@@ -6,8 +6,9 @@ import LinearProgress from '@smui/linear-progress';
 
 const getGameOpts = async () => {
     return { 
-        clientName: localStorage.getItem("version"),
-        version: localStorage.getItem("version"),
+        modloader: "forge", //localStorage.getItem("modloader"),
+        clientName: "1.8.9", //localStorage.getItem("version"),
+        version: "1.8.9", //localStorage.getItem("version"),
         memMax: localStorage.getItem("maxMemory")+"M",
         memMin: localStorage.getItem("minMemory")+"M",
         authentication: getAuth(),

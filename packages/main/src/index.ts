@@ -1,8 +1,7 @@
-// ES Imports
 import got from "got";
 import * as path from "path";
 import * as util from "minecraft-server-util";
-import { installFabric, getFabricLoaderArtifact} from "@xmcl/installer";
+import { installFabric, getFabricLoaderArtifact, installForge, getForgeVersionList, installVersion, installDependencies} from "@xmcl/installer";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 
 // Const Imports
@@ -73,14 +72,8 @@ const login = async () => {
 
 const startClient = async (options) => {
   const startTime = performance.now();
-
-  const installation = await install("fabric", options.version, options.clientName);
+  const installation = await install(options.modloader, options.version, options.clientName);
   const version = installation.versionName;
-  let java = path.join(installation.javaPath, "bin", "javaw");
-  if (process.platform === "darwin") {
-    // MacOS different path
-    java = path.join(installation.javaPath, "Contents", "Home", "bin", "java");
-  }
 
   const rootDir = path.join(
     minecraftPath,
@@ -94,17 +87,20 @@ const startClient = async (options) => {
     root: rootDir,
     version: {
       number: options.version,
-      custom: version,
+      // custom: version,
     },
     memory: {
       min: options.memMin,
       max: options.memMax,
     },
-    javaPath: java,
+    javaPath: installation.java,
     overrides: {
       maxSockets: options.maxSockets,
     },
   };
+  if (options.modloader == "forge") {
+    opts["forge"] = path.join(rootDir,"forge.jar");
+  }
 
   console.error(`Starting Fusion Client ${version}!`);
   currentVersion = options.version;
@@ -117,6 +113,9 @@ const startClient = async (options) => {
   });
   launcher.on("data", (e) => {
     console.log(e);
+    if (e.includes("[main/INFO]") || e.includes("[Render thread/INFO]")) {
+      console.log(e);
+    }
     if (e.includes("Sound engine started")) {
       console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
     }
@@ -147,51 +146,58 @@ const download = async (url, dest) => {
 };
 
 const install = async (modloader, version, instance) => {
-  // Variables
   let versionName;
-  
-  const arch = process.arch.replace("arm", "aarch");
+  // Get Information
   const modloaderMatch = mods.filter(input => input.modloader === modloader)[0];
   const filteredResult = modloaderMatch.versions.filter(input => {
       const versionCheck = input.version === version;
       return versionCheck;
   });
 
-  const loaderVersion = filteredResult[0].loaderVersion;
-  version = filteredResult[0].version ? filteredResult[0].version : version;
-  const javaVersion  = filteredResult[0].java;
-
-  const mcVersion = version + "";
-  if (modloader == "fabric") {
-    versionName = mcVersion + "-fabric" + loaderVersion;
-  }
-
-  // Paths
-  const instancesPath = path.join(minecraftPath, "instances", instance);
-  const modsPath = path.join(instancesPath, "mods");
-  const javaTemp = path.join(minecraftPath, "java", "temp");
-  const javaPath = path.join(minecraftPath, "java", javaVersion);
-
   // Install Java
+  const javaVersion  = filteredResult[0].java;
+  const javaPath = path.join(minecraftPath, "java", javaVersion);
+  const javaTemp = path.join(minecraftPath, "java", "temp");
+  const arch = process.arch.replace("arm", "aarch");
   await getJava(javaVersion, javaPath, javaTemp, arch).then(() => console.log("Java installed!"));
 
-  // Install Fabric
-  const versionList = await getFabricLoaderArtifact(mcVersion, loaderVersion);
-  await installFabric(versionList, instancesPath).then((result) => {
-    versionName = result;
-    console.log("Fabric installed!");
-  });
+  let java = path.join(javaPath, "bin", "javaw");
+
+  if (process.platform === "darwin") {
+    java = path.join(javaPath, "Contents", "Home", "bin", "java");
+  }
+
+  // Install Minecraft
+  const loaderVersion = filteredResult[0].loaderVersion;
+  const instancesPath = path.join(minecraftPath, "instances", instance);
+  const modsPath = path.join(instancesPath, "mods");
+  version = filteredResult[0].version ? filteredResult[0].version : version;
+
+  if (modloader == "fabric") {
+    versionName = version + "-fabric" + loaderVersion;
+    const versionList = await getFabricLoaderArtifact(version, loaderVersion);
+    await installFabric(versionList, instancesPath).then((result) => {
+      versionName = result;
+      console.log("Fabric installed!");
+    });
+  }
+  if (modloader == "forge") {
+    await download(filteredResult[0].loaderUrl, path.join(instancesPath, "forge.jar"));
+    console.log("Forge Installed!");
+  }
 
   // Install Mods
+  console.log(filteredResult[0].mods);
   await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
     const modVersion = mod.version ? mod.version : version;
-    if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath);
-    else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath);
+    if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath, modloader);
+    else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath, modloader);
   })).then(() => console.log("Mods installed!"));
 
   console.log("Installation complete!");
 
   return {
+    java,
     javaPath,
     versionName,
   };
@@ -217,7 +223,6 @@ app
     }
 
     restoreOrCreateWindow();
-    getVersions();
   })
   .catch((e) => console.error("Failed:", e));
 
@@ -251,12 +256,20 @@ const getJava = async (javaVersion, javaPath, javaTemp, arch) => {
     info.binary.package.link,
     path.join(javaTemp, `${filename}.zip`),
   );
-  await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
-  await fs.move(path.join(javaTemp, filename), javaPath);
+  await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp).then(
+    async (e) => {
+      await fs.move(path.join(javaTemp, e[0].path), javaPath);
+    },
+  );
+  
   await fs.remove(path.join(javaTemp));
 };
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-const getCurseforgeMod = async (mod, version, modsPath) => {
+const getCurseforgeMod = async (mod, version, modsPath, loader) => {
+  loader = capitalizeFirstLetter(loader);
   const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${version}&slug=${mod}`;
   const response = await got(url,{
     headers: {
@@ -269,7 +282,7 @@ const getCurseforgeMod = async (mod, version, modsPath) => {
     const latestFiles = data["latestFiles"];
     for (const latestFile in latestFiles) {
       const file = data["latestFiles"][latestFile];
-      if(file["gameVersions"].includes("Fabric") && file["gameVersions"].includes(version)) {
+      if(file["gameVersions"].includes(loader) && file["gameVersions"].includes(version)) {
         const downloadURL = file["downloadUrl"];
         const name = file["fileName"] || `${mod}-${file["id"]}.jar`;
         const filename = path.join(modsPath, name);
@@ -287,11 +300,11 @@ const getCurseforgeMod = async (mod, version, modsPath) => {
   }
 };
 
-const getModrinthMod = async (mod, version, modsPath) => {
+const getModrinthMod = async (mod, version, modsPath, loader) => {
   const url = `https://api.modrinth.com/v2/project/${mod}/version?game_versions=["${
     version
   }"]
-  &loaders=["fabric"]`;
+  &loaders=["${loader}"]`;
   const response = await got(url);
   const results = JSON.parse(response.body);
   for (const result in results) {
@@ -316,8 +329,8 @@ const getModrinthMod = async (mod, version, modsPath) => {
   }
 };
 
-const getVersions = () => {
-  const versions = mods.filter(data => data.modloader == "fabric")[0].versions;
+const getVersions = (modloader) => {
+  const versions = mods.filter(data => data.modloader == modloader)[0].versions;
   const versionList : string[] = [];
   versions.forEach((version) => versionList.push(version.version));
   return versionList;
@@ -342,11 +355,13 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     case "devmode":
       return process.env.IS_DEV === "true";
     case "versions":
-      return getVersions();
+      return getVersions(arg1);
     case "serverStats":
       return await getServerStats(arg1, arg2);
     case "minecraftVersions":
       return mcData.versions.pc;
+    case "modloaders":
+      return mods.map(data => data.modloader);
     case "freeMemory":
       return memoryGet(os.freemem(), arg1);
     case "maxMemory":

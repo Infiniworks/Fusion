@@ -1,0 +1,1424 @@
+yarn run v1.22.15
+$ node scripts/watch.js
+[36mvite v3.0.2 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36m
+build started...[39m
+transforming...
+[32m✓[39m 1 modules transformed.
+rendering chunks...
+[90m[37m[2mdist/[22m[90m[39m[36mindex.cjs  [39m [2m0.38 KiB / gzip: 0.22 KiB[22m
+[90m[37m[2mdist/[22m[90m[39m[90mindex.cjs.map[39m [2m2.12 KiB[22m
+[36mbuilt in 53ms.[39m
+[36mvite v3.0.2 [32mbuilding for development...[36m[39m
+[36m
+watching for file changes...[39m
+[36m
+build started...[39m
+transforming...
+[32m✓[39m 305 modules transformed.
+rendering chunks...
+[90m[37m[2mdist/[22m[90m[39m[36mindex.cjs  [39m [33m829.86 KiB / gzip: 164.20 KiB[39m
+[90m[37m[2mdist/[22m[90m[39m[90mindex.cjs.map[39m [33m2002.66 KiB[39m
+[36mbuilt in 1972ms.[39m
+[2m6:10:39 PM[22m [33m[1m[main][22m[39m App is ready!
+
+[2m6:10:39 PM[22m [33m[1m[main][22m[39m Running in development mode.
+
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/linear-progress/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/slider/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/linear-progress/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/linear-progress/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/linear-progress/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/linear-progress/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/linear-progress/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/helper-text/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/icon/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu-surface/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/slider/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/slider/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/slider/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/slider/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/slider/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/base/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/base/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/animation/util.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/floating-label/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/line-ripple/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/notched-outline/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/icon/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/helper-text/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/dom/keyboard.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/helper-text/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/helper-text/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/helper-text/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/icon/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/icon/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/dom/ponyfill.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/select/icon/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu-surface/component.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu-surface/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu-surface/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/dom/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/line-ripple/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/floating-label/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/notched-outline/index.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/dom/events.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/animation/animationframe.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/floating-label/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/util.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/line-ripple/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/notched-outline/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/notched-outline/foundation.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu-surface/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/typeahead.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/events.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/menu-surface/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/dom/focus-trap.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/ripple/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/types.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/list/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/line-ripple/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/line-ripple/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/floating-label/adapter.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/floating-label/constants.js" points to missing source files
+Sourcemap for "C:/Files/Minecraft/Fusion/node_modules/@material/notched-outline/adapter.js" points to missing source files
+[2m6:10:42 PM[22m [33m[1m[main][22m[39m Window Loaded
+
+[2m6:10:46 PM[22m [33m[1m[main][22m[39m {
+  mcversion: '1.8.9',
+  versions: [
+    {
+      version: '11.15.1.2318',
+      date: '2017-06-08',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'recommended'
+    },
+    {
+      version: '11.15.1.1902',
+      date: '2016-05-11',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1890',
+      date: '2016-05-05',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1875',
+      date: '2016-05-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1873',
+      date: '2016-05-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1872',
+      date: '2016-05-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1855',
+      date: '2016-04-07',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1847',
+      date: '2016-04-05',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1808',
+      date: '2016-03-24',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1794',
+      date: '2016-03-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1791',
+      date: '2016-03-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1785',
+      date: '2016-03-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1783',
+      date: '2016-03-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1777',
+      date: '2016-03-20',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1765',
+      date: '2016-03-18',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1764',
+      date: '2016-02-29',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1763',
+      date: '2016-02-27',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1762',
+      date: '2016-02-24',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1761',
+      date: '2016-02-23',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1760',
+      date: '2016-02-22',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1759',
+      date: '2016-02-22',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1758',
+      date: '2016-02-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1757',
+      date: '2016-02-20',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1756',
+      date: '2016-02-19',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1755',
+      date: '2016-02-19',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1754',
+      date: '2016-02-18',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1752',
+      date: '2016-02-18',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1751',
+      date: '2016-02-17',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1750',
+      date: '2016-02-17',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1749',
+      date: '2016-02-17',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1748',
+      date: '2016-02-17',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1747',
+      date: '2016-02-16',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1746',
+      date: '2016-02-15',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1745',
+      date: '2016-02-15',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1744',
+      date: '2016-02-14',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1743',
+      date: '2016-02-14',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1742',
+      date: '2016-02-13',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1741',
+      date: '2016-02-11',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1740',
+      date: '2016-02-11',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1739',
+      date: '2016-02-10',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1738',
+      date: '2016-02-10',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1737',
+      date: '2016-02-10',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1736',
+      date: '2016-02-09',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1735',
+      date: '2016-02-07',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1734',
+      date: '2016-02-07',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1733',
+      date: '2016-02-07',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1732',
+      date: '2016-02-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1731',
+      date: '2016-02-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1730',
+      date: '2016-02-03',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1729',
+      date: '2016-02-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1727',
+      date: '2016-02-01',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1726',
+      date: '2016-01-27',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1725',
+      date: '2016-01-27',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1724',
+      date: '2016-01-27',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1723',
+      date: '2016-01-25',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.1.1722',
+      date: '2016-01-25',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1721',
+      date: '2016-01-25',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1720',
+      date: '2016-01-25',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1719',
+      date: '2016-01-25',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1718',
+      date: '2016-01-24',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1716',
+      date: '2016-01-24',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1715',
+      date: '2016-01-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1714',
+      date: '2016-01-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1713',
+      date: '2016-01-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1712',
+      date: '2016-01-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1711',
+      date: '2016-01-21',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1710',
+      date: '2016-01-19',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1709',
+      date: '2016-01-19',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1708',
+      date: '2016-01-18',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1707',
+      date: '2016-01-17',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1706',
+      date: '2016-01-17',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1705',
+      date: '2016-01-16',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1703',
+      date: '2016-01-16',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1702',
+      date: '2016-01-16',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1701',
+      date: '2016-01-16',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1700',
+      date: '2016-01-16',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1699',
+      date: '2016-01-14',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1698',
+      date: '2016-01-14',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1697',
+      date: '2016-01-13',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1696',
+      date: '2016-01-12',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1695',
+      date: '2016-01-12',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1694',
+      date: '2016-01-10',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1693',
+      date: '2016-01-10',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1692',
+      date: '2016-01-10',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1691',
+      date: '2016-01-09',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1690',
+      date: '2016-01-08',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1689',
+      date: '2016-01-08',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1688',
+      date: '2016-01-06',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1687',
+      date: '2016-01-06',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1686',
+      date: '2016-01-06',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1684',
+      date: '2016-01-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1683',
+      date: '2016-01-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1682',
+      date: '2016-01-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1681',
+      date: '2016-01-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1677',
+      date: '2016-01-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1676',
+      date: '2016-01-04',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1675',
+      date: '2016-01-03',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1674',
+      date: '2016-01-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1673',
+      date: '2016-01-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    {
+      version: '11.15.0.1672',
+      date: '2016-01-02',
+      changelog: [Object],
+      installer: [Object],
+      mdk: [Object],
+      universal: [Object],
+      source: undefined,
+      launcher: undefined,
+      'installer-win': undefined,
+      mcversion: '1.8.9',
+      type: 'common'
+    },
+    ... 14 more items
+  ],
+  timestamp: 'Fri, 29 Jul 2022 08:31:43 GMT'
+}
+
+[2m6:10:46 PM[22m [31m[1m[main][22m[39m Error occurred in handler for 'get': TypeError: Cannot read properties of undefined (reading 'versions')
+    at install (C:\Files\Minecraft\Fusion\packages\main\dist\index.cjs:23065:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async startClient (C:\Files\Minecraft\Fusion\packages\main\dist\index.cjs:22996:24)
+    at async C:\Files\Minecraft\Fusion\packages\main\dist\index.cjs:23244:14
+    at async node:electron/js2c/browser_init:189:563
+Done in 31.18s.

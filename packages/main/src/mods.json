@@ -2,11 +2,51 @@
     {
         "modloader": "fabric",
         "versions": [
-            {
+            {  
                 "version": "1.19",
                 "loaderVersion": "0.14.8",
                 "java": "17",
-                "mods": [ 
+                "mods": [   
+                    {
+                        "name": "inspecio",
+                        "slug": "inspecio",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "slight-gui-modifications",
+                        "slug": "slight-gui-modifications",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "fastanim",
+                        "slug": "fastanim",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "cull-leaves",
+                        "slug": "cull-leaves",
+                        "source": "curseforge"
+                    },                    
+                    {
+                        "name": "better-beds",
+                        "slug": "better-beds",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "entity-collision-fps-fix",
+                        "slug": "entity-collision-fps-fix",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "3d Chunk Loader",
+                        "slug": "better-fps-render-distance-fabric",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "boosted brightness",
+                        "slug": "boosted-brightness",
+                        "source": "curseforge"
+                    },
                     {
                         "name": "Shadowy Path Blocks",
                         "usage": "Displays nicer looking path and other blocks than sodium.",
@@ -30,6 +70,11 @@
                         "usage": "Caches recipes for faster load times.",
                         "slug": "recipe-cache",
                         "source": "curseforge"
+                    },
+                    {
+                        "name": "logical-zoom",
+                        "slug": "logical-zoom",
+                        "source": "modrinth"
                     },
                     {
                         "name": "Custom Splash Screen",
@@ -57,6 +102,11 @@
                         "name": "entityculling",
                         "slug": "entityculling",
                         "source": "modrinth"
+                    },
+                    {
+                        "name": "mixin-conflict-helper",
+                        "slug": "mixin-conflict-helper",
+                        "source": "curseforge"
                     },
                     {
                         "name": "fabric-api",
@@ -104,11 +154,6 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "thorium",
-                        "slug": "thorium",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "debugify",
                         "slug": "debugify",
                         "source": "modrinth"
@@ -131,11 +176,6 @@
                     {
                         "name": "indium",
                         "slug": "indium",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "dynamic-fps",
-                        "slug": "dynamic-fps",
                         "source": "modrinth"
                     },
                     {
@@ -209,11 +249,6 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "forcecloseworldloadingscreen",
-                        "slug": "forcecloseworldloadingscreen",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "no-fade",
                         "slug": "no-fade",
                         "source": "curseforge"
@@ -236,7 +271,7 @@
                     {
                         "name": "zoomify",
                         "slug": "zoomify",
-                        "source": "curseforge"
+                        "source": "modrinth"
                     },
                     {
                         "name": "colormatic",
@@ -269,18 +304,8 @@
                         "source": "curseforge"
                     },
                     {
-                        "name": "lambdabettergrass",
-                        "slug": "lambdabettergrass",
-                        "source": "curseforge"
-                    },
-                    {
                         "name": "item-model-fix",
                         "slug": "item-model-fix",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "capes",
-                        "slug": "capes",
                         "source": "curseforge"
                     },
                     {
@@ -291,16 +316,6 @@
                     {
                         "name": "midnightlib",
                         "slug": "midnightlib",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "stop",
-                        "slug": "stop",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "animatica",
-                        "slug": "animatica",
                         "source": "curseforge"
                     }
                 ]
@@ -534,17 +549,7 @@
                     {
                         "name": "zoomify",
                         "slug": "zoomify",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "colormatic",
-                        "slug": "colormatic",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "optigui",
-                        "slug": "optigui",
-                        "source": "curseforge"
+                        "source": "modrinth"
                     },
                     {
                         "name": "tooltipfix",
@@ -592,14 +597,31 @@
                         "source": "curseforge"
                     },
                     {
-                        "name": "stop",
-                        "slug": "stop",
+                        "name": "mixin-conflict-helper",
+                        "slug": "mixin-conflict-helper",
                         "source": "curseforge"
                     },
                     {
                         "name": "animatica",
                         "slug": "animatica",
                         "source": "curseforge"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "modloader": "forge",
+        "versions": [
+            {
+                "version": "1.8.9",
+                "loaderUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.8.9-11.15.1.2318-1.8.9/forge-1.8.9-11.15.1.2318-1.8.9-universal.jar",
+                "java": "8",
+                "mods": [
+                    {
+                        "name": "in-game-account-switcher",
+                        "slug": "in-game-account-switcher",
+                        "source": "modrinth"
                     }
                 ]
             }
