@@ -356,6 +356,8 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       return process.env.IS_DEV === "true";
     case "versions":
       return getVersions(arg1);
+    case "mods":
+      return mods;
     case "serverStats":
       return await getServerStats(arg1, arg2);
     case "minecraftVersions":
