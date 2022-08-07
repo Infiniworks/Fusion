@@ -118,6 +118,7 @@ const startClient = async (options) => {
       "-XX:SurvivorRatio=32",
       "-XX:+PerfDisableSharedMem",
       "-XX:MaxTenuringThreshold=1",
+      "-Dorg.lwjgl.util.Debug=true"
     ],
   };
 
