@@ -30,7 +30,7 @@ const isSingleInstance = app.requestSingleInstanceLock();
 const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 const resourcesPath = path.join(minecraftPath, "resources");
 
-let currentVersion, serverUrl, authResult;
+let currentVersion, serverUrl, authResult, skipMods: any;
 
 import mods from "./mods.json";
 
