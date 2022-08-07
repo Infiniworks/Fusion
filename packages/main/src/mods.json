@@ -33,6 +33,11 @@
                         "source": "modrinth"
                     },
                     {
+                        "name": "lambdabettergrass",
+                        "slug": "lambdabettergrass",
+                        "source": "curseforge"
+                    },
+                    {
                         "name": "alternate-current",
                         "slug": "alternate-current",
                         "source": "modrinth"
@@ -410,6 +415,11 @@
                         "name": "Kappa",
                         "usage": "Displays Optifine Capes",
                         "slug": "kappa",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "lambdabettergrass",
+                        "slug": "lambdabettergrass",
                         "source": "curseforge"
                     },
                     {
