@@ -299,7 +299,6 @@ const getJava = async (javaVersion, javaPath, javaTemp, arch) => {
     operatingSystem = "mac";
   } 
   if (macCompatMode) {
-    operatingSystem = "windows";
     arch = "x64";
   }
   const response = await got(
