@@ -461,12 +461,10 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "fastload",
+                        "name": "Fastload-1.1.5-override1.18.2",
                         "slug": "fastload",
-                        "source": "modrinth",
-                        "overrides": {
-                            "filename": "Fastload-1.1.5-override1.18.2.jar"
-                        }
+                        "source": "link",
+                        "link": "https://cdn.modrinth.com/data/kCpssoSb/versions/1.1.5.fabric.1.18.2/Fastload-1.1.5.jar"
                         
                     },
                     {
