@@ -29,7 +29,9 @@ async function createWindow() {
             if (browserWindow.isMaximized()) browserWindow.unmaximize();
             else browserWindow.maximize();
           }
-          arg2;
+          if (arg2) {
+            console.log(arg2);
+          }
           break;
       }
     });

@@ -74,6 +74,7 @@
     "node-curseforge": "^1.2.0",
     "os": "^0.1.2",
     "postcss": "^8.4.14",
+    "skinview3d": "^3.0.0-alpha.1",
     "svelte-material-ui": "^6.0.0",
     "svelte-virtual-list": "^3.0.1",
     "tailwindcss": "^3.1.6"

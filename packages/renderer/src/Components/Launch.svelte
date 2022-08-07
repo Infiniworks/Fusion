@@ -42,7 +42,9 @@ const getAuth = () => {
     
 }}>
 {clientMSG}
-
+{#key selected}
+    <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
+{/key}
 
 {#if progressBar}
 <InlineLoading status="active" description="Loading..." />
@@ -51,6 +53,12 @@ const getAuth = () => {
 </button>
 
 <style>
+.userHead {
+    width: 100%;
+}
+button {
+    padding: 30px;
+}
 button.launch {
     background-color: #16a34a;
     color: rgb(197, 197, 197);

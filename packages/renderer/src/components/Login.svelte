@@ -2,6 +2,7 @@
 import _ from "lodash"; 
 import { onMount } from 'svelte';
 import { selectedUser } from "../data/localStore";
+// import { SkinViewer } from "skinview3d";
 
 let selected;
 selectedUser.subscribe((thing) => selected = thing);
@@ -56,6 +57,23 @@ const userListify = () => {
 onMount(() => {
     userListify();
 });
+
+
+
+
+
+
+// let skinViewer = new skinview3d.SkinViewer({
+// 		canvas: document.getElementById("skin_container"),
+// 		width: 300,
+// 		height: 400,
+// 		skin: "https://s.namemc.com/i/37529af66bcdd70d.png"
+// 	});
+
+// 	// Change viewer size
+// 	skinViewer.width = 600;
+// 	skinViewer.height = 800;
+//     skinViewer.nameTag = selected;
 </script>
 
 <main>
@@ -64,9 +82,9 @@ onMount(() => {
             await login()
         }
     }>Login</button><br>
-    {#key selected}
+    <!-- {#key selected}
     <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
-    {/key}
+    {/key} -->
     {#key users}
         {#if users}
             {#each users as [name, data]}
@@ -86,6 +104,7 @@ onMount(() => {
         {/if}
     {/key}
 </main>
+<!-- <canvas id="skin_container"></canvas> -->
 
 <style>
 .login {
@@ -102,11 +121,6 @@ onMount(() => {
 .selected {
     background-color: #0a86a8;
     box-shadow: 0 0 4px rgba(0,0,0,0.75);
-}
-.userHead {
-    width: 110px;
-    height: 100%;
-    float: left;
 }
 .logout {
     float:right;

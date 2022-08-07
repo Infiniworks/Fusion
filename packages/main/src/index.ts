@@ -30,9 +30,11 @@ const isSingleInstance = app.requestSingleInstanceLock();
 const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 const resourcesPath = path.join(minecraftPath, "resources");
 
-let currentVersion, serverUrl, authResult, skipMods: any;
+let currentVersion, serverUrl, authResult;
 
-const macCompatMode = true;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
+let macCompatMode = true, skipMods = false;
 
 import mods from "./mods.json";
 
@@ -94,7 +96,7 @@ const startClient = async (options) => {
       min: options.memMin,
       max: options.memMax,
     },
-    javaPath: installation.java,
+    javaPath: installation.java+".exe",
     overrides: {
       maxSockets: options.maxSockets,
       libraryRoot: path.join(resourcesPath, "libraries"),
@@ -120,7 +122,7 @@ const startClient = async (options) => {
       "-XX:SurvivorRatio=32",
       "-XX:+PerfDisableSharedMem",
       "-XX:MaxTenuringThreshold=1",
-      "-Dorg.lwjgl.util.Debug=true"
+      "-Dorg.lwjgl.util.Debug=true",
     ],
   };
 
@@ -149,10 +151,10 @@ const startClient = async (options) => {
       console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
     }
   });
-  launcher.on("close", (e) => {
+  launcher.on("close", async (e) => {
     console.log("Closed:", e);
     currentVersion = "Launcher Screen";
-    setActivity(currentVersion);
+    await setActivity(currentVersion);
   });
 };
 
@@ -244,9 +246,6 @@ const install = async (modloader, version, instance, fullOptions) => {
     }
     await fs.ensureSymlink(modFilePath, path.join(minecraftPath, "shared", "mods", path.basename(modFilePath)), "file");
   })).then(() => console.log("Mods installed!"));
-  // Install Mods
-  
-
   console.log("Installation complete!");
 
   return {
@@ -266,7 +265,7 @@ app.on("activate", restoreOrCreateWindow);
 
 app
   .whenReady()
-  .then(() => {
+  .then(async () => {
     console.log("App is ready!");
     if (import.meta.env.PROD) {
       console.log("Checking for updates:");
@@ -275,18 +274,18 @@ app
       console.log("Running in development mode.");
     }
 
-    restoreOrCreateWindow();
+    await restoreOrCreateWindow();
   })
   .catch((e) => console.error("Failed:", e));
 
 DiscordRPC.register(clientId);
 
-rpc.on("ready", () => {
-  setActivity(currentVersion);
+rpc.on("ready", async () => {
+  await setActivity(currentVersion);
 
-  setInterval(() => {
-    setActivity(currentVersion);
-  }, 6e4);
+  setInterval(async () => {
+    await setActivity(currentVersion);
+  }, 6e1);
 });
 
 rpc.login({ clientId }).catch(console.error);

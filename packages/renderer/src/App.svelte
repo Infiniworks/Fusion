@@ -16,7 +16,8 @@ import MainPage from "./components/MainPage.svelte";
 			<Login></Login>
 		</div>
 		<div class="profiles bg-cyan-600"style="flex: 8 0">
-			Profiles Go Here<Profiles></Profiles>
+			<Settings></Settings>
+			
 		</div>
 		<div class="launch bg-cyan-700"style="flex: 2 0">
 			<Launch></Launch>
@@ -25,7 +26,7 @@ import MainPage from "./components/MainPage.svelte";
 	<div class="main" style="flex: 4 0;">
 		<div class="left bg-cyan-600" style="flex: 4 0;">
 			<div class="settings">
-				<Settings></Settings>	
+				Profiles Go Here<Profiles></Profiles>
 			</div>
 			<div class="servers">
 				Servers Here<Servers></Servers>

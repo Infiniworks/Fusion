@@ -6,7 +6,6 @@ import {
     Checkbox, Select, SelectItem, SelectItemGroup,
 } from "carbon-components-svelte";
 import { versions, maxMemory, minMemory, modDisabling } from "../data/localStore";
-import { freemem } from "os";
 
 $: document.documentElement.setAttribute("theme", "g90");
 
@@ -62,6 +61,8 @@ Waiting for load
     </SelectItemGroup>
     {/each}
 </Select>
+<div class="oop">
+
 
 <Slider
 invalid={memMax >= freeMem}
@@ -72,25 +73,17 @@ maxLabel={totalMem+" MB"}
 bind:value={memMax}
 step={10}
 />
-
-<p>Using: {memMax} MB</p>
-
-<!-- <div class="oop">
-    <Checkbox bind:checked />
-    Disable Mods Installing
-    <Tooltip direction="right">
-        <Tag type="red">BETA</Tag> Use for mod testing only
-    </Tooltip>
-</div> -->
+Using: {memMax} MB
+</div>
 {/await}
 
 <style>
 
 div.oop {
+    display: fixed;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    outline: 3px solid;
 }
 
 </style>
