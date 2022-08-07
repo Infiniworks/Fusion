@@ -8,13 +8,53 @@
                 "java": "17",
                 "mods": [   
                     {
-                        "name": "inspecio",
-                        "slug": "inspecio",
+                        "name": "mipmaplevelandlanguagefix",
+                        "slug": "mipmaplevelandlanguagefix",
                         "source": "curseforge"
                     },
                     {
-                        "name": "slight-gui-modifications",
-                        "slug": "slight-gui-modifications",
+                        "name": "clear-skies",
+                        "slug": "clear-skies",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "spark",
+                        "slug": "spark",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "clumps",
+                        "slug": "clumps",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "mcmouser",
+                        "slug": "mcmouser",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "alternate-current",
+                        "slug": "alternate-current",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "smoke-suppression",
+                        "slug": "smoke-suppression",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "fast-chest",
+                        "source": "link",
+                        "link": "https://github.com/FakeDomi/FastChest/releases/download/1.3%2B1.19/fast-chest-1.3+1.19.jar"
+                    },
+                    {
+                        "name": "thorium",
+                        "slug": "thorium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "inspecio",
+                        "slug": "inspecio",
                         "source": "curseforge"
                     },
                     {
@@ -82,6 +122,11 @@
                         "slug": "custom-splash-screen",
                         "version": "1.18.2",
                         "source": "curseforge"
+                    },
+                    {
+                        "name": "Very Many Players",
+                        "slug": "vmp-fabric",
+                        "source": "modrinth"
                     },
                     {
                         "name": "c2me-fabric",
@@ -214,11 +259,6 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "notenoughcrashes",
-                        "slug": "notenoughcrashes",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "not-enough-animations",
                         "slug": "not-enough-animations",
                         "source": "modrinth"
@@ -269,48 +309,13 @@
                         "source": "curseforge"
                     },
                     {
-                        "name": "zoomify",
-                        "slug": "zoomify",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "colormatic",
-                        "slug": "colormatic",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "optigui",
-                        "slug": "optigui",
-                        "source": "curseforge"
-                    },
-                    {
                         "name": "tooltipfix",
                         "slug": "tooltipfix",
                         "source": "curseforge"
                     },
                     {
-                        "name": "cit-resewn",
-                        "slug": "cit-resewn",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "advancementinfo",
-                        "slug": "advancementinfo",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "puzzle",
-                        "slug": "puzzle",
-                        "source": "curseforge"
-                    },
-                    {
                         "name": "item-model-fix",
                         "slug": "item-model-fix",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "fabric-language-kotlin",
-                        "slug": "fabric-language-kotlin",
                         "source": "curseforge"
                     },
                     {
@@ -324,7 +329,82 @@
                 "version": "1.18.2",
                 "loaderVersion": "0.14.8",
                 "java": "17",
-                "mods": [ 
+                "mods": [   
+                    {
+                        "name": "mcmouser",
+                        "slug": "mcmouser",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "alternate-current",
+                        "slug": "alternate-current",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "smoke-suppression",
+                        "slug": "smoke-suppression",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "fast-chest",
+                        "source": "link",
+                        "link": "https://github.com/FakeDomi/FastChest/releases/download/1.3%2B1.18/fast-chest-1.3+1.18.jar"
+                    },
+                    {
+                        "name": "thorium",
+                        "slug": "thorium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "inspecio",
+                        "slug": "inspecio",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "fastanim",
+                        "slug": "fastanim",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "cull-leaves",
+                        "slug": "cull-leaves",
+                        "source": "curseforge"
+                    },                    
+                    {
+                        "name": "better-beds",
+                        "slug": "better-beds",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "entity-collision-fps-fix",
+                        "slug": "entity-collision-fps-fix",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "mipmaplevelandlanguagefix",
+                        "slug": "mipmaplevelandlanguagefix",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "clear-skies",
+                        "slug": "clear-skies",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "spark",
+                        "slug": "spark",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "3d Chunk Loader",
+                        "slug": "better-fps-render-distance-fabric",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "boosted brightness",
+                        "slug": "boosted-brightness",
+                        "source": "curseforge"
+                    },
                     {
                         "name": "Shadowy Path Blocks",
                         "usage": "Displays nicer looking path and other blocks than sodium.",
@@ -350,10 +430,14 @@
                         "source": "curseforge"
                     },
                     {
+                        "name": "logical-zoom",
+                        "slug": "logical-zoom",
+                        "source": "modrinth"
+                    },
+                    {
                         "name": "Custom Splash Screen",
                         "usage": "Displays a custom background on startup.",
                         "slug": "custom-splash-screen",
-                        "version": "1.18.2",
                         "source": "curseforge"
                     },
                     {
@@ -422,13 +506,13 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "thorium",
-                        "slug": "thorium",
+                        "name": "debugify",
+                        "slug": "debugify",
                         "source": "modrinth"
                     },
                     {
-                        "name": "debugify",
-                        "slug": "debugify",
+                        "name": "cull-less-leaves",
+                        "slug": "cull-less-leaves",
                         "source": "modrinth"
                     },
                     {
@@ -444,11 +528,6 @@
                     {
                         "name": "indium",
                         "slug": "indium",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "dynamic-fps",
-                        "slug": "dynamic-fps",
                         "source": "modrinth"
                     },
                     {
@@ -487,11 +566,6 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "notenoughcrashes",
-                        "slug": "notenoughcrashes",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "not-enough-animations",
                         "slug": "not-enough-animations",
                         "source": "modrinth"
@@ -522,11 +596,6 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "forcecloseworldloadingscreen",
-                        "slug": "forcecloseworldloadingscreen",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "no-fade",
                         "slug": "no-fade",
                         "source": "curseforge"
@@ -547,33 +616,8 @@
                         "source": "curseforge"
                     },
                     {
-                        "name": "zoomify",
-                        "slug": "zoomify",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "tooltipfix",
                         "slug": "tooltipfix",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "cit-resewn",
-                        "slug": "cit-resewn",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "advancementinfo",
-                        "slug": "advancementinfo",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "puzzle",
-                        "slug": "puzzle",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "lambdabettergrass",
-                        "slug": "lambdabettergrass",
                         "source": "curseforge"
                     },
                     {
@@ -582,28 +626,8 @@
                         "source": "curseforge"
                     },
                     {
-                        "name": "capes",
-                        "slug": "capes",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "fabric-language-kotlin",
-                        "slug": "fabric-language-kotlin",
-                        "source": "curseforge"
-                    },
-                    {
                         "name": "midnightlib",
                         "slug": "midnightlib",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "mixin-conflict-helper",
-                        "slug": "mixin-conflict-helper",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "animatica",
-                        "slug": "animatica",
                         "source": "curseforge"
                     }
                 ]

@@ -1,7 +1,7 @@
 import got from "got";
 import * as path from "path";
 import * as util from "minecraft-server-util";
-import { installFabric, getFabricLoaderArtifact, installForge, getForgeVersionList, installVersion, installDependencies} from "@xmcl/installer";
+import { installFabric, getFabricLoaderArtifact} from "@xmcl/installer";
 import { restoreOrCreateWindow } from "/@/mainWindow";
 
 // Const Imports
@@ -68,11 +68,9 @@ const login = async () => {
   return JSON.stringify(authResult);
 };
 
-
-
 const startClient = async (options) => {
   const startTime = performance.now();
-  const installation = await install(options.modloader, options.version, options.clientName);
+  const installation = await install(options.modloader, options.version, options.clientName, options);
   const version = installation.versionName;
 
   const rootDir = path.join(
@@ -87,7 +85,6 @@ const startClient = async (options) => {
     root: rootDir,
     version: {
       number: options.version,
-      // custom: version,
     },
     memory: {
       min: options.memMin,
@@ -97,9 +94,32 @@ const startClient = async (options) => {
     overrides: {
       maxSockets: options.maxSockets,
     },
+    customArgs: [
+      "-XX:+UseG1GC",
+      "-XX:+ParallelRefProcEnabled", 
+      "-XX:MaxGCPauseMillis=200", 
+      "-XX:+UnlockExperimentalVMOptions", 
+      "-XX:+DisableExplicitGC", 
+      "-XX:+AlwaysPreTouch", 
+      "-XX:G1NewSizePercent=30", 
+      "-XX:G1MaxNewSizePercent=40", 
+      "-XX:G1HeapRegionSize=8M", 
+      "-XX:G1ReservePercent=20", 
+      "-XX:G1HeapWastePercent=5", 
+      "-XX:G1MixedGCCountTarget=4", 
+      "-XX:InitiatingHeapOccupancyPercent=15", 
+      "-XX:G1MixedGCLiveThresholdPercent=90", 
+      "-XX:G1RSetUpdatingPauseTimePercent=5",
+      "-XX:SurvivorRatio=32",
+      "-XX:+PerfDisableSharedMem",
+      "-XX:MaxTenuringThreshold=1",
+    ],
   };
   if (options.modloader == "forge") {
     opts["forge"] = path.join(rootDir,"forge.jar");
+  }
+  if (options.modloader == "fabric") {
+    opts["version"]["custom"] = version;
   }
 
   console.error(`Starting Fusion Client ${version}!`);
@@ -145,7 +165,7 @@ const download = async (url, dest) => {
   await pipeline(downloadStream, fileWriterStream);
 };
 
-const install = async (modloader, version, instance) => {
+const install = async (modloader, version, instance, fullOptions) => {
   let versionName;
   // Get Information
   const modloaderMatch = mods.filter(input => input.modloader === modloader)[0];
@@ -186,13 +206,23 @@ const install = async (modloader, version, instance) => {
     console.log("Forge Installed!");
   }
 
+  if (!fullOptions.skipMods) {
+    await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
+      const modVersion = mod.version ? mod.version : version;
+      if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath, modloader);
+      else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath, modloader);
+      else if (mod.source === "link") {
+        if (!(await fs.pathExists(mod.name+".jar"))) {
+          console.log(`Special download: ${mod.name}`);
+          await download(mod.link, path.join(modsPath,mod.name+".jar"));
+        } else {
+          console.log(`Special download already exists: ${mod.name}`); 
+        }
+      }
+    })).then(() => console.log("Mods installed!"));
+  }
   // Install Mods
-  console.log(filteredResult[0].mods);
-  await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
-    const modVersion = mod.version ? mod.version : version;
-    if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath, modloader);
-    else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath, modloader);
-  })).then(() => console.log("Mods installed!"));
+  
 
   console.log("Installation complete!");
 

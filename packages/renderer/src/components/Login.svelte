@@ -1,8 +1,12 @@
 <script>
 import _ from "lodash"; 
 import { onMount } from 'svelte';
-import { get } from "svelte/store";
-let users, selected;
+import { selectedUser } from "../data/localStore";
+
+let selected;
+selectedUser.subscribe((thing) => selected = thing);
+
+let users;
 
 async function login(username) {
     let data;
@@ -22,7 +26,7 @@ async function login(username) {
         users = JSON.stringify(_.merge(users, userSnippet))
         
         localStorage.setItem("users", users);
-        localStorage.setItem("selected", username)
+        selectedUser.set(username)
 
         userListify();
         console.log("Sign-in Successful!");
@@ -31,15 +35,12 @@ async function login(username) {
 
 const select = async (name) => {
     localStorage.setItem("selected", name)
-    selected = localStorage.getItem("selected");
 }
 
 const logout = async (name) => {
-    if (localStorage.getItem("selected") == name) {
-        localStorage.setItem("selected", "")
+    if (localStorage.selected == name) {
+        selectedUser.set("e")
     }
-
-    selected = localStorage.getItem("selected");
 
     users = JSON.parse(localStorage.getItem("users"));
     delete users[name]
@@ -50,10 +51,6 @@ const logout = async (name) => {
 
 const userListify = () => {
     users = Object.entries(JSON.parse(localStorage.getItem("users")));
-    selected = localStorage.getItem("selected");
-    if (!selected) {
-        selected = "e"
-    }
 }
 
 onMount(() => {
@@ -67,7 +64,9 @@ onMount(() => {
             await login()
         }
     }>Login</button><br>
+    {#key selected}
     <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
+    {/key}
     {#key users}
         {#if users}
             {#each users as [name, data]}

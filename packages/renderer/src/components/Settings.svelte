@@ -1,79 +1,64 @@
 <script lang="ts">
-import Select, { Option } from '@smui/select';
+import { Select, SelectItem, SelectItemGroup } from "carbon-components-svelte";
 import Slider from '@smui/slider';
+import { versions, maxMemory, minMemory } from "../data/localStore";
 
-let versions: any;
+
+let selected: any;
+
+let totalMem: any, memMax: number, memMin: number;
+
+versions.subscribe((thing) => selected = thing);
+maxMemory.subscribe((thing) => memMax = thing);
+minMemory.subscribe((thing) => memMin = thing);
+
+
 let mods: any;
-let modloaders: any;
-let maxMemory: number, freeMemory, memMax: number, memMin: number;
+
 const start = async() => {
     mods = await window.please.get("mods");
-    console.log(mods);
-    versions = mods.filter(data => data.modloader == modloader)[0].versions;
-    console.log(versions.some((data) => data == "version"))
-    modloaders = await window.please.get("modloaders");
-    maxMemory = await window.please.get("maxMemory", "M");
-    freeMemory = await window.please.get("freeMemory", "M");
-    if (localStorage.getItem("modloader")) {
-        modloader = localStorage.getItem("modloader");
+    totalMem = await window.please.get("maxMemory", "M");
+    if (!memMax) {
+        memMax = await window.please.get("freeMemory", "M");
     }
-    else {
-        modloader = "fabric";
-    }
-    if (localStorage.getItem("maxMemory")) {
-        memMax = Number(localStorage.getItem("maxMemory"));
-        memMin = Number(localStorage.getItem("minMemory"));
-    }
-    else {
-        memMax = freeMemory;
-        memMin = 128;
-    }
+    
+    return mods;
 };
 
-$: modloader = localStorage.getItem("modloader");
-$:{
-    if (modloader) {
-        localStorage.setItem("modloader", modloader);
-    } else {
-        localStorage.setItem("modloader", "fabric");
-    }
-}
-
-
-// $: versions = mods.filter((data: { modloader: string|null; }) => data.modloader == modloader)[0].versions;
-
-$: if (version) localStorage.setItem("version", version);
-$: version = localStorage.getItem("version");
 $: {
-    if (memMax && memMin) {
-        localStorage.setItem("minMemory", String(memMin));
-        localStorage.setItem("maxMemory", String(memMax));
+    if (mods) {
+        for (let version of mods) {
+            for (let modloaderVersions of version.versions) {
+                if (modloaderVersions.version == selected) localStorage.modloader = version.modloader;
+            }
+        }
     }
+    versions.set(selected)
 }
+$: maxMemory.set(memMax)
+$: minMemory.set(memMin)
 
-// $: modloader, 
+
 </script>
 
 {#await start()}
 Waiting for load
-{:then}
-
-<Select variant="filled" bind:modloader label="Modloader">
-    {#each modloaders as loader}
-        <Option value={loader}>{loader}</Option>
-    {/each}
-</Select>
-
-<Select variant="filled" bind:version label="Version">
-    {#each versions as version}
-        <Option value={version}>{version}</Option>
+{:then mods}
+<Select labelText="Carbon theme" bind:selected>
+    {#each mods as modloaderInfo}
+    <SelectItemGroup label={modloaderInfo.modloader}>
+        {#each modloaderInfo.versions as version}
+            <SelectItem value={version.version} text={version.version}/>
+        {/each}
+    </SelectItemGroup>
     {/each}
 </Select>
 
 <Slider range
 bind:start={memMin} bind:end={memMax}
-min={128} max={maxMemory} step={1}
-input$aria-label="Memory Slider"/>
+min={128} max={totalMem} step={1}
+input$aria-label="Memory Slider"
+/>
 
 <p>{memMin}/{memMax}M</p>
 {/await}

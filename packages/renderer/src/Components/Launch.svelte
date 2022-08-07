@@ -1,35 +1,42 @@
 <script>
-let typeClass = localStorage.getItem("selected") !==null ? "launch" : "angwy";
-let clientMSG = typeClass == "launch" ? "Launch Client" : "Login First!";
-let closed = true;
+import { selectedUser } from "../data/localStore";
 import LinearProgress from '@smui/linear-progress';
+
+
+let selected;
+selectedUser.subscribe((thing) => selected = thing);
+
+$: typeClass = selected !== "e" ? "launch" : "angwy";
+$: clientMSG = typeClass == "launch" ? "Launch Client" : "Login First!";
+let closed = true;
 
 const getGameOpts = async () => {
     return { 
-        modloader: "forge", //localStorage.getItem("modloader"),
-        clientName: "1.8.9", //localStorage.getItem("version"),
-        version: "1.8.9", //localStorage.getItem("version"),
+        modloader: localStorage.getItem("modloader"),
+        clientName: localStorage.getItem("version"),
+        version: localStorage.getItem("version"),
         memMax: localStorage.getItem("maxMemory")+"M",
         memMin: localStorage.getItem("minMemory")+"M",
         authentication: getAuth(),
-        maxSockets: 8,
+        maxSockets: 10,
+        skipMods: true,
     }
 }
 
 const getAuth = () => {
-    return JSON.parse(localStorage.getItem("users"))[localStorage.getItem("selected")];
+    return JSON.parse(localStorage.getItem("users"))[selected];
 }
 </script>
 
 <button class={typeClass} on:click={async () => {
-    if (localStorage.getItem("selected")) {
+    if (selected != "e") {
         closed = false;
         window.please.get("startClient", await getGameOpts()).then(() => {
             closed = true;
         });
     }
     else {
-        alert = ("Login First!");
+        alert = "Login First!";
     }
     
 }}>
