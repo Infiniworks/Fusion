@@ -96,7 +96,7 @@ const startClient = async (options) => {
       min: options.memMin,
       max: options.memMax,
     },
-    javaPath: installation.java+".exe",
+    javaPath: installation.java,
     overrides: {
       maxSockets: options.maxSockets,
       libraryRoot: path.join(resourcesPath, "libraries"),
@@ -194,7 +194,7 @@ const install = async (modloader, version, instance, fullOptions) => {
 
   let java = path.join(javaPath, "bin", "javaw");
 
-  if (process.platform === "darwin" && macCompatMode == false) {
+  if (process.platform === "darwin") {
     java = path.join(javaPath, "Contents", "Home", "bin", "java");
   }
 
