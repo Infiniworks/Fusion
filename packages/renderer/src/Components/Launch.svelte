@@ -1,14 +1,15 @@
 <script>
-import { selectedUser } from "../data/localStore";
-import LinearProgress from '@smui/linear-progress';
+import { selectedUser, versions, modDisabling } from "../data/localStore";
+import { InlineLoading } from "carbon-components-svelte";
 
-
-let selected;
+let selected, version, modsDisabled;
 selectedUser.subscribe((thing) => selected = thing);
+versions.subscribe((thing) => version = thing);
+modDisabling.subscribe((thing) => modsDisabled = thing);
 
-$: typeClass = selected !== "e" ? "launch" : "angwy";
-$: clientMSG = typeClass == "launch" ? "Launch Client" : "Login First!";
-let closed = true;
+$: typeClass = selected !== "e" ? "launch" : "disabled";
+$: clientMSG = typeClass == "launch" ? `Launch ${version}` : "Login First!";
+let progressBar = false;
 
 const getGameOpts = async () => {
     return { 
@@ -19,7 +20,7 @@ const getGameOpts = async () => {
         memMin: localStorage.getItem("minMemory")+"M",
         authentication: getAuth(),
         maxSockets: 10,
-        skipMods: true,
+        skipMods: modsDisabled || false,
     }
 }
 
@@ -30,9 +31,9 @@ const getAuth = () => {
 
 <button class={typeClass} on:click={async () => {
     if (selected != "e") {
-        closed = false;
+        progressBar = true;
         window.please.get("startClient", await getGameOpts()).then(() => {
-            closed = true;
+            progressBar = false;
         });
     }
     else {
@@ -41,7 +42,12 @@ const getAuth = () => {
     
 }}>
 {clientMSG}
-<LinearProgress indeterminate {closed}/>
+
+
+{#if progressBar}
+<InlineLoading status="active" description="Loading..." />
+{/if}
+
 </button>
 
 <style>
@@ -63,7 +69,7 @@ button.launch:hover {
     clip-path: inset(0px 0px -30px 0px);
 }
 
-button.angwy {
+button.disabled {
     background-color: #a31616;
     color: rgb(197, 197, 197);
     width: 100%;

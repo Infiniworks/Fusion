@@ -1,17 +1,22 @@
 <script lang="ts">
-import { Select, SelectItem, SelectItemGroup } from "carbon-components-svelte";
+import "carbon-components-svelte/css/all.css";
+import { 
+    Tag, Tooltip, 
+    Checkbox, Select, SelectItem, SelectItemGroup,
+} from "carbon-components-svelte";
 import Slider from '@smui/slider';
-import { versions, maxMemory, minMemory } from "../data/localStore";
+import { versions, maxMemory, minMemory, modDisabling } from "../data/localStore";
 
+$: document.documentElement.setAttribute("theme", "g90");
 
-let selected: any;
+let selected: any, checked: any;
 
 let totalMem: any, memMax: number, memMin: number;
 
 versions.subscribe((thing) => selected = thing);
 maxMemory.subscribe((thing) => memMax = thing);
 minMemory.subscribe((thing) => memMin = thing);
-
+modDisabling.subscribe((thing) => checked = thing);
 
 let mods: any;
 
@@ -37,14 +42,14 @@ $: {
 }
 $: maxMemory.set(memMax)
 $: minMemory.set(memMin)
-
+$: modDisabling.set(checked)
 
 </script>
 
 {#await start()}
 Waiting for load
 {:then mods}
-<Select labelText="Carbon theme" bind:selected>
+<Select labelText="Select Version" bind:selected>
     {#each mods as modloaderInfo}
     <SelectItemGroup label={modloaderInfo.modloader}>
         {#each modloaderInfo.versions as version}
@@ -61,5 +66,23 @@ input$aria-label="Memory Slider"
 />
 
 <p>{memMin}/{memMax}M</p>
+
+<div class="oop">
+    <Checkbox bind:checked/>
+    Disable Mods Installing
+    <Tooltip direction="right">
+        <Tag type="red">BETA</Tag> Use for mod testing only
+    </Tooltip>
+</div>
 {/await}
 
+<style>
+
+div.oop {
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    outline: 3px solid;
+}
+
+</style>

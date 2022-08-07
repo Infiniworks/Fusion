@@ -356,11 +356,6 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "inspecio",
-                        "slug": "inspecio",
-                        "source": "curseforge"
-                    },
-                    {
                         "name": "fastanim",
                         "slug": "fastanim",
                         "source": "curseforge"
