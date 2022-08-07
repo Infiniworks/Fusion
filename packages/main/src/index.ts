@@ -26,7 +26,9 @@ const clientId = "1001858478618447952";
 const rpc = new DiscordRPC.Client({ transport: "ipc" });
 const startTimestamp = new Date();
 const isSingleInstance = app.requestSingleInstanceLock();
+
 const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
+const resourcesPath = path.join(minecraftPath, "resources");
 
 let currentVersion, serverUrl, authResult;
 
@@ -93,6 +95,9 @@ const startClient = async (options) => {
     javaPath: installation.java,
     overrides: {
       maxSockets: options.maxSockets,
+      libraryRoot: path.join(resourcesPath, "libraries"),
+      assetRoot: path.join(resourcesPath, "assets"),
+      gameDirectory: path.join(minecraftPath, "shared"),
     },
     customArgs: [
       "-XX:+UseG1GC",
@@ -115,6 +120,7 @@ const startClient = async (options) => {
       "-XX:MaxTenuringThreshold=1",
     ],
   };
+
   if (options.modloader == "forge") {
     opts["forge"] = path.join(rootDir,"forge.jar");
   }
@@ -190,9 +196,10 @@ const install = async (modloader, version, instance, fullOptions) => {
   // Install Minecraft
   const loaderVersion = filteredResult[0].loaderVersion;
   const instancesPath = path.join(minecraftPath, "instances", instance);
-  const modsPath = path.join(instancesPath, "mods");
+  const modsPath = path.join(resourcesPath, "mods");
   version = filteredResult[0].version ? filteredResult[0].version : version;
 
+  fs.remove(path.join(minecraftPath, "shared", "mods"));
   if (modloader == "fabric") {
     versionName = version + "-fabric" + loaderVersion;
     const versionList = await getFabricLoaderArtifact(version, loaderVersion);
@@ -205,22 +212,35 @@ const install = async (modloader, version, instance, fullOptions) => {
     await download(filteredResult[0].loaderUrl, path.join(instancesPath, "forge.jar"));
     console.log("Forge Installed!");
   }
-
-  if (!fullOptions.skipMods) {
-    await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
-      const modVersion = mod.version ? mod.version : version;
-      if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath, modloader);
-      else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath, modloader);
-      else if (mod.source === "link") {
-        if (!(await fs.pathExists(mod.name+".jar"))) {
-          console.log(`Special download: ${mod.name}`);
-          await download(mod.link, path.join(modsPath,mod.name+".jar"));
-        } else {
-          console.log(`Special download already exists: ${mod.name}`); 
-        }
+  skipMods = fullOptions.skipMods;
+  await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
+    let modFilePath;
+    const modVersion = mod.version ? mod.version : version;
+    if (mod.source === "modrinth") {
+      modFilePath = await getModrinthMod(mod.slug, modVersion, modsPath, modloader);
+    }
+    else if (mod.source === "curseforge") {
+      modFilePath = await getCurseforgeMod(mod.slug, modVersion, modsPath, modloader);
+    }
+    else if (mod.source === "link") {
+      modFilePath = path.join(modsPath,mod.name+".jar");
+      if (!(await fs.pathExists(mod.name+".jar"))) {
+        console.log(`Special download: ${mod.name}`);
+        await download(mod.link, modFilePath);
+      } else {
+        console.log(`Special download already exists: ${mod.name}`); 
       }
-    })).then(() => console.log("Mods installed!"));
-  }
+    }
+    if (mod.overrides) {
+      const overrides = mod.overrides;
+      if (overrides.filename) {
+        const newFilename = path.join(path.dirname(modFilePath), overrides.filename);
+        await fs.move(modFilePath, newFilename);
+        modFilePath = newFilename;
+      }
+    }
+    await fs.ensureSymlink(modFilePath, path.join(minecraftPath, "shared", "mods", path.basename(modFilePath)), "file");
+  })).then(() => console.log("Mods installed!"));
   // Install Mods
   
 
@@ -320,10 +340,10 @@ const getCurseforgeMod = async (mod, version, modsPath, loader) => {
           console.error(`Downloading CringeForge ${version} Mod! *CF`);
           console.log(`${mod} <== npm @ (node-curseforge)`);
           await download(downloadURL, filename);
-          break;
+          return filename;
         } else {
           console.error(`File ${filename} already exists! *CF`);
-          break;
+          return filename;
         }
       }
     }
@@ -351,10 +371,10 @@ const getModrinthMod = async (mod, version, modsPath, loader) => {
       );
       console.log(`${mod} <== (${url})`);
       await download(downloadURL, filename);
-      break;
+      return filename;
     } else {
       console.error(`File ${filename} already exists!`);
-      break;
+      return filename;
     }
   }
 };

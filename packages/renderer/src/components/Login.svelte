@@ -34,7 +34,7 @@ async function login(username) {
 }
 
 const select = async (name) => {
-    localStorage.setItem("selected", name)
+    selectedUser.set(name)
 }
 
 const logout = async (name) => {

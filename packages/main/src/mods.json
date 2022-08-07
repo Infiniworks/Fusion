@@ -463,7 +463,11 @@
                     {
                         "name": "fastload",
                         "slug": "fastload",
-                        "source": "modrinth"
+                        "source": "modrinth",
+                        "overrides": {
+                            "filename": "Fastload-1.1.5-override1.18.2.jar"
+                        }
+                        
                     },
                     {
                         "name": "ferrite-core",
