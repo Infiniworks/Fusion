@@ -292,12 +292,15 @@ rpc.login({ clientId }).catch(console.error);
 
 const getJava = async (javaVersion, javaPath, javaTemp, arch) => {
   if (await fs.exists(javaPath)) return;
-  
   let operatingSystem = process.platform + "";
   if (operatingSystem == "win32") {
     operatingSystem = "windows";
-  } else if (operatingSystem == "darwin" && macCompatMode == false) {
+  } else if (operatingSystem == "darwin") {
     operatingSystem = "mac";
+  } 
+  if (macCompatMode) {
+    operatingSystem = "windows";
+    arch = "x64";
   }
   const response = await got(
     `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${operatingSystem}&architecture=${arch}`,
