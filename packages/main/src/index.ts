@@ -32,6 +32,8 @@ const resourcesPath = path.join(minecraftPath, "resources");
 
 let currentVersion, serverUrl, authResult, skipMods: any;
 
+const macCompatMode = true;
+
 import mods from "./mods.json";
 
 // Checks
@@ -190,7 +192,7 @@ const install = async (modloader, version, instance, fullOptions) => {
 
   let java = path.join(javaPath, "bin", "javaw");
 
-  if (process.platform === "darwin") {
+  if (process.platform === "darwin" && macCompatMode == false) {
     java = path.join(javaPath, "Contents", "Home", "bin", "java");
   }
 
@@ -295,7 +297,7 @@ const getJava = async (javaVersion, javaPath, javaTemp, arch) => {
   let operatingSystem = process.platform + "";
   if (operatingSystem == "win32") {
     operatingSystem = "windows";
-  } else if (operatingSystem == "darwin") {
+  } else if (operatingSystem == "darwin" && macCompatMode == false) {
     operatingSystem = "mac";
   }
   const response = await got(
