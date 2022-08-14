@@ -173,21 +173,21 @@ const install = async (modloader, version, instance) => {
   const javaPath = path.join(minecraftPath, "java", javaVersion);
 
   // Install Java
-  await getJava(javaVersion, javaPath, javaTemp, arch).then(() => console.log("Java installed!"));
+  // sawait getJava(javaVersion, javaPath, javaTemp, arch).then(() => console.log("Java installed!"));
 
   // Install Fabric
-  const versionList = await getFabricLoaderArtifact(mcVersion, loaderVersion);
-  await installFabric(versionList, instancesPath).then((result) => {
-    versionName = result;
-    console.log("Fabric installed!");
-  });
+  // const versionList = await getFabricLoaderArtifact(mcVersion, loaderVersion);
+  // await installFabric(versionList, instancesPath).then((result) => {
+  //   versionName = result;
+  //   console.log("Fabric installed!");
+  // });
 
   // Install Mods
-  await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
-    const modVersion = mod.version ? mod.version : version;
-    if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath);
-    else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath);
-  })).then(() => console.log("Mods installed!"));
+  // await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
+  //   const modVersion = mod.version ? mod.version : version;
+  //   if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath);
+  //   else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath);
+  // })).then(() => console.log("Mods installed!"));
 
   console.log("Installation complete!");
 
