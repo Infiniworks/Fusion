@@ -48,7 +48,7 @@ if (!isSingleInstance) {
 async function setActivity(activity) {
   rpc.setActivity({
     details: `Playing ${activity || "Launcher Screen"}`,
-    buttons: [{ label: "Downloads", url: "https://github.com/AarushX/Fusion" }],
+    buttons: [{ label: "Downloads", url: "https://github.com/AlphaUpstream/Fusion" }],
     startTimestamp,
     largeImageKey: "fusion",
   });
@@ -146,6 +146,7 @@ const startClient = async (options) => {
     console.log(e);
   });
   launcher.on("data", (e) => {
+    fs.appendFileSync();
     console.log(e);
     if (e.includes("[main/INFO]") || e.includes("[Render thread/INFO]")) {
       console.log(e);
