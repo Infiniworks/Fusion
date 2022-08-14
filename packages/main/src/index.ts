@@ -103,7 +103,6 @@ const startClient = async (options) => {
       maxSockets: options.maxSockets,
       libraryRoot: path.join(resourcesPath, "libraries"),
       assetRoot: path.join(resourcesPath, "assets"),
-      gameDirectory: path.join(minecraftPath, "shared"),
     },
     customArgs: [
       `-Dorg.lwjgl.librarypath=${path.join(resourcesPath, "lwjgl")}`,
@@ -144,6 +143,7 @@ const startClient = async (options) => {
 
   const fullLog = path.join(resourcesPath, "logs", options.version + Date.now() + ".full.log");
   const gameLog = path.join(resourcesPath, "logs", options.version + Date.now() + ".log");
+
   fs.ensureFile(fullLog);
   fs.ensureFile(gameLog);
   
@@ -216,8 +216,10 @@ const install = async (modloader, version, instance, fullOptions) => {
   // Install Minecraft
   const loaderVersion = filteredResult[0].loaderVersion;
   const instancesPath = path.join(minecraftPath, "instances", instance);
-  const modsPath = path.join(resourcesPath, "mods");
+  
   version = filteredResult[0].version ? filteredResult[0].version : version;
+  const modsPath = path.join(resourcesPath, "mods", version);
+  
 
   fs.remove(path.join(minecraftPath, "shared", "mods"));
   if (modloader == "fabric") {

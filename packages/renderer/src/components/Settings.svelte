@@ -1,6 +1,7 @@
 <script lang="ts">
 import "carbon-components-svelte/css/all.css";
 import { 
+    Tile,
     Slider,
     Tag, Tooltip, 
     Checkbox, Select, SelectItem, SelectItemGroup,
@@ -52,38 +53,52 @@ $: modDisabling.set(checked)
 {#await start()}
 Waiting for load
 {:then mods}
-<Select labelText="Select Version" bind:selected>
-    {#each mods as modloaderInfo}
-    <SelectItemGroup label={modloaderInfo.modloader}>
-        {#each modloaderInfo.versions as version}
-            <SelectItem value={version.version} text={version.version}/>
-        {/each}
-    </SelectItemGroup>
+{#each mods as modloaderInfo}
+<div class="inline">
+    {modloaderInfo.modloader}
+    {#each modloaderInfo.versions as version}
+        <button class="inline button" on:click={() => selected = version.version}>{version.version}</button>
     {/each}
-</Select>
-<div class="oop">
-
-
-<Slider
-invalid={memMax >= freeMem}
-labelText="Memory (MB)"
-min={128}
-max={totalMem}
-maxLabel={totalMem+" MB"}
-bind:value={memMax}
-step={10}
-/>
-Using: {memMax} MB
 </div>
+{/each}
+<div class="oop inline">
+    <Slider
+        invalid={memMax >= freeMem}
+        labelText="Memory (MB)"
+        min={128}
+        max={totalMem}
+        maxLabel={totalMem+" MB"}
+        bind:value={memMax}
+        step={10}
+    />
+    Using: {memMax} MB
+</div>
+
 {/await}
 
 <style>
-
-div.oop {
-    display: fixed;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
+    .button {
+        padding: 7px;
+        background-color: #1f2020;
+        transition-timing-function: ease-in-out;
+        color: rgba(255, 255, 255, 0.503);
+        transition: all .8s;
+    }
+    .inline {
+        border-radius: 5px 5px 5px 5px;
+        display: flex;
+        padding: 7px;
+        margin: 5px;
+        background-color: #1f2020;
+        transition-timing-function: ease-in-out;
+        color: rgba(255, 255, 255, 0.373);
+        transition: all .8s;
+    }
+    div.oop {
+        display: fixed;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
 
 </style>

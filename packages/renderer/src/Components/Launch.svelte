@@ -28,54 +28,59 @@ const getAuth = () => {
 }
 </script>
 
-{#if selected == "e"}
-<button class="disabled">Login First!</button>
-{:else}
-<button class="launch" on:click={async () => {
-    progressBar = true;
-    window.please.get("startClient", await getGameOpts()).then(() => {
-        progressBar = false;
-    });
-}}>LAUNCH {version}</button>
-{/if}
 
-{#if progressBar}
-<InlineLoading status="active" description="Loading..." />
-{/if}
+<main>
+    {#if selected == "e"}
+        <button class="disabled inline">Login First!</button>
+    {:else}
+        <button class="launch inline" on:click={async () => {
+            progressBar = true;
+            window.please.get("startClient", await getGameOpts()).then(() => {
+                progressBar = false;
+            });
+        }}>LAUNCH {version}
+        </button>
+    {/if}
+
+    {#if progressBar}
+        <InlineLoading status="active" description="Loading..." />
+    {/if}
+</main>
 
 <style>
-button {
-    padding: 30px;
+.inline {
+    padding: 7px;
+    background-color: #1f2020;
     transition-timing-function: ease-in-out;
+    color: rgba(255, 255, 255, 0.503);
+    transition: all .8s;
 }
 button.launch {
-    background-color: #16a34a;
+    background-color: #1f2020;
     color: rgb(197, 197, 197);
-    font-size: 23px;
+    font-size: 18px;
     font-weight: bold;
     width: 100%;
     height: 100%;
     transition-timing-function: ease-in-out;
     transition: all .8s;
-    box-shadow: 0 0 1px rgba(0,0,0,0.75);
-    clip-path: inset(0px 0px -15px 0px);
+}
+.body {
+    width:50%;
+}
+button {
+    padding: 30px;
+    transition-timing-function: ease-in-out;
 }
 
+
 button.launch:hover {
-    background-color: #0ac850;
+    background-color: #0b8fb4;
     color: #ffffff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.75);
-    clip-path: inset(0px 0px -10px 0px);
 }
 
 button.disabled {
     background-color: #a31616;
     color: rgb(197, 197, 197);
-    width: 100%;
-    height: 100%;
-    transition-timing-function: ease-in-out;
-    transition: all .8s;
-    box-shadow: 0 0 1px rgba(0,0,0,0.75);
-    clip-path: inset(0px 0px -15px 0px);
 }
 </style>

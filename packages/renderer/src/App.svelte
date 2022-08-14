@@ -9,37 +9,34 @@ import ProfileBar from "./components/ProfileBar.svelte";
 import MainPage from "./components/MainPage.svelte";
 </script>
 
-<main class="body font-medium lining-nums">
-	<div class="topBar"><TopBar /></div>
-	<div class="top" style="flex: 1 0;">
-		<div class="login bg-cyan-700" style="flex: 4 0">
-			<Login></Login>
-		</div>
-		<div class="profiles bg-cyan-600"style="flex: 8 0">
-			<Settings></Settings>
-			
-		</div>
-		<div class="launch bg-cyan-700"style="flex: 2 0">
-			<Launch></Launch>
-		</div>
-	</div>
-	<div class="main" style="flex: 4 0;">
-		<div class="left bg-cyan-600" style="flex: 4 0;">
-			<div class="settings">
-				Profiles Go Here<Profiles></Profiles>
-			</div>
-			<div class="servers">
-				Servers Here<Servers></Servers>
-			</div>
-		</div>
 
-		<div class="right bg-cyan-500" style="flex: 8 0;">
-			<div>Profile Bar Here<ProfileBar></ProfileBar></div>
-			<div>Actual Page Here<MainPage></MainPage></div>
+<main class="font-medium lining-nums">
+	<div class="tbar">
+		<TopBar />
+	</div>
+	<div class="body">
+		<div class="left">
+			<div>
+				<Login></Login>
+				<Profiles></Profiles>
+				<Servers></Servers>
+			</div>
+		</div>
+		<div class="middle">
+			<div>
+				<MainPage></MainPage>
+				<Settings></Settings>
+				<ProfileBar></ProfileBar>
+			</div>
+		</div>
+		<div class="right">
+			<div>
+				<Launch></Launch>
+			</div>
 		</div>
 	</div>
 </main>
-<TopBar/>
+
 
 <style>
 main {
@@ -52,51 +49,49 @@ main {
 	margin:0px;
 	padding:0px;
 	color: rgb(194, 214, 234);
-}
-.main {
-	display: flex;
-	flex-direction: row;
+	display: inline-block;
+	background-color: purple;
 }
 .body {
 	display: flex;
-	flex-direction: column;
-	flex: 1 0;
+	flex-direction: row;
 	align-items: stretch;
 	margin: auto;
-	padding:0;
+	padding: 0px;
+	height: 100%;
 }
-.top {
+/* .top {
 	display: inline-flex;
 	background-color: #4d25eb;
 	box-shadow: 0 0 15px rgba(0,0,0,0.75);
 	clip-path: inset(0px 0px -15px 0px);
-}
+} */
 .left {
-	display: inline-flex;
+	flex: 10 0 0;
 	flex-direction: column;
-	padding:10px;
-	/* background-color: #2d65bf; */
+	height: 100%;
+	background:linear-gradient(rgba(17, 16, 16, 0.9), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
+	background-size: cover; 
 }
 .right {
-	display: inline-flex;
+	flex: 5 0 0;
 	flex-direction: column;
-	padding:10px;
-	/* background-color: #3e7ed7; */
+	height: 100%;
+	/* background-color: #070908; */
+	background:linear-gradient(rgba(17, 16, 16, 0.9), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
+	background-size: cover; 
+}
+.middle {
+	flex: 15 0 0;
+	flex-direction: column;
+	height: 100%;
+	background:linear-gradient(rgba(17, 16, 16, 0.95), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
+	background-size: cover; 
 }
 
-.topBar {
+.tbar {
 	-webkit-app-region: drag;
 	box-shadow: 0 0 15px rgba(0,0,0,0.75);
 	clip-path: inset(0px 0px -15px 0px);
-}
-.login {
-	justify-content: center;
-}
-.launch {
-	justify-content: center;
-}
-.profiles {
-	padding:10px;
-	justify-content: center;
 }
 </style>

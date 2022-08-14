@@ -78,7 +78,8 @@ onMount(() => {
         async () => {
             await login()
         }
-    }>Login</button><br>
+    }>ADD LOGIN</button><br>
+    <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/>
     {#key users}
         {#if users}
             {#each users as [name, data]}
@@ -93,72 +94,92 @@ onMount(() => {
                     async () => {
                         logout(name)
                     }
-                }>X</button>
+                }><img class = "logoutImage" alt="Logout" src="images/xsymb.webp"/></button>
                 <br>
             </div>
             {/each}
         {/if}
     {/key}
+    
 </main>
 
 <!-- <canvas id="skin_container"></canvas> -->
 
 <style>
-.inline {
-    display: flex;
-    padding: 5px;
-    background-color: #0d6076;
-    transition-timing-function: ease-in-out;
-    color: rgba(255, 255, 255, 0.264);
-    transition: all .8s;
-    
-}
-.login {
-    padding: 5px;
-    transition-timing-function: ease-in-out;
-    background-color: #098233;
-    color: white;
-    width: 100%;
-    transition: all 0.75s;
-}
-.login:hover {
-    background-color: #0b8fb4;
-    color: white;
-    width:100%;
-}
-.selected {
-    color: rgba(255, 255, 255, 0.753);
-    background-color: #0a86a8;
-}
-.logout {
-    border-radius: 5px 5px 5px 5px;
-    float: right;
-    flex: 1 0;
-    background-color: #0b7593;
-    padding: 5px;
-}
-.logout:hover {
-    color: white;
-}
-.user {
-    flex: 10 0;
-    padding: 5px;
-    text-align: left;
-    font-size: 20px;
-}
-.user:hover {
-    background-color: #08b2e100;
-    color: white;
-}
-.noLogin {
-    font-size: 20px;
-    padding: 10px;
-    background-color: rgba(255, 0, 0, 0.287);
-}
-.userHead {
-    border-radius: 5px 5px 5px 5px;
-    width: 15%;
-    padding: 0px;
-    margin: 0px;
-}
+    .bodyIMG {
+        width: 30%;
+        margin-left: auto;
+        margin-right: auto;
+        float: left;
+    }
+    .logoutImage {
+        filter: invert(100%);
+        opacity: 0.5;
+        width: 20px;
+        margin: auto;
+        display: block;
+    }
+    .login {
+        font-size: 18px;
+        font-weight: bold;
+        width: 100%;
+        padding: 7px;
+        background-color: #1f2020;
+        transition-timing-function: ease-in-out;
+        color: rgb(197, 197, 197);
+        transition: all .8s;
+    }
+    .inline {
+        border-radius: 5px 5px 5px 5px;
+        display: flex;
+        padding: 7px;
+        margin: 5px;
+        background-color: #1f2020;
+        transition-timing-function: ease-in-out;
+        color: rgba(255, 255, 255, 0.503);
+        transition: all .8s;
+    }
+    .login:hover {
+        background-color: #0b8fb4;
+        color: white;
+        width:100%;
+    }
+    .selected {
+        color: rgba(255, 255, 255, 0.803);
+        background-color: rgb(59, 59, 59);
+    }
+    .logout {
+        border-radius: 5px 5px 5px 5px;
+        float: right;
+        flex: 1 0;
+        height: 50px;
+        width: 50px;
+        aspect-ratio: 1 / 1;
+        background-color: black;
+        padding: 5px;
+        text-align: center;
+    }
+    .logout:hover {
+        color: white;
+    }
+    .user {
+        flex: 10 0;
+        padding: 5px;
+        text-align: left;
+        font-size: 20px;
+    }
+    .user:hover {
+        background-color: #08b2e100;
+        color: white;
+    }
+    .noLogin {
+        font-size: 20px;
+        padding: 10px;
+        background-color: rgba(255, 0, 0, 0.287);
+    }
+    .userHead {
+        border-radius: 5px 5px 5px 5px;
+        height: 50px;
+        aspect-ratio: 1 / 1;
+    }
 </style>
