@@ -105,7 +105,9 @@ const startClient = async (options) => {
       maxSockets: options.maxSockets,
     },
   };
-
+  if (options.memMin > options.memMax) {
+    options.memMin = options.memMax;
+  }
   console.error(`Starting Fusion Client ${version}!`);
   currentVersion = options.version;
   await setActivity("Minecraft " + options.version);
