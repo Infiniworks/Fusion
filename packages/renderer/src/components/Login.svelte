@@ -77,14 +77,13 @@ onMount(() => {
 </script>
 
 <main>
-    <button class="login" on:click={
+    <button 
+    class:noLogin="{selected === 'e'}"
+    class="login" on:click={
         async () => {
             await login()
         }
     }>Login</button><br>
-    <!-- {#key selected}
-    <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
-    {/key} -->
     {#key users}
         {#if users}
             {#each users as [name, data]}
@@ -122,8 +121,8 @@ onMount(() => {
     padding: 5px;
     background-color: #0d6076;
     color: white;
-    width:100%;
-    transition: background-color 1.75s;
+    width: 100%;
+    transition: all 1.75s;
 }
 .login:hover {
     background-color: #0d5062;
@@ -153,6 +152,11 @@ onMount(() => {
 .user:hover {
     background-color: #08b2e100;
     color: white;
+}
+.noLogin {
+    font-size: 20px;
+    padding: 10px;
+    background-color: rgba(255, 0, 0, 0.287);
 }
 .userHead {
     border-radius: 5px 5px 5px 5px;

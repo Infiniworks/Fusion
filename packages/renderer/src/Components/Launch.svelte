@@ -29,7 +29,7 @@ const getAuth = () => {
 </script>
 
 {#if selected == "e"}
-<button class="disabled">"Login First!"</button>
+<button class="disabled">Login First!</button>
 {:else}
 <button class="launch" on:click={async () => {
     progressBar = true;
@@ -39,20 +39,11 @@ const getAuth = () => {
 }}>LAUNCH {version}</button>
 {/if}
 
-
-
-<!--{#key selected}
-    <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
-{/key}-->
-
 {#if progressBar}
 <InlineLoading status="active" description="Loading..." />
 {/if}
 
 <style>
-.userHead {
-    width: 100%;
-}
 button {
     padding: 30px;
 }
