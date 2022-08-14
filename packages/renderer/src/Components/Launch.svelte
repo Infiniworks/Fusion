@@ -1,14 +1,13 @@
 <script>
 import { selectedUser, versions, modDisabling } from "../data/localStore";
 import { InlineLoading } from "carbon-components-svelte";
+import Login from "./Login.svelte";
 
 let selected, version, modsDisabled;
 selectedUser.subscribe((thing) => selected = thing);
 versions.subscribe((thing) => version = thing);
 modDisabling.subscribe((thing) => modsDisabled = thing);
 
-$: typeClass = selected !== "e" ? "launch" : "disabled";
-$: clientMSG = typeClass == "launch" ? `Launch ${version}` : "Login First!";
 let progressBar = false;
 
 const getGameOpts = async () => {
@@ -29,28 +28,26 @@ const getAuth = () => {
 }
 </script>
 
-<button class={typeClass} on:click={async () => {
-    if (selected != "e") {
-        progressBar = true;
-        window.please.get("startClient", await getGameOpts()).then(() => {
-            progressBar = false;
-        });
-    }
-    else {
-        alert = "Login First!";
-    }
-    
-}}>
-{clientMSG}
-{#key selected}
+{#if selected == "e"}
+<button class="disabled">"Login First!"</button>
+{:else}
+<button class="launch" on:click={async () => {
+    progressBar = true;
+    window.please.get("startClient", await getGameOpts()).then(() => {
+        progressBar = false;
+    });
+}}>LAUNCH {version}</button>
+{/if}
+
+
+
+<!--{#key selected}
     <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
-{/key}
+{/key}-->
 
 {#if progressBar}
 <InlineLoading status="active" description="Loading..." />
 {/if}
-
-</button>
 
 <style>
 .userHead {
@@ -62,10 +59,12 @@ button {
 button.launch {
     background-color: #16a34a;
     color: rgb(197, 197, 197);
+    font-size: 23px;
+    font-weight: bold;
     width: 100%;
     height: 100%;
     transition-timing-function: ease-in-out;
-    transition: all 3.3333s;
+    transition: all .8s;
     box-shadow: 0 0 1px rgba(0,0,0,0.75);
     clip-path: inset(0px 0px -15px 0px);
 }
@@ -73,8 +72,8 @@ button.launch {
 button.launch:hover {
     background-color: #0ac850;
     color: #ffffff;
-    box-shadow: 0 0 30px rgba(0,0,0,0.75);
-    clip-path: inset(0px 0px -30px 0px);
+    box-shadow: 0 0 10px rgba(0,0,0,0.75);
+    clip-path: inset(0px 0px -10px 0px);
 }
 
 button.disabled {
@@ -83,7 +82,7 @@ button.disabled {
     width: 100%;
     height: 100%;
     transition-timing-function: ease-in-out;
-    transition: all 3.3333s;
+    transition: all .8s;
     box-shadow: 0 0 1px rgba(0,0,0,0.75);
     clip-path: inset(0px 0px -15px 0px);
 }

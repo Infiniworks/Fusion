@@ -84,7 +84,9 @@ const startClient = async (options) => {
     "instances",
     options.clientName,
   );
-
+  if (options.memMin > options.memMax) {
+    options.memMin = options.memMax;
+  }
   const opts = {
     clientPackage: null,
     authorization: msmc.getMCLC().getAuth(options.authentication),
@@ -102,8 +104,10 @@ const startClient = async (options) => {
       libraryRoot: path.join(resourcesPath, "libraries"),
       assetRoot: path.join(resourcesPath, "assets"),
       gameDirectory: path.join(minecraftPath, "shared"),
+      natives: path.join(resourcesPath, "libraries", "au", "lwjgl"),
     },
     customArgs: [
+      "-Dorg.lwjgl.util.Debug=true",
       "-XX:+UseG1GC",
       "-XX:+ParallelRefProcEnabled", 
       "-XX:MaxGCPauseMillis=200", 
@@ -122,7 +126,6 @@ const startClient = async (options) => {
       "-XX:SurvivorRatio=32",
       "-XX:+PerfDisableSharedMem",
       "-XX:MaxTenuringThreshold=1",
-      "-Dorg.lwjgl.util.Debug=true",
     ],
   };
 

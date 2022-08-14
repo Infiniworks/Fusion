@@ -88,7 +88,8 @@ onMount(() => {
     {#key users}
         {#if users}
             {#each users as [name, data]}
-            <div class:selected="{name == selected}">
+            <div class="inline" class:selected="{name == selected}">
+                <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{name}"/>
                 <button class="user" on:click={
                     async () => {
                         select(name)
@@ -98,7 +99,8 @@ onMount(() => {
                     async () => {
                         logout(name)
                     }
-                }>Logout</button><br>
+                }>X</button>
+                <br>
             </div>
             {/each}
         {/if}
@@ -107,7 +109,17 @@ onMount(() => {
 <!-- <canvas id="skin_container"></canvas> -->
 
 <style>
+.inline {
+    display: flex;
+    padding: 5px;
+    background-color: #0d6076;
+    transition-timing-function: ease-in-out;
+    color: rgba(255, 255, 255, 0.264);
+    transition: all .8s;
+    
+}
 .login {
+    padding: 5px;
     background-color: #0d6076;
     color: white;
     width:100%;
@@ -119,11 +131,14 @@ onMount(() => {
     width:100%;
 }
 .selected {
+    color: rgba(255, 255, 255, 0.753);
     background-color: #0a86a8;
     box-shadow: 0 0 4px rgba(0,0,0,0.75);
 }
 .logout {
-    float:right;
+    border-radius: 5px 5px 5px 5px;
+    float: right;
+    flex: 1 0;
     background-color: #0b7593;
     padding: 5px;
 }
@@ -131,11 +146,19 @@ onMount(() => {
     color: white;
 }
 .user {
-    font-weight: bold;
+    flex: 10 0;
     padding: 5px;
+    text-align: left;
+    font-size: 20px;
 }
 .user:hover {
     background-color: #08b2e100;
     color: white;
+}
+.userHead {
+    border-radius: 5px 5px 5px 5px;
+    width: 15%;
+    padding: 0px;
+    margin: 0px;
 }
 </style>
