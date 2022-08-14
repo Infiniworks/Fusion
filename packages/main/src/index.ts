@@ -104,9 +104,9 @@ const startClient = async (options) => {
       libraryRoot: path.join(resourcesPath, "libraries"),
       assetRoot: path.join(resourcesPath, "assets"),
       gameDirectory: path.join(minecraftPath, "shared"),
-      natives: path.join(resourcesPath, "libraries", "au", "lwjgl"),
     },
     customArgs: [
+      `-Dorg.lwjgl.librarypath=${path.join(resourcesPath, "lwjgl")}`,
       "-Dorg.lwjgl.util.Debug=true",
       "-XX:+UseG1GC",
       "-XX:+ParallelRefProcEnabled", 
@@ -141,18 +141,29 @@ const startClient = async (options) => {
   await setActivity("Minecraft " + options.version);
 
   console.error(`Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
+
+  const fullLog = path.join(resourcesPath, "logs", options.version + Date.now() + ".full.log");
+  const gameLog = path.join(resourcesPath, "logs", options.version + Date.now() + ".log");
+  fs.ensureFile(fullLog);
+  fs.ensureFile(gameLog);
+  
   launcher.launch(opts);
   launcher.on("debug", (e) => {
     console.log(e);
   });
   launcher.on("data", (e) => {
-    fs.appendFileSync();
-    console.log(e);
+    // Full log
+    fs.appendFileSync(fullLog, e);
     if (e.includes("[main/INFO]") || e.includes("[Render thread/INFO]")) {
+      // Skim log
+      fs.appendFileSync(gameLog, e);
       console.log(e);
     }
     if (e.includes("Sound engine started")) {
       console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
+    }
+    if (e.includes("[Render Thread/WARN]")) {
+      console.error(e);
     }
   });
   launcher.on("close", async (e) => {

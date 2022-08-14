@@ -133,7 +133,6 @@ onMount(() => {
 .selected {
     color: rgba(255, 255, 255, 0.753);
     background-color: #0a86a8;
-    box-shadow: 0 0 4px rgba(0,0,0,0.75);
 }
 .logout {
     border-radius: 5px 5px 5px 5px;
