@@ -6,32 +6,7 @@
                 "version": "1.19",
                 "loaderVersion": "0.14.8",
                 "java": "17",
-                "mods": [   
-                    {
-                        "name": "mipmaplevelandlanguagefix",
-                        "slug": "mipmaplevelandlanguagefix",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "clear-skies",
-                        "slug": "clear-skies",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "spark",
-                        "slug": "spark",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "clumps",
-                        "slug": "clumps",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "mcmouser",
-                        "slug": "mcmouser",
-                        "source": "modrinth"
-                    },
+                "mods": [
                     {
                         "name": "lambdabettergrass",
                         "slug": "lambdabettergrass",
@@ -43,24 +18,9 @@
                         "source": "modrinth"
                     },
                     {
-                        "name": "smoke-suppression",
-                        "slug": "smoke-suppression",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "fast-chest",
                         "source": "link",
                         "link": "https://github.com/FakeDomi/FastChest/releases/download/1.3%2B1.19/fast-chest-1.3+1.19.jar"
-                    },
-                    {
-                        "name": "thorium",
-                        "slug": "thorium",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "inspecio",
-                        "slug": "inspecio",
-                        "source": "curseforge"
                     },
                     {
                         "name": "fastanim",
@@ -127,11 +87,6 @@
                         "slug": "custom-splash-screen",
                         "version": "1.18.2",
                         "source": "curseforge"
-                    },
-                    {
-                        "name": "Very Many Players",
-                        "slug": "vmp-fabric",
-                        "source": "modrinth"
                     },
                     {
                         "name": "c2me-fabric",
@@ -299,11 +254,6 @@
                         "source": "curseforge"
                     },
                     {
-                        "name": "antighost",
-                        "slug": "antighost",
-                        "source": "curseforge"
-                    },
-                    {
                         "name": "dont-clear-chat-history",
                         "slug": "dont-clear-chat-history",
                         "source": "curseforge"
@@ -336,29 +286,14 @@
                 "java": "17",
                 "mods": [   
                     {
-                        "name": "mcmouser",
-                        "slug": "mcmouser",
-                        "source": "modrinth"
-                    },
-                    {
                         "name": "alternate-current",
                         "slug": "alternate-current",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "smoke-suppression",
-                        "slug": "smoke-suppression",
                         "source": "modrinth"
                     },
                     {
                         "name": "fast-chest",
                         "source": "link",
                         "link": "https://github.com/FakeDomi/FastChest/releases/download/1.3%2B1.18/fast-chest-1.3+1.18.jar"
-                    },
-                    {
-                        "name": "thorium",
-                        "slug": "thorium",
-                        "source": "modrinth"
                     },
                     {
                         "name": "fastanim",
@@ -378,21 +313,6 @@
                     {
                         "name": "entity-collision-fps-fix",
                         "slug": "entity-collision-fps-fix",
-                        "source": "modrinth"
-                    },
-                    {
-                        "name": "mipmaplevelandlanguagefix",
-                        "slug": "mipmaplevelandlanguagefix",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "clear-skies",
-                        "slug": "clear-skies",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "spark",
-                        "slug": "spark",
                         "source": "modrinth"
                     },
                     {
@@ -475,7 +395,6 @@
                         "slug": "fastload",
                         "source": "link",
                         "link": "https://cdn.modrinth.com/data/kCpssoSb/versions/1.1.5.fabric.1.18.2/Fastload-1.1.5.jar"
-                        
                     },
                     {
                         "name": "ferrite-core",
@@ -605,11 +524,6 @@
                     {
                         "name": "no-fade",
                         "slug": "no-fade",
-                        "source": "curseforge"
-                    },
-                    {
-                        "name": "antighost",
-                        "slug": "antighost",
                         "source": "curseforge"
                     },
                     {
