@@ -46,6 +46,7 @@ const getAuth = () => {
 <style>
 button {
     padding: 30px;
+    transition-timing-function: ease-in-out;
 }
 button.launch {
     background-color: #16a34a;

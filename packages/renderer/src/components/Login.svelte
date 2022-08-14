@@ -58,11 +58,6 @@ onMount(() => {
     userListify();
 });
 
-
-
-
-
-
 // let skinViewer = new skinview3d.SkinViewer({
 // 		canvas: document.getElementById("skin_container"),
 // 		width: 300,
@@ -88,7 +83,7 @@ onMount(() => {
         {#if users}
             {#each users as [name, data]}
             <div class="inline" class:selected="{name == selected}">
-                <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{name}"/>
+                <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{name}/180.png"/>
                 <button class="user" on:click={
                     async () => {
                         select(name)
@@ -105,6 +100,7 @@ onMount(() => {
         {/if}
     {/key}
 </main>
+
 <!-- <canvas id="skin_container"></canvas> -->
 
 <style>
@@ -119,13 +115,14 @@ onMount(() => {
 }
 .login {
     padding: 5px;
-    background-color: #0d6076;
+    transition-timing-function: ease-in-out;
+    background-color: #098233;
     color: white;
     width: 100%;
-    transition: all 1.75s;
+    transition: all 0.75s;
 }
 .login:hover {
-    background-color: #0d5062;
+    background-color: #0b8fb4;
     color: white;
     width:100%;
 }

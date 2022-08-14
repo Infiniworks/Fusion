@@ -11,7 +11,6 @@
   "main": "packages/main/dist/index.cjs",
   "scripts": {
     "start": "yarn && echo Running Loader && yarn watch",
-    "install": "yarn && echo Installed Files",
     "build": "yarn build:main && yarn build:preload && yarn build:renderer",
     "build:main": "cd ./packages/main && vite build",
     "build:preload": "cd ./packages/preload && vite build",
