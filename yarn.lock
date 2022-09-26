@@ -4233,10 +4233,10 @@ node-addon-api@^1.6.3:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
   integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
 
-node-curseforge@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/node-curseforge/-/node-curseforge-1.1.0.tgz#2e3f41ae482a16edd68c3576e2ae9ffe689c5f76"
-  integrity sha512-GCVrgKicUod+duC0qoyYEVv40z06bWenKtCnoHurgkN8tRHP2VK+ku0IH1iPNjULZhZqBfhBmSM2O03ZjsZQkA==
+node-curseforge@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/node-curseforge/-/node-curseforge-1.2.2.tgz#8e5cabfec14dc2aeb440c4ad14643d38c3be1cf9"
+  integrity sha512-dfvKVN7pup3we+yFLzrpWG+o20t+XhMMnIVfNBCQ513TnNI93TrMsCXjNPMLCEBB5DFSAnXGdrKwqRQrB18Qeg==
 
 node-fetch@2.x, node-fetch@^2.6.1, node-fetch@^2.x.x:
   version "2.6.7"
