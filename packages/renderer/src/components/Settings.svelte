@@ -2,24 +2,28 @@
 import "carbon-components-svelte/css/all.css";
 import { 
     Tile,
-    Slider,
+    Slider, Button,
     Tag, Tooltip, 
     Checkbox, Select, SelectItem, SelectItemGroup,
 } from "carbon-components-svelte";
-import { versions, maxMemory, minMemory, modDisabling } from "../data/localStore";
+import { versions, memory, modDisabling } from "../data/localStore";
+import { get } from "svelte/store";
 
 $: document.documentElement.setAttribute("theme", "g90");
 
 let selected: any;
-let checked: any = false;
+let checked2: any;
 
-let totalMem: any, memMax: number, memMin: number;
+let totalMem: any, memory2: number;
 let freeMem: number;
 
+
 versions.subscribe((thing) => selected = thing);
-maxMemory.subscribe((thing) => memMax = thing);
-minMemory.subscribe((thing) => memMin = thing);
-modDisabling.subscribe((thing) => checked = thing);
+memory.subscribe((thing) => memory2 = thing);
+modDisabling.subscribe((thing) => checked2 = thing);
+
+$: modDisabling.set(checked2)
+
 
 let mods: any;
 
@@ -27,8 +31,8 @@ const start = async() => {
     mods = await window.please.get("mods");
     totalMem = await window.please.get("maxMemory", "M");
     freeMem = await window.please.get("freeMemory", "M");
-    if (!memMax) {
-        memMax = freeMem;
+    if (!memory2) {
+        memory2 = freeMem;
     }
     
     return mods;
@@ -44,9 +48,7 @@ $: {
     }
     versions.set(selected)
 }
-$: maxMemory.set(memMax)
-$: minMemory.set(memMin)
-$: modDisabling.set(checked)
+$: memory.set(memory2)
 
 </script>
 
@@ -63,17 +65,20 @@ Waiting for load
 {/each}
 <div class="oop inline">
     <Slider
-        invalid={memMax >= freeMem}
+        invalid={memory2 >= freeMem}
         labelText="Memory (MB)"
         min={128}
         max={totalMem}
         maxLabel={totalMem+" MB"}
-        bind:value={memMax}
+        bind:value={memory2}
         step={10}
     />
-    Using: {memMax} MB
+    Using: {memory2} MB
 </div>
-
+<div class="inline">
+    <Button on:click={() => (checked2 = !checked2)}>{checked2 ?  "Enable Mods" : "Disable Mods"}</Button>
+    Skipping Mods: {checked2}
+</div>
 {/await}
 
 <style>

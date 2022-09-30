@@ -15,11 +15,11 @@ const getGameOpts = async () => {
         modloader: localStorage.getItem("modloader"),
         clientName: localStorage.getItem("version"),
         version: localStorage.getItem("version"),
-        memMax: localStorage.getItem("maxMemory")+"M",
-        memMin: localStorage.getItem("minMemory")+"M",
+        memory: localStorage.getItem("memory")+"M",
         authentication: getAuth(),
         maxSockets: 10,
         skipMods: modsDisabled || false,
+        online: !localStorage.getItem("skipMods") || true,
     }
 }
 

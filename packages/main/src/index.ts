@@ -76,17 +76,16 @@ const login = async () => {
 
 const startClient = async (options) => {
   const startTime = performance.now();
-  const installation = await install(options.modloader, options.version, options.clientName, options);
-  const version = installation.versionName;
-
   const rootDir = path.join(
     minecraftPath,
     "instances",
     options.clientName,
   );
-  if (options.memMin > options.memMax) {
-    options.memMin = options.memMax;
-  }
+
+  const installation = await install(options.modloader, options.version, options.clientName, options, rootDir);
+  const version = installation.versionName;
+
+  
   const opts = {
     clientPackage: null,
     authorization: msmc.getMCLC().getAuth(options.authentication),
@@ -95,8 +94,8 @@ const startClient = async (options) => {
       number: options.version,
     },
     memory: {
-      min: options.memMin,
-      max: options.memMax,
+      min: options.memory,
+      max: options.memory,
     },
     javaPath: installation.java,
     overrides: {
@@ -191,7 +190,7 @@ const download = async (url, dest) => {
   await pipeline(downloadStream, fileWriterStream);
 };
 
-const install = async (modloader, version, instance, fullOptions) => {
+const install = async (modloader, version, instance, fullOptions, rootDir) => {
   let versionName;
   // Get Information
   const modloaderMatch = mods.filter(input => input.modloader === modloader)[0];
@@ -205,10 +204,11 @@ const install = async (modloader, version, instance, fullOptions) => {
   const javaPath = path.join(minecraftPath, "java", javaVersion);
   const javaTemp = path.join(minecraftPath, "java", "temp");
   const arch = process.arch.replace("arm", "aarch");
-  await getJava(javaVersion, javaPath, javaTemp, arch).then(() => console.log("Java installed!"));
+  if (fullOptions.online) {
+    await getJava(javaVersion, javaPath, javaTemp, arch).then(() => console.log("Java installed!"));
+  }
 
   let java = path.join(javaPath, "bin", "javaw");
-
   if (process.platform === "darwin") {
     java = path.join(javaPath, "Contents", "Home", "bin", "java");
   }
@@ -218,21 +218,23 @@ const install = async (modloader, version, instance, fullOptions) => {
   const instancesPath = path.join(minecraftPath, "instances", instance);
   
   version = filteredResult[0].version ? filteredResult[0].version : version;
-  const modsPath = path.join(resourcesPath, "mods", version);
+  const modsPath = path.join(resourcesPath, "mods");
   
-
+  
   fs.remove(path.join(minecraftPath, "shared", "mods"));
-  if (modloader == "fabric") {
-    versionName = version + "-fabric" + loaderVersion;
-    const versionList = await getFabricLoaderArtifact(version, loaderVersion);
-    await installFabric(versionList, instancesPath).then((result) => {
-      versionName = result;
-      console.log("Fabric installed!");
-    });
-  }
-  if (modloader == "forge") {
-    await download(filteredResult[0].loaderUrl, path.join(instancesPath, "forge.jar"));
-    console.log("Forge Installed!");
+  if (fullOptions.online) {
+    if (modloader == "fabric") {
+      versionName = version + "-fabric" + loaderVersion;
+      const versionList = await getFabricLoaderArtifact(version, loaderVersion);
+      await installFabric(versionList, instancesPath).then((result) => {
+        versionName = result;
+        console.log("Fabric installed!");
+      });
+    }
+    if (modloader == "forge") {
+      await download(filteredResult[0].loaderUrl, path.join(instancesPath, "forge.jar"));
+      console.log("Forge Installed!");
+    }
   }
   skipMods = fullOptions.skipMods;
   await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
@@ -261,7 +263,7 @@ const install = async (modloader, version, instance, fullOptions) => {
         modFilePath = newFilename;
       }
     }
-    await fs.ensureSymlink(modFilePath, path.join(minecraftPath, "shared", "mods", path.basename(modFilePath)), "file");
+    await fs.ensureSymlink(modFilePath, path.join(rootDir, "mods", path.basename(modFilePath)), "file");
   })).then(() => console.log("Mods installed!"));
   console.log("Installation complete!");
 
