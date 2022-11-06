@@ -1,36 +1,32 @@
 <script>
-import { selectedUser, versions, modDisabling } from "../data/localStore";
+import { data } from "../data/localStore.js";
 import { InlineLoading } from "carbon-components-svelte";
-import Login from "./Login.svelte";
 
-let selected, version, modsDisabled;
-selectedUser.subscribe((thing) => selected = thing);
-versions.subscribe((thing) => version = thing);
-modDisabling.subscribe((thing) => modsDisabled = thing);
+let globalData = {};
+data.subscribe((thing) => globalData = thing);
 
 let progressBar = false;
 
 const getGameOpts = async () => {
     return { 
-        modloader: localStorage.getItem("modloader"),
-        clientName: localStorage.getItem("version"),
-        version: localStorage.getItem("version"),
-        memory: localStorage.getItem("memory")+"M",
+        modloader: globalData["modloader"],
+        clientName: globalData["version"],
+        version: globalData["version"],
+        memory: globalData["memory"]+"M",
         authentication: getAuth(),
         maxSockets: 10,
-        skipMods: modsDisabled || false,
-        online: !localStorage.getItem("skipMods") || true,
+        online: !globalData["skipMods"] || true,
     }
 }
 
 const getAuth = () => {
-    return JSON.parse(localStorage.getItem("users"))[selected];
+    return JSON.parse(globalData["users"])[globalData.selected];
 }
 </script>
 
 
 <main>
-    {#if selected == "e"}
+    {#if globalData.selected == "e"}
         <button class="disabled inline">Login First!</button>
     {:else}
         <button class="launch inline" on:click={async () => {
@@ -38,7 +34,7 @@ const getAuth = () => {
             window.please.get("startClient", await getGameOpts()).then(() => {
                 progressBar = false;
             });
-        }}>LAUNCH {version}
+        }}>LAUNCH {globalData.version}
         </button>
     {/if}
 

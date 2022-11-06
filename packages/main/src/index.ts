@@ -34,7 +34,7 @@ let currentVersion, serverUrl, authResult;
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, prefer-const
-let macCompatMode = true, skipMods = false;
+let macCompatMode = true;
 
 import mods from "./mods.json";
 
@@ -236,7 +236,6 @@ const install = async (modloader, version, instance, fullOptions, rootDir) => {
       console.log("Forge Installed!");
     }
   }
-  skipMods = fullOptions.skipMods;
   await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
     let modFilePath;
     const modVersion = mod.version ? mod.version : version;
