@@ -33,17 +33,6 @@ const start = async() => {
     return mods;
 };
 
-$: {
-    if (mods) {
-        for (let version of mods) {
-            for (let modloaderVersions of version.versions) {
-                if (modloaderVersions.version == selected) localStorage.modloader = version.modloader;
-            }
-        }
-    }
-    globalData.selected = selected;
-}
-
 $: data.update((thing) => thing = globalData);
 
 </script>
@@ -67,7 +56,9 @@ Waiting for load
 <div class="inline">
     {modloaderInfo.modloader}
     {#each modloaderInfo.versions as version}
-        <button class="inline button" on:click={() => selected = version.version}>{version.version}</button>
+        <button class="inline button" on:click={() => {
+            globalData.version = version;
+        }}>{version.version}</button>
     {/each}
 </div>
 {/each}

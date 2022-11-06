@@ -1,13 +1,11 @@
 <script>
 import _ from "lodash"; 
-import { onMount } from 'svelte';
+import { get } from 'svelte/store';
 import { data } from "../data/localStore.js";
 
 let selected;
 
-let users;
-let globalData = {};
-// data.subscribe((thing) => globalData = thing);
+let globalData = get(data);
 
 async function login(username) {
     let data = JSON.parse(await window.please.get("login"));
@@ -19,8 +17,7 @@ async function login(username) {
         username = data.profile.name;
 
         const userSnippet = { username, data }
-        users = _.compact(_.concat(users, userSnippet));
-        globalData.users = users;
+        globalData.users = _.compact(_.concat(globalData.users, userSnippet));
         globalData.selected = username;
 
         console.log("Sign-in Successful!");
@@ -29,17 +26,19 @@ async function login(username) {
 
 const select = async (index) => {
     globalData.selected = globalData.users[index].username;
+    globalData;
 }
 
 const logout = async (index) => {
     if (globalData.selected == globalData.users[index].username) {
         if (globalData.users.length > 1) {
-            globalData.selected = globalData.users[0].username;
+            globalData.selected = globalData.users[1].username;
         } else {
             globalData.selected = "e";
         }
     }
     delete globalData.users[index];
+    globalData.users = _.compact(globalData.users);
 }
 
 $: data.update((thing) => thing = globalData);
@@ -47,17 +46,17 @@ $: data.update((thing) => thing = globalData);
 
 <main>
     <button 
-    class:noLogin="{selected === 'e'}"
+    class:noLogin="{globalData.selected === 'e'}"
     class="login" on:click={
         async () => {
             await login()
         }
     }>ADD LOGIN</button><br>
     <!-- <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/> -->
-    {#key users}
-        {#if users}
-            {#each users as user, i}
-            <div class="inline" class:selected="{user.username == selected}">
+    {#key globalData.users}
+        {#if globalData.users}
+            {#each globalData.users as user, i}
+            <div class="inline" class:selected="{user.username == globalData.selected}">
                 <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{user.username}/180.png"/>
                 <button class="user" on:click={
                     async () => {

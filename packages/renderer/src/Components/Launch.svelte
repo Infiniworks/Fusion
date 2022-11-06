@@ -2,9 +2,9 @@
 import { data } from "../data/localStore.js";
 import { InlineLoading } from "carbon-components-svelte";
 
-let globalData = {};
+let globalData;
 data.subscribe((thing) => globalData = thing);
-
+console.log(globalData)
 let progressBar = false;
 
 const getGameOpts = async () => {
@@ -24,7 +24,6 @@ const getAuth = () => {
 }
 </script>
 
-
 <main>
     {#if globalData.selected == "e"}
         <button class="disabled inline">Login First!</button>
@@ -34,7 +33,7 @@ const getAuth = () => {
             window.please.get("startClient", await getGameOpts()).then(() => {
                 progressBar = false;
             });
-        }}>LAUNCH {globalData.version}
+        }}>LAUNCH {globalData.selected}
         </button>
     {/if}
 
