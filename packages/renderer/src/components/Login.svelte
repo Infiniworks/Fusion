@@ -19,13 +19,14 @@ async function login(username) {
         const userSnippet = { username, data }
         globalData.users = _.compact(_.concat(globalData.users, userSnippet));
         globalData.selected = username;
-
+        globalData.selectedIndex = globalData.users.length - 1;
         console.log("Sign-in Successful!");
     } 
 }
 
 const select = async (index) => {
     globalData.selected = globalData.users[index].username;
+    globalData.selectedIndex = index;
     globalData;
 }
 
@@ -33,6 +34,7 @@ const logout = async (index) => {
     if (globalData.selected == globalData.users[index].username) {
         if (globalData.users.length > 1) {
             globalData.selected = globalData.users[1].username;
+            globalData.selectedIndex = 1;
         } else {
             globalData.selected = "e";
         }

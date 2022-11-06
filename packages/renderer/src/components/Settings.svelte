@@ -58,6 +58,7 @@ Waiting for load
     {#each modloaderInfo.versions as version}
         <button class="inline button" on:click={() => {
             globalData.version = version;
+            globalData.version.modloader = modloaderInfo.modloader;
         }}>{version.version}</button>
     {/each}
 </div>

@@ -4,14 +4,14 @@ import { InlineLoading } from "carbon-components-svelte";
 
 let globalData;
 data.subscribe((thing) => globalData = thing);
-console.log(globalData)
 let progressBar = false;
 
 const getGameOpts = async () => {
+    const version = globalData.version;
     return { 
-        modloader: globalData["modloader"],
-        clientName: globalData["version"],
-        version: globalData["version"],
+        modloader: version.modloader,
+        clientName: version.version,
+        version: version.version,
         memory: globalData["memory"]+"M",
         authentication: getAuth(),
         maxSockets: 10,
@@ -20,7 +20,7 @@ const getGameOpts = async () => {
 }
 
 const getAuth = () => {
-    return JSON.parse(globalData["users"])[globalData.selected];
+    return globalData["users"][globalData.selectedIndex].data;
 }
 </script>
 
@@ -30,10 +30,11 @@ const getAuth = () => {
     {:else}
         <button class="launch inline" on:click={async () => {
             progressBar = true;
-            window.please.get("startClient", await getGameOpts()).then(() => {
+            const opts = await getGameOpts();
+            window.please.get("startClient", opts).then(() => {
                 progressBar = false;
             });
-        }}>LAUNCH {globalData.selected}
+        }}>LAUNCH {globalData.version.version}
         </button>
     {/if}
 
