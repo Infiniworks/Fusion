@@ -1,20 +1,14 @@
 <script>
 import _ from "lodash"; 
-import { onMount } from 'svelte';
-import { selectedUser } from "../data/localStore";
-// import { SkinViewer } from "skinview3d";
+import { get } from 'svelte/store';
+import { data } from "../data/localStore.js";
 
 let selected;
-selectedUser.subscribe((thing) => selected = thing);
 
-let users;
+let globalData = get(data);
 
 async function login(username) {
-    let data;
-    await window.please.get("login")
-    .then((loginData) => {
-        data = JSON.parse(loginData)
-    })
+    let data = JSON.parse(await window.please.get("login"));
     let result = data.type;
     if (result == "Cancelled") {
         console.log("Sign-in Cancelled!")
@@ -22,77 +16,58 @@ async function login(username) {
     else if (result == "Success") {
         username = data.profile.name;
 
-        users = JSON.parse(localStorage.getItem("users"));
-        let userSnippet = JSON.parse(`{"${username}": ${JSON.stringify(data)}}`);
-        users = JSON.stringify(_.merge(users, userSnippet))
-        
-        localStorage.setItem("users", users);
-        selectedUser.set(username)
-
-        userListify();
+        const userSnippet = { username, data }
+        globalData.users = _.compact(_.concat(globalData.users, userSnippet));
+        globalData.selected = username;
+        globalData.selectedIndex = globalData.users.length - 1;
         console.log("Sign-in Successful!");
     } 
 }
 
-const select = async (name) => {
-    selectedUser.set(name)
+const select = async (index) => {
+    globalData.selected = globalData.users[index].username;
+    globalData.selectedIndex = index;
+    globalData;
 }
 
-const logout = async (name) => {
-    if (localStorage.selected == name) {
-        selectedUser.set("e")
+const logout = async (index) => {
+    if (globalData.selected == globalData.users[index].username) {
+        if (globalData.users.length > 1) {
+            globalData.selected = globalData.users[1].username;
+            globalData.selectedIndex = 1;
+        } else {
+            globalData.selected = "e";
+        }
     }
-
-    users = JSON.parse(localStorage.getItem("users"));
-    delete users[name]
-    
-    localStorage.setItem("users", JSON.stringify(users));
-    userListify();
+    delete globalData.users[index];
+    globalData.users = _.compact(globalData.users);
 }
 
-const userListify = () => {
-    users = Object.entries(JSON.parse(localStorage.getItem("users")));
-}
-
-onMount(() => {
-    userListify();
-});
-
-// let skinViewer = new skinview3d.SkinViewer({
-// 		canvas: document.getElementById("skin_container"),
-// 		width: 300,
-// 		height: 400,
-// 		skin: "https://s.namemc.com/i/37529af66bcdd70d.png"
-// 	});
-
-// 	// Change viewer size
-// 	skinViewer.width = 600;
-// 	skinViewer.height = 800;
-//     skinViewer.nameTag = selected;
+$: data.update((thing) => thing = globalData);
 </script>
 
 <main>
     <button 
-    class:noLogin="{selected === 'e'}"
+    class:noLogin="{globalData.selected === 'e'}"
     class="login" on:click={
         async () => {
             await login()
         }
     }>ADD LOGIN</button><br>
-    <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/>
-    {#key users}
-        {#if users}
-            {#each users as [name, data]}
-            <div class="inline" class:selected="{name == selected}">
-                <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{name}/180.png"/>
+    <!-- <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/> -->
+    {#key globalData.users}
+        {#if globalData.users}
+            {#each globalData.users as user, i}
+            <div class="inline" class:selected="{user.username == globalData.selected}">
+                <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{user.username}/180.png"/>
                 <button class="user" on:click={
                     async () => {
-                        select(name)
+                        select(i)
                     }
-                }>{name}</button>
+                }>{user.username}</button>
                 <button class="logout" on:click={
                     async () => {
-                        logout(name)
+                        logout(i)
                     }
                 }><img class = "logoutImage" alt="Logout" src="images/xsymb.webp"/></button>
                 <br>

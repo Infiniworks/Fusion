@@ -7,6 +7,8 @@ import Settings from "./components/Settings.svelte";
 import Servers from "./components/Servers.svelte";
 import ProfileBar from "./components/ProfileBar.svelte";
 import MainPage from "./components/MainPage.svelte";
+import InfoBar from "./components/InfoBar.svelte";
+import { Tab, TabContent, Tabs } from "carbon-components-svelte";
 </script>
 
 
@@ -15,23 +17,23 @@ import MainPage from "./components/MainPage.svelte";
 		<TopBar />
 	</div>
 	<div class="body">
-		<div class="left">
-			<div>
-				<Login></Login>
-				<Profiles></Profiles>
-				<Servers></Servers>
-			</div>
+		<div class="top">
+			<InfoBar />
 		</div>
 		<div class="middle">
 			<div>
-				<MainPage></MainPage>
-				<Settings></Settings>
+				<Tabs>
+					<Tab label="Login" />
+					<Tab label="Settings" />
+					
+					<svelte:fragment slot="content">
+						<TabContent><Login/></TabContent>
+						<TabContent><Settings/></TabContent>
+					</svelte:fragment>
+				</Tabs>
+
+				<MainPage></MainPage>	
 				<ProfileBar></ProfileBar>
-			</div>
-		</div>
-		<div class="right">
-			<div>
-				<Launch></Launch>
 			</div>
 		</div>
 	</div>
@@ -54,37 +56,23 @@ main {
 }
 .body {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	align-items: stretch;
 	margin: auto;
 	padding: 0px;
-	height: 100%;
+	width: 100%;
 }
-/* .top {
-	display: inline-flex;
-	background-color: #4d25eb;
-	box-shadow: 0 0 15px rgba(0,0,0,0.75);
-	clip-path: inset(0px 0px -15px 0px);
-} */
-.left {
-	flex: 10 0 0;
-	flex-direction: column;
-	height: 100%;
-	background:linear-gradient(rgba(17, 16, 16, 0.9), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
-	background-size: cover; 
-}
-.right {
-	flex: 5 0 0;
-	flex-direction: column;
-	height: 100%;
-	/* background-color: #070908; */
-	background:linear-gradient(rgba(17, 16, 16, 0.9), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
-	background-size: cover; 
+.top {
+	width: 100%;
+	display: flex;
+	background-color: #2d25eb;
+	margin: auto;
+	padding: 0px;
 }
 .middle {
 	flex: 15 0 0;
-	flex-direction: column;
-	height: 100%;
+	flex-direction: row;
+	width: 100%;
 	background:linear-gradient(rgba(17, 16, 16, 0.95), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
 	background-size: cover; 
 }
@@ -92,6 +80,5 @@ main {
 .tbar {
 	-webkit-app-region: drag;
 	box-shadow: 0 0 15px rgba(0,0,0,0.75);
-	clip-path: inset(0px 0px -15px 0px);
 }
 </style>

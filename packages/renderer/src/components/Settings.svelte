@@ -6,7 +6,7 @@ import {
     Tag, Tooltip, 
     Checkbox, Select, SelectItem, SelectItemGroup,
 } from "carbon-components-svelte";
-import { versions, memory, modDisabling } from "../data/localStore";
+import { data } from "../data/localStore.js";
 import { get } from "svelte/store";
 
 $: document.documentElement.setAttribute("theme", "g90");
@@ -14,16 +14,11 @@ $: document.documentElement.setAttribute("theme", "g90");
 let selected: any;
 let checked2: any;
 
-let totalMem: any, memory2: number;
+let totalMem: any;
 let freeMem: number;
 
-
-versions.subscribe((thing) => selected = thing);
-memory.subscribe((thing) => memory2 = thing);
-modDisabling.subscribe((thing) => checked2 = thing);
-
-$: modDisabling.set(checked2)
-
+let globalData: JSON;
+data.subscribe((thing) => globalData = thing);
 
 let mods: any;
 
@@ -31,54 +26,43 @@ const start = async() => {
     mods = await window.please.get("mods");
     totalMem = await window.please.get("maxMemory", "M");
     freeMem = await window.please.get("freeMemory", "M");
-    if (!memory2) {
-        memory2 = freeMem;
+    if (!globalData.memory) {
+        globalData.memory = freeMem;
     }
     
     return mods;
 };
 
-$: {
-    if (mods) {
-        for (let version of mods) {
-            for (let modloaderVersions of version.versions) {
-                if (modloaderVersions.version == selected) localStorage.modloader = version.modloader;
-            }
-        }
-    }
-    versions.set(selected)
-}
-$: memory.set(memory2)
+$: data.update((thing) => thing = globalData);
 
 </script>
 
 {#await start()}
 Waiting for load
 {:then mods}
-{#each mods as modloaderInfo}
-<div class="inline">
-    {modloaderInfo.modloader}
-    {#each modloaderInfo.versions as version}
-        <button class="inline button" on:click={() => selected = version.version}>{version.version}</button>
-    {/each}
-</div>
-{/each}
 <div class="oop inline">
     <Slider
-        invalid={memory2 >= freeMem}
+        invalid={globalData.memory >= freeMem}
         labelText="Memory (MB)"
         min={128}
         max={totalMem}
         maxLabel={totalMem+" MB"}
-        bind:value={memory2}
+        bind:value={globalData.memory}
         step={10}
     />
-    Using: {memory2} MB
+    Using: {globalData.memory} MB
 </div>
+{#each mods as modloaderInfo}
 <div class="inline">
-    <Button on:click={() => (checked2 = !checked2)}>{checked2 ?  "Enable Mods" : "Disable Mods"}</Button>
-    Skipping Mods: {checked2}
+    {modloaderInfo.modloader}
+    {#each modloaderInfo.versions as version}
+        <button class="inline button" on:click={() => {
+            globalData.version = version;
+            globalData.version.modloader = modloaderInfo.modloader;
+        }}>{version.version}</button>
+    {/each}
 </div>
+{/each}
 {/await}
 
 <style>

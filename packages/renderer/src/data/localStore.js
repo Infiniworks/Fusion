@@ -2,15 +2,15 @@
 // ^ Needed since localStorage is available, but not properly found.
 // src/stores/content.js
 import { writable } from "svelte/store";
+// import { database } from "./dataTools.js";
 
-export const versions = writable(localStorage.version);
-export const memory = writable(localStorage.memory || "2048");
-export const selectedUser = writable(localStorage.selected || "e");
-export const modDisabling = writable(localStorage.skipMods || false);
-// export const options = writable(JSON.parse(localStorage.getItem("options") || JSON.stringify({})));
+// let settings = new database("C:\\Files\\Coding\\local.json");
+// const initialSettingsState = await settings.get();
+// const fullData = initialSettingsState;
 
-versions.subscribe((value) => localStorage.version = value);
-memory.subscribe((value) => localStorage.memory = value);
-selectedUser.subscribe((value) => localStorage.selected = value);
-modDisabling.subscribe((value) => localStorage.skipMods = String(value));
-// options.subscribe((value) => localStorage.setItem("options",JSON.stringify(value)));
+export const data = writable(JSON.parse(localStorage.data));
+
+data.subscribe((value) => {
+    console.log(value);
+    localStorage.data = JSON.stringify(value);
+});
