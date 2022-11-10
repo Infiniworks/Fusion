@@ -18,7 +18,7 @@ async function createWindow() {
       preload: join(__dirname, "../../preload/dist/index.cjs"),
       nodeIntegration: true,
     },
-  });
+  }); 
 
   browserWindow.on("ready-to-show", () => {
     ipcMain.on("greet", (event, command, arg1, arg2) => {
