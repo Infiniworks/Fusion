@@ -20,17 +20,17 @@ let freeMem: number;
 let globalData: JSON;
 data.subscribe((thing) => globalData = thing);
 
-let mods: any;
+let clients: any;
 
 const start = async() => {
-    mods = await window.please.get("mods");
+    clients = await window.please.get("clients");
     totalMem = await window.please.get("maxMemory", "M");
     freeMem = await window.please.get("freeMemory", "M");
     if (!globalData.memory) {
         globalData.memory = freeMem;
     }
     
-    return mods;
+    return clients;
 };
 
 $: data.update((thing) => thing = globalData);
@@ -39,7 +39,7 @@ $: data.update((thing) => thing = globalData);
 
 {#await start()}
 Waiting for load
-{:then mods}
+{:then clients}
 <div class="oop inline">
     <Slider
         invalid={globalData.memory >= freeMem}
@@ -52,17 +52,15 @@ Waiting for load
     />
     Using: {globalData.memory} MB
 </div>
-{#each mods as modloaderInfo}
+
 <div class="inline">
-    {modloaderInfo.modloader}
-    {#each modloaderInfo.versions as version}
-        <button class="inline button" on:click={() => {
-            globalData.version = version;
-            globalData.version.modloader = modloaderInfo.modloader;
-        }}>{version.version}</button>
+    {#each clients as client}
+    <button class="inline button" on:click={() => {
+        globalData.client = client;
+    }}>{client}</button>
     {/each}
 </div>
-{/each}
+
 {/await}
 
 <style>

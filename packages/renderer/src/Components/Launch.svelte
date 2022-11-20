@@ -34,7 +34,7 @@ const getAuth = () => {
             window.please.get("startClient", opts).then(() => {
                 progressBar = false;
             });
-        }}>LAUNCH {globalData.version.version}
+        }}>LAUNCH {globalData.client}
         </button>
     {/if}
 

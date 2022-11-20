@@ -4,14 +4,17 @@ const os = require("os");
 const { autoUpdater } = require("electron-updater");
 const { app, ipcMain } = require("electron");
 const isSingleInstance = app.requestSingleInstanceLock();
+import * as path from "path";
 
 import mods from "./mods.json";
 import { disc } from "./modules/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
 import { memoryGet } from "./modules/tools";
-import { getVersions, login, startClient } from "./modules/client";
+import { client } from "./modules/client";
 
 let currentVersion, serverUrl;
+const klaw = require("klaw");
+const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 
 // Checks
 if (!isSingleInstance) {
@@ -42,17 +45,31 @@ app
   })
   .catch((e) => console.error("Failed:", e));
 
-
+const thisClient = new client(path.normalize("C:\\Files\\Minecraft\\TestBench\\1.19"));
 
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
   switch (command) {
     case "devmode":
       return process.env.IS_DEV === "true";
-    case "versions":
-      return getVersions(arg1);
-    case "mods":
-      return mods;
+    case "clients":
+      const clients = [];
+      for await (const file of klaw(path.join(minecraftPath,"clients"), {depthLimit: 0})) {
+        if (file.path != "C:\\Files\\Minecraft\\TestBench") {
+          clients.push(file.path.replace("C:\\Files\\Minecraft\\TestBench\\", ""));
+        }
+      }
+      return clients;
+    case "collections":
+      https://github.com/AlphaUpstream/FusionRepo/blob/main/defaults.zip
+      const collections = []
+      for await (const file of klaw(path.join(minecraftPath,"collections"), {depthLimit: 0})) {
+
+        if (file.path != "C:\\Files\\Minecraft\\TestBench") {
+          clients.push(file.path.replace("C:\\Files\\Minecraft\\TestBench\\", ""));
+        }
+      }
+      return instances;
     case "serverStats":
       return await getServerStats(arg1, arg2);
     case "minecraftVersions":
@@ -64,9 +81,12 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     case "maxMemory":
       return memoryGet(os.totalmem(), arg1);
     case "login":
-      return await login();
-    case "startClient":
-      return await startClient(arg1);
+      return await thisClient.login();
+    case "startClient": {
+      await thisClient.init(arg1);
+      await thisClient.start();
+      break;
+    }
     case "version":
       switch (arg1) {
         case "minecraft":

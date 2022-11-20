@@ -3,39 +3,67 @@ const decompress = require("decompress");
 import * as path from "path";
 import got from "got";
 import { download, capitalizeFirstLetter } from "./tools";
+const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 
-const macCompatMode = false;
+const iJava = async (javaVersion, _javaPath) => {
 
-const getJava = async (javaVersion, javaPath, javaTemp, arch) => {
-    if (await fs.exists(javaPath)) return;
+    // Get Paths from the Directory Specified
+    const javaPath = path.join(_javaPath, javaVersion);
+
+    // If the Java Version exists, exit the function.
+    if (await fs.exists(javaPath)) {
+        return javaPath;
+    } 
+
+    // Create a temporary directory to download the Java Version to
+    const javaTemp = path.join(_javaPath, "temp");
+
+    // If the computer is running ARM, change the type to AARCH for the download
+    const arch = process.arch.replace("arm", "aarch");
+
+    // Use the process.platform as a string to change the OS based on the platform
     let operatingSystem = process.platform + "";
+
     if (operatingSystem == "win32") {
         operatingSystem = "windows";
     } else if (operatingSystem == "darwin") {
         operatingSystem = "mac";
     }
-    if (macCompatMode) {
-        arch = "x64";
-    }
+
+    // Send a request based on the information provided to get the download info
     const response = await got(
-        `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${operatingSystem}&architecture=${arch}`,
+        `https://api.adoptium.net/v3/assets/latest/
+        ${javaVersion}/hotspot
+        ?image_type=jre
+        &vendor=eclipse
+        &os=${operatingSystem}
+        &architecture=${arch}`,
     );
+
+    // Parse the response into a JSON object and create a filename for it
     const info = JSON.parse(response.body)[0];
     const filename = `jdk-${info.version.semver}-jre`;
+
+    // Download Java into the temp directory
     await download(
         info.binary.package.link,
         path.join(javaTemp, `${filename}.zip`),
     );
+
+    // Extract the zip file to the Java Path
     await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp).then(
         async (e) => {
             await fs.move(path.join(javaTemp, e[0].path), javaPath);
         },
     );
 
+    // Remove the temp directory
     await fs.remove(path.join(javaTemp));
+
+    return javaPath;
 };
 
-const getCurseforgeMod = async (mod, version, modsPath, loader) => {
+const iCurseforge = async (mod, version, modsPath, loader) => {
     loader = capitalizeFirstLetter(loader);
     const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${version}&slug=${mod}`;
     const response = await got(url, {
@@ -57,6 +85,7 @@ const getCurseforgeMod = async (mod, version, modsPath, loader) => {
                 const downloadURL = file["downloadUrl"];
                 const name = file["fileName"] || `${mod}-${file["id"]}.jar`;
                 const filename = path.join(modsPath, name);
+
                 if (!(await fs.pathExists(filename))) {
                     console.error(
                         `Downloading CringeForge ${version} Mod! *CF`,
@@ -73,19 +102,23 @@ const getCurseforgeMod = async (mod, version, modsPath, loader) => {
     }
 };
 
-const getModrinthMod = async (mod, version, modsPath, loader) => {
+const iModrinth = async (mod, version, modsPath, loader) => {
     const url = `https://api.modrinth.com/v2/project/${mod}/version?game_versions=["${version}"]
     &loaders=["${loader}"]`;
     const response = await got(url);
     const results = JSON.parse(response.body);
     for (const result in results) {
         const file = results[result];
+
+        // Use the primary file provided, otherwise just continue.
         let files = file["files"].filter((x) => x["primary"] == true);
         if (files.length < 1) {
             files = file["files"];
         }
+        
         const downloadURL = files[0]["url"];
         const filename = path.join(modsPath, files[0]["filename"]);
+
         if (!(await fs.pathExists(filename))) {
             console.error(`Downloading Modrinth ${version} Mod!`);
             console.log(`${mod} <== (${url})`);
@@ -98,4 +131,15 @@ const getModrinthMod = async (mod, version, modsPath, loader) => {
     }
 };
 
-export { getJava, getCurseforgeMod, getModrinthMod };
+const iCollection = (collection) => {
+    const collectionsPath = path.join(minecraftPath,"collections");
+    download (`https://github.com/AlphaUpstream/FusionRepo/blob/main/${collection}.zip`, collectionsPath);
+    const filename = `${collection}.zip`;
+    decompress(collectionsPath + filename);
+    fs.
+
+    
+};
+
+export { iCollection, iJava, iCurseforge, iModrinth };
+

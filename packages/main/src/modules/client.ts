@@ -4,251 +4,217 @@ import * as path from "path";
 const msmc = require("msmc");
 const { Client } = require("minecraft-launcher-core");
 const launcher = new Client();
-import mods from "../mods.json";
+import { timer as Timer } from "./tools/timer";
 
-import { getCurseforgeMod, getJava, getModrinthMod } from "./api";
+import { iJava, iCurseforge, iModrinth } from "./api";
 import { disc } from "./hooks";
 import { download } from "./tools";
 
 const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 const resourcesPath = path.join(minecraftPath, "resources");
 
-let rootDir;
-
-const startClient = async (options) => {
-    const startTime = performance.now();
-    rootDir = path.join(minecraftPath, "instances", options.clientName);
-
-    const installation = await install(
-        options.modloader,
-        options.version,
-        options.clientName,
-        options,
-    );
-    const version = installation.versionName;
-
-    const opts = {
-        clientPackage: null,
-        authorization: msmc.getMCLC().getAuth(options.authentication),
-        root: rootDir,
-        version: {
-            number: options.version,
-        },
-        memory: {
-            min: options.memory,
-            max: options.memory,
-        },
-        javaPath: installation.java,
-        overrides: {
-            maxSockets: options.maxSockets,
-            libraryRoot: path.join(resourcesPath, "libraries"),
-            assetRoot: path.join(resourcesPath, "assets"),
-        },
-        customArgs: [
-            `-Dorg.lwjgl.librarypath=${path.join(resourcesPath, "lwjgl")}`,
-            "-Dorg.lwjgl.util.Debug=true",
-            "-XX:+UseG1GC",
-            "-XX:+ParallelRefProcEnabled",
-            "-XX:MaxGCPauseMillis=200",
-            "-XX:+UnlockExperimentalVMOptions",
-            "-XX:+DisableExplicitGC",
-            "-XX:+AlwaysPreTouch",
-            "-XX:G1NewSizePercent=30",
-            "-XX:G1MaxNewSizePercent=40",
-            "-XX:G1HeapRegionSize=8M",
-            "-XX:G1ReservePercent=20",
-            "-XX:G1HeapWastePercent=5",
-            "-XX:G1MixedGCCountTarget=4",
-            "-XX:InitiatingHeapOccupancyPercent=15",
-            "-XX:G1MixedGCLiveThresholdPercent=90",
-            "-XX:G1RSetUpdatingPauseTimePercent=5",
-            "-XX:SurvivorRatio=32",
-            "-XX:+PerfDisableSharedMem",
-            "-XX:MaxTenuringThreshold=1",
-        ],
-    };
-
-    if (options.modloader == "forge") {
-        opts["forge"] = path.join(rootDir, "forge.jar");
-    }
-    if (options.modloader == "fabric") {
-        opts["version"]["custom"] = version;
+class client {
+    private credentials;
+    public creation_time = new Date();
+    public timer = new Timer();
+    
+    public clientDirectory;
+    public gameDirectory;
+    public config;
+    public pack;
+    private options;
+    
+    public constructor(_clientDirectory) {
+        this.clientDirectory = _clientDirectory;
+        fs.ensureDirSync(this.clientDirectory);
+        this.pack = fs.readJSONSync(path.join(this.clientDirectory, "pack.json"));
     }
 
-    console.error(`Starting Fusion Client ${version}!`);
-    disc.activity = "Minecraft " + options.version;
-
-    console.error(
-        `Time taken: ${(performance.now() - startTime).toFixed(2)}ms`,
-    );
-
-    const fullLog = path.join(
-        resourcesPath,
-        "logs",
-        options.version + Date.now() + ".full.log",
-    );
-    const gameLog = path.join(
-        resourcesPath,
-        "logs",
-        options.version + Date.now() + ".log",
-    );
-
-    fs.ensureFile(fullLog);
-    fs.ensureFile(gameLog);
-
-    launcher.launch(opts);
-    launcher.on("debug", (e) => {
-        console.log(e);
-    });
-    launcher.on("data", (e) => {
-        // Full log
-        fs.appendFileSync(fullLog, e);
-        if (e.includes("[main/INFO]") || e.includes("[Render thread/INFO]")) {
-            // Skim log
-            fs.appendFileSync(gameLog, e);
-            console.log(e);
-        }
-        if (e.includes("Sound engine started")) {
-            console.error(
-                `Total Launch Time taken: ${(
-                    performance.now() - startTime
-                ).toFixed(2)}ms`,
-            );
-        }
-        if (e.includes("[Render Thread/WARN]")) {
-            console.error(e);
-        }
-    });
-    launcher.on("close", async (e) => {
-        console.log("Closed:", e);
-        disc.activity = "Launcher Screen";
-    });
-};
-let modloader;
-const install = async (modloader2, version, instance, fullOptions) => {
-    modloader = modloader2;
-    let versionName;
-    // Get Information
-    const modloaderMatch = mods.filter(
-        (input) => input.modloader === modloader,
-    )[0];
-    const filteredResult = modloaderMatch.versions.filter((input) => {
-        const versionCheck = input.version === version;
-        return versionCheck;
-    });
-
-    // Install Java
-    const javaVersion = filteredResult[0].java;
-    const javaPath = path.join(minecraftPath, "java", javaVersion);
-    const javaTemp = path.join(minecraftPath, "java", "temp");
-    const arch = process.arch.replace("arm", "aarch");
-    if (fullOptions.online) {
-        await getJava(javaVersion, javaPath, javaTemp, arch).then(() =>
-            console.log("Java installed!"),
-        );
+    private patchOptions (options, java) {
+        this.options = {
+            clientPackage: null,
+            authorization: msmc.getMCLC().getAuth(options.authentication),
+            root: this.gameDirectory,
+            version: {
+                number: options.version,
+            },
+            memory: {
+                min: options.memory,
+                max: options.memory,
+            },
+            javaPath: java,
+            overrides: {
+                maxSockets: options.maxSockets,
+                libraryRoot: path.join(resourcesPath, "libraries"),
+                assetRoot: path.join(resourcesPath, "assets"),
+            },
+            customArgs: [
+                `-Dorg.lwjgl.librarypath=${path.join(resourcesPath, "lwjgl")}`,
+                "-Dorg.lwjgl.util.Debug=true",
+                "-XX:+UseG1GC",
+                "-XX:+ParallelRefProcEnabled",
+                "-XX:MaxGCPauseMillis=200",
+                "-XX:+UnlockExperimentalVMOptions",
+                "-XX:+DisableExplicitGC",
+                "-XX:+AlwaysPreTouch",
+                "-XX:G1NewSizePercent=30",
+                "-XX:G1MaxNewSizePercent=40",
+                "-XX:G1HeapRegionSize=8M",
+                "-XX:G1ReservePercent=20",
+                "-XX:G1HeapWastePercent=5",
+                "-XX:G1MixedGCCountTarget=4",
+                "-XX:InitiatingHeapOccupancyPercent=15",
+                "-XX:G1MixedGCLiveThresholdPercent=90",
+                "-XX:G1RSetUpdatingPauseTimePercent=5",
+                "-XX:SurvivorRatio=32",
+                "-XX:+PerfDisableSharedMem",
+                "-XX:MaxTenuringThreshold=1",
+            ],
+        };
     }
 
-    let java = path.join(javaPath, "bin", "javaw");
-    if (process.platform === "darwin") {
-        java = path.join(javaPath, "Contents", "Home", "bin", "java");
-    }
+    public init = async (options) => {
+        // this.config = await fs.readJSON(path.join(this.clientDirectory, "config.json"));
+        
 
-    // Install Minecraft
-    const loaderVersion = filteredResult[0].loaderVersion;
-    const instancesPath = path.join(minecraftPath, "instances", instance);
+        this.gameDirectory = path.join(this.clientDirectory, "runtime");
 
-    version = filteredResult[0].version ? filteredResult[0].version : version;
+        const javaPath = await iJava(this.pack.java, path.join(minecraftPath, "java"));
+        
+        const java = process.platform === "darwin" ? 
+            path.join(javaPath, "Contents", "Home", "bin", "java") : 
+            path.join(javaPath, "bin", "javaw");
+        
+        this.patchOptions(options, java);
 
-    fs.remove(path.join(minecraftPath, "shared", "mods"));
-    if (fullOptions.online) {
-        if (modloader == "fabric") {
-            versionName = version + "-fabric" + loaderVersion;
+        if (this.pack.modloader == "fabric") {
             const versionList = getFabricLoaderArtifact(
-                version,
-                loaderVersion,
+                this.pack.version,
+                this.pack.loaderVersion,
             );
-            installFabric(await versionList, instancesPath).then((result) => {
-                versionName = result;
-                console.log("Fabric installed!");
-            });
+            installFabric(await versionList, this.gameDirectory).then(
+                (result) => {
+                    this.options["version"]["custom"] = result;
+                },
+            ).catch((e)=>console.error("Invalid Mod Setup in pack.json" + e));
         }
-        if (modloader == "forge") {
+        if (this.pack.modloader == "forge") {
             await download(
-                filteredResult[0].loaderUrl,
-                path.join(instancesPath, "forge.jar"),
+                this.pack.loaderUrl,
+                path.join(this.gameDirectory, "forge.jar"),
             );
-            console.log("Forge Installed!");
+            this.options["forge"] = path.join(this.gameDirectory, "forge.jar");
         }
-    }
-    loadMods(filteredResult);
-    console.log("Installation complete!");
+        
+        const mods = await fs.readJSON(path.join(this.clientDirectory,"mods.json"));
 
-    return {
-        java,
-        javaPath,
-        versionName,
-    };
-};
+        const modsPath = path.join(this.clientDirectory,"resources","mods");
+        await Promise.allSettled(
+            mods.map(async (mod) => {
+                let modFilePath;
 
-const getVersions = (modloader) => {
-    const versions = mods.filter((data) => data.modloader == modloader)[0]
-        .versions;
-    const versionList: string[] = [];
-    versions.forEach((version) => versionList.push(version.version));
-    return versionList;
-};
-
-const login = async () => {
-    return await msmc.fastLaunch("electron");
-};
-
-const loadMods = async (filteredResult) => {
-    const modsPath = path.join(resourcesPath, "mods");
-    await Promise.allSettled(
-        filteredResult[0].mods.map(async (mod) => {
-            let modFilePath;
-            const modVersion = mod.version;
-            if (mod.source === "modrinth") {
-                modFilePath = await getModrinthMod(
-                    mod.slug,
-                    modVersion,
-                    modsPath,
-                    modloader,
-                );
-            } else if (mod.source === "curseforge") {
-                modFilePath = await getCurseforgeMod(
-                    mod.slug,
-                    modVersion,
-                    modsPath,
-                    modloader,
-                );
-            } else if (mod.source === "link") {
-                modFilePath = path.join(modsPath, mod.name + ".jar");
-                if (!(await fs.pathExists(mod.name + ".jar"))) {
-                    console.log(`Special download: ${mod.name}`);
-                    await download(mod.link, modFilePath);
-                } else {
-                    console.log(`Special download already exists: ${mod.name}`);
+                if (mod.version == undefined) {
+                    mod.version = this.pack.version;
                 }
-            }
-            if (mod.overrides) {
-                const overrides = mod.overrides;
-                if (overrides.filename) {
-                    const newFilename = path.join(
-                        path.dirname(modFilePath),
-                        overrides.filename,
+                
+                const modVersion = mod.version;
+                
+                if (mod.source === "modrinth") {
+                    modFilePath = await iModrinth(
+                        mod.slug,
+                        modVersion,
+                        modsPath,
+                        this.pack.modloader,
                     );
-                    await fs.move(modFilePath, newFilename);
-                    modFilePath = newFilename;
+                } else if (mod.source === "curseforge") {
+                    modFilePath = await iCurseforge(
+                        mod.slug,
+                        modVersion,
+                        modsPath,
+                        this.pack.modloader,
+                    );
+                } else if (mod.source === "link") {
+                    modFilePath = path.join(modsPath, mod.name + ".jar");
+                    if (!(await fs.pathExists(mod.name + ".jar"))) {
+                        console.log(`Special download: ${mod.name}`);
+                        await download(mod.link, modFilePath);
+                    } else {
+                        console.log(`Special download already exists: ${mod.name}`);
+                    }
                 }
-            }
-            await fs.ensureSymlink(
-                modFilePath,
-                path.join(rootDir, "mods", path.basename(modFilePath)),
-                "file",
-            );
-        }),
-    );
-};
+                if (mod.overrides) {
+                    const overrides = mod.overrides;
+                    if (overrides.filename) {
+                        const newFilename = path.join(
+                            path.dirname(modFilePath),
+                            overrides.filename,
+                        );
+                        await fs.move(modFilePath, newFilename);
+                        modFilePath = newFilename;
+                    }
+                }
+                await fs.ensureSymlink(
+                    modFilePath,
+                    path.join(this.gameDirectory, "mods", path.basename(modFilePath)),
+                    "file",
+                );
+            }),
+        );
+    };
 
-export { startClient, install, getVersions, login, loadMods };
+    public start = async () => {
+        this.timer.start();
+    
+        console.error(`Starting Fusion Client ${this.pack.version}!`);
+        disc.activity = "Minecraft " + this.pack.version;
+    
+        const fullLog = path.join(
+            resourcesPath,
+            "logs",
+            this.pack.version + Date.now() + ".full.log",
+        );
+        const gameLog = path.join(
+            resourcesPath,
+            "logs",
+            this.pack.version + Date.now() + ".log",
+        );
+    
+        fs.ensureFile(fullLog);
+        fs.ensureFile(gameLog);
+    
+        launcher.launch(this.options);
+        launcher.on("debug", (e) => {
+            console.log(e);
+        });
+        launcher.on("data", (e) => {
+            // Full log
+            fs.appendFileSync(fullLog, e);
+            if (e.includes("[main/INFO]") || e.includes("[Render thread/INFO]")) {
+                // Skim log
+                fs.appendFileSync(gameLog, e);
+                console.log(e);
+            }
+            if (e.includes("Sound engine started")) {
+                this.timer.stop();
+                console.error(
+                    `Total Launch Time taken: ${(
+                        this.timer.getDuration()
+                    ).toFixed(2)}ms`,
+                );
+            }
+            if (e.includes("[Render Thread/WARN]")) {
+                console.error(e);
+            }
+        });
+        launcher.on("close", async (e) => {
+            console.log("Closed:", e);
+            disc.activity = "Launcher Screen";
+        });
+    };
+    
+    public login = async () => {
+        return JSON.stringify(await msmc.fastLaunch("electron"));
+    };
+
+}
+export { client };

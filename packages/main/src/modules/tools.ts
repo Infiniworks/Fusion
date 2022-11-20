@@ -1,6 +1,7 @@
 import got from "got";
 const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
+const fs = require("fs-extra");
 const stream = require("stream");
 
 const download = async (url, dest) => {
