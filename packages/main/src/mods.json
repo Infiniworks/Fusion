@@ -8,7 +8,7 @@
                 "java": "17",
                 "mods": [ 
                     {
-                        "name": "Config Library",
+                        "name": "Make sure you install this seperately... main build doesn't have link installs",
                         "slug": "yacl",
                         "source": "curseforge",
                         "version": "1.19.3"
@@ -602,15 +602,9 @@
             },
             {
                 "version": "1.19",
-                "loaderVersion": "0.14.8",
+                "loaderVersion": "0.14.9",
                 "java": "17",
                 "mods": [ 
-                    {
-                        "name": "Shadowy Path Blocks",
-                        "usage": "Displays nicer looking path and other blocks than sodium.",
-                        "slug": "sodium-shadowy-path-blocks",
-                        "source": "curseforge"
-                    },
                     {
                         "name": "Kappa",
                         "usage": "Displays Optifine Capes",
