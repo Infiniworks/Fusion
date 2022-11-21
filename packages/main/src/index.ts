@@ -7,14 +7,16 @@ const isSingleInstance = app.requestSingleInstanceLock();
 import * as path from "path";
 
 import mods from "./mods.json";
-import { disc } from "./modules/hooks";
+import { disc } from "./modules/tools/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
-import { memoryGet } from "./modules/tools";
-import { client } from "./modules/client";
+import { memoryGet } from "./modules/tools/essentials";
+import { client, login } from "./modules/client";
+import { iCollection } from "./modules/tools/api";
+import { minecraftPath } from "./modules/extensions/paths";
+const fs = require("fs-extra");
 
 let currentVersion, serverUrl;
 const klaw = require("klaw");
-const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
 
 // Checks
 if (!isSingleInstance) {
@@ -42,34 +44,55 @@ app
     }
     await restoreOrCreateWindow();
     await disc.init();
+    await iCollection("defaults");
   })
   .catch((e) => console.error("Failed:", e));
-
-const thisClient = new client(path.normalize("C:\\Files\\Minecraft\\TestBench\\1.19"));
 
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
   switch (command) {
     case "devmode":
       return process.env.IS_DEV === "true";
-    case "clients":
-      const clients = [];
+    case "clients": {
+      const clients: unknown [] = [];
+      await fs.ensureDir(path.join(minecraftPath,"clients"));
       for await (const file of klaw(path.join(minecraftPath,"clients"), {depthLimit: 0})) {
-        if (file.path != "C:\\Files\\Minecraft\\TestBench") {
-          clients.push(file.path.replace("C:\\Files\\Minecraft\\TestBench\\", ""));
+        if (file.path != path.join(minecraftPath,"clients")) {
+          clients.push(file.path.replace(path.join(minecraftPath,"clients"), ""));
         }
       }
       return clients;
-    case "collections":
-      https://github.com/AlphaUpstream/FusionRepo/blob/main/defaults.zip
-      const collections = []
-      for await (const file of klaw(path.join(minecraftPath,"collections"), {depthLimit: 0})) {
+    }
+    case "collections": {
+      const collectionsPath = path.join(minecraftPath,"collections");
+      const collections: string [] = [];
+      for await (const folder of klaw(collectionsPath, {depthLimit: 0})) {
+        const collectionName = folder.path.replace(collectionsPath, "").replace("\\","");
+        if (collectionName == "") continue;
 
-        if (file.path != "C:\\Files\\Minecraft\\TestBench") {
-          clients.push(file.path.replace("C:\\Files\\Minecraft\\TestBench\\", ""));
+        const collectionPath = path.join(collectionsPath, collectionName);
+        const collection = {}; 
+        for await (const collxion of klaw(collectionPath, {depthLimit: 0})) {
+          if (collxion.path == collectionPath) continue;
+
+          const subCollectionName = collxion.path
+            .replace(collectionPath, "")
+            .replace("\\","");
+          if (subCollectionName == "") continue;
+
+          collection[subCollectionName] = {
+            "name": subCollectionName,
+            "version": (await fs.readJSON(
+              path.join(collectionPath, subCollectionName, "pack.json"),
+            )).version,
+          };
+          
+
         }
+        collections.push(`{"${collectionName}": ${JSON.stringify(collection)}}`);
       }
-      return instances;
+      return collections;
+    }
     case "serverStats":
       return await getServerStats(arg1, arg2);
     case "minecraftVersions":
@@ -81,8 +104,23 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     case "maxMemory":
       return memoryGet(os.totalmem(), arg1);
     case "login":
-      return await thisClient.login();
+      return await login();
     case "startClient": {
+      let thisClient;
+      console.log(arg2);
+      switch (arg2.clientType) {
+        case "collection": {
+          thisClient = new client(path.join(minecraftPath, "collection", arg2.collection, arg2.client));
+          break;
+        }
+        case "client": {
+          thisClient = new client(path.join(minecraftPath, "clients", arg2.client));
+          break;
+        }
+        default: {
+          console.error("Error...");
+        }
+      }
       await thisClient.init(arg1);
       await thisClient.start();
       break;

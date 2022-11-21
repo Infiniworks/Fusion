@@ -81,12 +81,12 @@ $: data.update((thing) => thing = globalData);
 <!-- <canvas id="skin_container"></canvas> -->
 
 <style>
-    .bodyIMG {
+    /* .bodyIMG {
         width: 30%;
         margin-left: auto;
         margin-right: auto;
         float: left;
-    }
+    } */
     .logoutImage {
         filter: invert(100%);
         opacity: 0.5;
@@ -113,6 +113,7 @@ $: data.update((thing) => thing = globalData);
         transition-timing-function: ease-in-out;
         color: rgba(255, 255, 255, 0.503);
         transition: all .8s;
+        
     }
     .login:hover {
         background-color: #0b8fb4;

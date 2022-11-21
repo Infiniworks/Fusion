@@ -30,15 +30,15 @@ import { Tab, TabContent, Tabs } from "carbon-components-svelte";
 						<TabContent><Login/></TabContent>
 						<TabContent><Settings/></TabContent>
 					</svelte:fragment>
+					
 				</Tabs>
-
 				<MainPage></MainPage>	
 				<ProfileBar></ProfileBar>
 			</div>
 		</div>
+		<div class="bg"></div>
 	</div>
 </main>
-
 
 <style>
 main {
@@ -52,7 +52,7 @@ main {
 	padding:0px;
 	color: rgb(194, 214, 234);
 	display: inline-block;
-	background-color: purple;
+	background-color: rgb(38, 38, 38);	
 }
 .body {
 	display: flex;
@@ -65,7 +65,7 @@ main {
 .top {
 	width: 100%;
 	display: flex;
-	background-color: #2d25eb;
+	background-color: #252525;
 	margin: auto;
 	padding: 0px;
 }
@@ -74,11 +74,41 @@ main {
 	flex-direction: row;
 	width: 100%;
 	background:linear-gradient(rgba(17, 16, 16, 0.95), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
-	background-size: cover; 
+	background-size: cover;
 }
 
 .tbar {
 	-webkit-app-region: drag;
 	box-shadow: 0 0 15px rgba(0,0,0,0.75);
+}
+
+
+.bg {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    padding: 0.5rem 1.5rem;
+    animation: gradient 15s ease infinite;
+    font-variation-settings: 'wght' 500;
+    height: auto;
+    border-radius: 0px 0px 0px 0px;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    box-shadow: none;
+    transform: scale(1);
+    margin: 0 0 0rem 0rem;
+	height: 100em;
+	z-index: 0;
+}
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 </style>

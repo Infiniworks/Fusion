@@ -1,9 +1,10 @@
 const fs = require("fs-extra");
-const decompress = require("decompress");
+const Zip = require("adm-zip");
 import * as path from "path";
+const decompress = require("decompress");
 import got from "got";
-import { download, capitalizeFirstLetter } from "./tools";
-const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
+import { download, capitalizeFirstLetter } from "./essentials";
+import { minecraftPath, tempDir } from "../extensions/paths";
 
 const iJava = async (javaVersion, _javaPath) => {
 
@@ -33,11 +34,11 @@ const iJava = async (javaVersion, _javaPath) => {
     // Send a request based on the information provided to get the download info
     const response = await got(
         `https://api.adoptium.net/v3/assets/latest/
-        ${javaVersion}/hotspot
-        ?image_type=jre
-        &vendor=eclipse
-        &os=${operatingSystem}
-        &architecture=${arch}`,
+${javaVersion}/hotspot
+?image_type=jre
+&vendor=eclipse
+&os=${operatingSystem}
+&architecture=${arch}`,
     );
 
     // Parse the response into a JSON object and create a filename for it
@@ -131,14 +132,15 @@ const iModrinth = async (mod, version, modsPath, loader) => {
     }
 };
 
-const iCollection = (collection) => {
+const iCollection = async (collection) => {
     const collectionsPath = path.join(minecraftPath,"collections");
-    download (`https://github.com/AlphaUpstream/FusionRepo/blob/main/${collection}.zip`, collectionsPath);
     const filename = `${collection}.zip`;
-    decompress(collectionsPath + filename);
-    fs.
-
-    
+    await download(
+        `https://github.com/AlphaUpstream/FusionRepo/raw/main/${filename}`, 
+        path.join(tempDir,filename),
+            );
+    new Zip(path.join(tempDir,filename)).extractAllTo(collectionsPath,true);
+    await fs.remove(path.join(tempDir, filename));
 };
 
 export { iCollection, iJava, iCurseforge, iModrinth };

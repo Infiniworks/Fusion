@@ -31,7 +31,7 @@ const getAuth = () => {
         <button class="launch inline" on:click={async () => {
             progressBar = true;
             const opts = await getGameOpts();
-            window.please.get("startClient", opts).then(() => {
+            window.please.get("startClient", opts, globalData).then(() => {
                 progressBar = false;
             });
         }}>LAUNCH {globalData.client}
@@ -51,6 +51,7 @@ const getAuth = () => {
     color: rgba(255, 255, 255, 0.503);
     transition: all .8s;
 }
+
 button.launch {
     background-color: #1f2020;
     color: rgb(197, 197, 197);
@@ -61,14 +62,11 @@ button.launch {
     transition-timing-function: ease-in-out;
     transition: all .8s;
 }
-.body {
-    width:50%;
-}
+
 button {
     padding: 30px;
     transition-timing-function: ease-in-out;
 }
-
 
 button.launch:hover {
     background-color: #0b8fb4;

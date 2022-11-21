@@ -4,12 +4,14 @@
 import { writable } from "svelte/store";
 import { database } from "./dataTools.js";
 
-let settings = new database("C:\\Files\\Coding\\local.json");
+const settingsFile = "C:\\Files\\Coding\\local.json";
+
+let settings = new database(settingsFile);
 
 export const data = writable(await settings.get());
 
 data.subscribe((value) => {
     console.log(value);
     settings.set(JSON.stringify(value));
-    window.dbTools.overwriteJSON("C:\\Files\\Coding\\local.json", value);
+    window.dbTools.overwriteJSON(settingsFile, value);
 });

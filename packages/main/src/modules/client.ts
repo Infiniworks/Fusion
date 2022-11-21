@@ -6,11 +6,12 @@ const { Client } = require("minecraft-launcher-core");
 const launcher = new Client();
 import { timer as Timer } from "./tools/timer";
 
-import { iJava, iCurseforge, iModrinth } from "./api";
-import { disc } from "./hooks";
-import { download } from "./tools";
+import { iJava, iCurseforge, iModrinth } from "./tools/api";
+import { disc } from "./tools/hooks";
+import { download } from "./tools/essentials";
+import { appFolder, javaLoc } from "./extensions/paths";
 
-const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
+const minecraftPath = path.join(appFolder, "minecraft");
 const resourcesPath = path.join(minecraftPath, "resources");
 
 class client {
@@ -74,12 +75,10 @@ class client {
     }
 
     public init = async (options) => {
-        // this.config = await fs.readJSON(path.join(this.clientDirectory, "config.json"));
-        
-
+    
         this.gameDirectory = path.join(this.clientDirectory, "runtime");
 
-        const javaPath = await iJava(this.pack.java, path.join(minecraftPath, "java"));
+        const javaPath = await iJava(this.pack.java, javaLoc);
         
         const java = process.platform === "darwin" ? 
             path.join(javaPath, "Contents", "Home", "bin", "java") : 
@@ -211,10 +210,10 @@ class client {
             disc.activity = "Launcher Screen";
         });
     };
-    
-    public login = async () => {
-        return JSON.stringify(await msmc.fastLaunch("electron"));
-    };
-
 }
+
+export const login = async () => {
+    return JSON.stringify(await msmc.fastLaunch("electron"));
+};
+
 export { client };
