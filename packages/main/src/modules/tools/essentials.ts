@@ -3,6 +3,7 @@ const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 const fs = require("fs-extra");
 const stream = require("stream");
+const path = require("path");
 
 const download = async (url, dest) => {
     const pipeline = await promisify(stream.pipeline);
@@ -28,5 +29,10 @@ const memoryGet = async (memory, identifier) => {
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export const noHidden = item => {
+    const basename = path.basename(item);
+    return basename === "." || basename[0] !== ".";
+};
 
 export { download, memoryGet, capitalizeFirstLetter };

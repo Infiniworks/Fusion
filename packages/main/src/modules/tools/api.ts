@@ -32,17 +32,39 @@ const iJava = async (javaVersion, _javaPath) => {
     }
 
     // Send a request based on the information provided to get the download info
-    const response = await got(
-        `https://api.adoptium.net/v3/assets/latest/
-${javaVersion}/hotspot
-?image_type=jre
-&vendor=eclipse
-&os=${operatingSystem}
-&architecture=${arch}`,
-    );
+
+    const url = `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot`;
+
+    console.log(url); 
+
+    const searchParams = {
+        image_type: "jre",
+        vendor: "eclipse",
+        os: operatingSystem,
+        architecture: arch,
+    };
+
+    let response: JSON = await got(
+        url, 
+        { searchParams: searchParams },
+    ).json();
 
     // Parse the response into a JSON object and create a filename for it
-    const info = JSON.parse(response.body)[0];
+    let info = response[0];    
+
+    if (info == "[]" || info == undefined || info == "") {
+        const searchParams2 = {
+            image_type: "jre",
+            vendor: "eclipse",
+            os: operatingSystem,
+        };
+        response = await got(
+            url, 
+            { searchParams: searchParams2 },
+        ).json();
+        info = response[0]; 
+    }
+
     const filename = `jdk-${info.version.semver}-jre`;
 
     // Download Java into the temp directory

@@ -50,8 +50,8 @@ class client {
                 assetRoot: path.join(resourcesPath, "assets"),
             },
             customArgs: [
-                `-Dorg.lwjgl.librarypath=${path.join(resourcesPath, "lwjgl")}`,
-                "-Dorg.lwjgl.util.Debug=true",
+                // `-Dorg.lwjgl.librarypath=${path.join(resourcesPath, "libraries", "org", "lwjgl")}`,
+                // "-Dorg.lwjgl.util.Debug=true",
                 "-XX:+UseG1GC",
                 "-XX:+ParallelRefProcEnabled",
                 "-XX:MaxGCPauseMillis=200",

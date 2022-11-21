@@ -3,7 +3,10 @@
 
 <main class="bg">
     <h2 class="centered">FUSION CLIENT</h2>
-    <button on:click={() => window.please.send("window","resize") }>❏</button>
+    <button on:click={() => {
+        window.please.send("window","resize");
+        console.log("executed");
+    }}>❏</button>
     <button on:click={() => window.please.send("window","destroy")}>🞭</button>
 </main>
 

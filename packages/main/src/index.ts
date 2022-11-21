@@ -9,10 +9,11 @@ import * as path from "path";
 import mods from "./mods.json";
 import { disc } from "./modules/tools/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
-import { memoryGet } from "./modules/tools/essentials";
+import { memoryGet, noHidden } from "./modules/tools/essentials";
 import { client, login } from "./modules/client";
 import { iCollection } from "./modules/tools/api";
 import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
+import { delim, osmac } from "./modules/extensions/constants";
 const fs = require("fs-extra");
 
 let currentVersion, serverUrl;
@@ -49,6 +50,8 @@ app
   })
   .catch((e) => console.error("Failed:", e));
 
+
+
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
   switch (command) {
@@ -67,24 +70,27 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     case "collections": {
       const collectionsPath = path.join(minecraftPath,"collections");
       const collections: string [] = [];
-      for await (const folder of klaw(collectionsPath, {depthLimit: 0})) {
-        const collectionName = folder.path.replace(collectionsPath, "").replace("\\","");
-        if (collectionName == "") continue;
 
+      for await (const folder of klaw(collectionsPath, {depthLimit: 0, filter: noHidden})) {
+        const collectionName = folder.path.replace(collectionsPath, "").replace(delim,"");
+        if (collectionName == "") continue;
+        if (osmac && (collectionName == ".DS_Store")) {
+          continue;
+        }
         const collectionPath = path.join(collectionsPath, collectionName);
         const collection = {}; 
-        for await (const collxion of klaw(collectionPath, {depthLimit: 0})) {
+        for await (const collxion of klaw(collectionPath, {depthLimit: 0, filter: noHidden})) {
           if (collxion.path == collectionPath) continue;
 
           const subCollectionName = collxion.path
             .replace(collectionPath, "")
-            .replace("\\","");
+            .replace(delim,"");
           if (subCollectionName == "") continue;
 
           const contents = await fs.readJSON(
             path.join(
               collectionPath, subCollectionName, "pack.json",
-              )
+              ),
           );
           
           collection[subCollectionName] = {
