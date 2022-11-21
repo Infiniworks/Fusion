@@ -69,13 +69,15 @@ No Collections Installed! Report this error, please!
     <p>{collectionName}</p>
     {#each collections as collxion}
         {@const collectionData = collection[collectionName][collxion]}
+        {@const name = collectionData.verified == "true" ? collectionData.name + " ✅" : collectionData.name}
         <div class= "ilModern">
             <button class="button" on:click={() => {
                 globalData.client = collectionData.name;
                 globalData.clientType = "collection";
                 globalData.collection = collectionName;
-            }}>{collectionData.name}</button>
+            }}>{name}</button>
             {collectionData.version}
+            
         </div>
     {/each}
 </div>

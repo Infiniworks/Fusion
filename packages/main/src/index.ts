@@ -36,6 +36,7 @@ app
   .whenReady()
   .then(async () => {
     console.log("App is ready!");
+    await iCollection("defaults");
     if (import.meta.env.PROD) {
       console.log("Checking for updates:");
       autoUpdater.checkForUpdatesAndNotify();
@@ -44,7 +45,7 @@ app
     }
     await restoreOrCreateWindow();
     await disc.init();
-    await iCollection("defaults");
+    
   })
   .catch((e) => console.error("Failed:", e));
 
@@ -80,14 +81,19 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
             .replace("\\","");
           if (subCollectionName == "") continue;
 
+          const contents = await fs.readJSON(
+            path.join(
+              collectionPath, subCollectionName, "pack.json",
+              )
+          );
+          
           collection[subCollectionName] = {
             "name": subCollectionName,
-            "version": (await fs.readJSON(
-              path.join(collectionPath, subCollectionName, "pack.json"),
-            )).version,
+            "version": contents.version,
+            "verified": contents.verified,
+            "info": JSON.stringify(contents),
           };
           
-
         }
         collections.push(`{"${collectionName}": ${JSON.stringify(collection)}}`);
       }

@@ -12,7 +12,6 @@ let settings = new database(settingsFile);
 export const data = writable(await settings.get());
 
 data.subscribe((value) => {
-    console.log(value);
     settings.set(JSON.stringify(value));
     window.dbTools.overwriteJSON(settingsFile, value);
 });

@@ -135,11 +135,12 @@ const iModrinth = async (mod, version, modsPath, loader) => {
 const iCollection = async (collection) => {
     const collectionsPath = path.join(minecraftPath,"collections");
     const filename = `${collection}.zip`;
+    console.log("Updating collection "+filename);
     await download(
         `https://github.com/AlphaUpstream/FusionRepo/raw/main/${filename}`, 
         path.join(tempDir,filename),
-            );
-    new Zip(path.join(tempDir,filename)).extractAllTo(collectionsPath,true);
+            ).catch((e)=>console.error(e));
+    await new Zip(path.join(tempDir,filename)).extractAllTo(collectionsPath,true);
     await fs.remove(path.join(tempDir, filename));
 };
 
