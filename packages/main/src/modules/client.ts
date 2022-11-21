@@ -37,7 +37,7 @@ class client {
             authorization: msmc.getMCLC().getAuth(options.authentication),
             root: this.gameDirectory,
             version: {
-                number: options.version,
+                number: this.pack.version,
             },
             memory: {
                 min: options.memory,
@@ -170,18 +170,19 @@ class client {
         const fullLog = path.join(
             resourcesPath,
             "logs",
-            this.pack.version + Date.now() + ".full.log",
+            Date.now() + "_" + this.pack.version + ".full.log",
         );
         const gameLog = path.join(
             resourcesPath,
             "logs",
-            this.pack.version + Date.now() + ".log",
+            Date.now() + "_" + this.pack.version + ".log",
         );
     
         fs.ensureFile(fullLog);
         fs.ensureFile(gameLog);
-    
+
         launcher.launch(this.options);
+        
         launcher.on("debug", (e) => {
             console.log(e);
         });
