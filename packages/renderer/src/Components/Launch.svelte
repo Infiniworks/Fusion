@@ -7,11 +7,8 @@ data.subscribe((thing) => globalData = thing);
 let progressBar = false;
 
 const getGameOpts = async () => {
-    const version = globalData.version;
     return { 
-        modloader: version.modloader,
-        clientName: version.version,
-        version: version.version,
+        clientName: globalData.client,
         memory: globalData["memory"]+"M",
         authentication: getAuth(),
         maxSockets: 10,
@@ -31,7 +28,7 @@ const getAuth = () => {
         <button class="launch inline" on:click={async () => {
             progressBar = true;
             const opts = await getGameOpts();
-            window.please.get("startClient", opts, globalData).then(() => {
+            window.please.get("startClient", [opts, globalData]).then(() => {
                 progressBar = false;
             });
         }}>LAUNCH {globalData.client}

@@ -12,7 +12,7 @@ import { awaitUrl, getServerStats } from "./modules/server";
 import { memoryGet } from "./modules/tools/essentials";
 import { client, login } from "./modules/client";
 import { iCollection } from "./modules/tools/api";
-import { minecraftPath } from "./modules/extensions/paths";
+import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
 const fs = require("fs-extra");
 
 let currentVersion, serverUrl;
@@ -105,12 +105,17 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       return memoryGet(os.totalmem(), arg1);
     case "login":
       return await login();
+    case "intercept_and_log": {
+      console.log(command, arg1, arg2);
+      return;
+    }      
     case "startClient": {
+      arg2 = arg1[1];
+      arg1 = arg1[0];
       let thisClient;
-      console.log(arg2);
       switch (arg2.clientType) {
         case "collection": {
-          thisClient = new client(path.join(minecraftPath, "collection", arg2.collection, arg2.client));
+          thisClient = new client(path.join(minecraftPath, "collections", arg2.collection, arg2.client));
           break;
         }
         case "client": {
@@ -137,5 +142,21 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       }
       serverUrl = await awaitUrl();
       return serverUrl;
+    case "defaults": {
+      switch (arg1) {
+        case "res": return resources;
+        default: return appFolder;
+      }
+    }
+    case "ensure": {
+      const pth = path.join(resources, arg1);
+      try {
+        await fs.readJson(pth);
+      } catch (err) {
+        fs.writeJSON(pth, {});
+      }
+      await fs.ensureFile(pth);
+      return pth;
+    }
   }
 });

@@ -4,7 +4,8 @@
 import { writable } from "svelte/store";
 import { database } from "./dataTools.js";
 
-const settingsFile = "C:\\Files\\Coding\\local.json";
+const settingsFile = await window.please.get("ensure", "store.json");
+console.log(settingsFile);
 
 let settings = new database(settingsFile);
 
