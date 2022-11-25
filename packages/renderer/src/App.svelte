@@ -1,60 +1,57 @@
 <script>
-import TopBar from "./components/TopBar.svelte";
-import Profiles from "./components/Profiles.svelte";
-import Login from "./components/Login.svelte";
-import Launch from "./components/Launch.svelte";
-import Settings from "./components/Settings.svelte";
-import Servers from "./components/Servers.svelte";
-import ProfileBar from "./components/ProfileBar.svelte";
-import MainPage from "./components/MainPage.svelte";
-import InfoBar from "./components/InfoBar.svelte";
-import { Tab, TabContent, Tabs } from "carbon-components-svelte";
+	import TopBar from "./components/TopBar.svelte";
+	import Profiles from "./components/Profiles.svelte";
+	import Login from "./components/Login.svelte";
+	import Launch from "./components/Launcher.svelte";
+	import Settings from "./components/Settings.svelte";
+	import Servers from "./components/Servers.svelte";
+	import ProfileBar from "./components/ProfileBar.svelte";
+	import InfoBar from "./components/Credits.svelte";
+	import { Tabs } from "attractions";
+	import Credits from "./components/Credits.svelte";
+	let selectedTab = 'Main dishes';
 </script>
 
 
 <main class="font-medium lining-nums">
-	<div class="tbar">
-		<TopBar />
-	</div>
-	<div class="body">
-		<div class="top">
-			<InfoBar />
+	<div class= "titleBar"><TopBar/></div>
+	<span class = "dynamic">
+		
+		<div class= "clientHeader">
+			<Tabs
+			name="menu"
+			items={['Appetizers', 'Main dishes', 'Drinks']}
+			bind:value={selectedTab}
+			/>
 		</div>
-		<div class="middle">
-			<div>
-				<Tabs>
-					<Tab label="Login" />
-					<Tab label="Settings" />
-					
-					<svelte:fragment slot="content">
-						<TabContent><Login/></TabContent>
-						<TabContent><Settings/></TabContent>
-					</svelte:fragment>
-					
-				</Tabs>
-				<MainPage></MainPage>	
-				<ProfileBar></ProfileBar>
-			</div>
+		<div class= "rocketLauncher"></div>
+		<div class= "usableSpace">
+			
 		</div>
-		<div class="bg"></div>
-	</div>
+	</span>
+	<div class= "creditsBar"><Credits/></div>
 </main>
 
 <style>
 main {
-	background-color: rgb(0, 0, 0);
+	background-color: #23a6d5;
 	position: fixed;
-	top:0px;
-	right:0px;
-	bottom:0px;
-	left:0px;
-	margin:0px;
-	padding:0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
 	color: rgb(194, 214, 234);
 	display: inline-block;
-	background-color: rgb(38, 38, 38);	
+    border-radius: 8px;
+    overflow: hidden;
+	/* box-shadow: inset 0px -1px 10px 1px #0000002e; */
 }
-.body {
+.dynamic {
+	position: absolute;
+	top: 38px;
+	bottom: 38px;
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
@@ -62,53 +59,21 @@ main {
 	padding: 0px;
 	width: 100%;
 }
-.top {
-	width: 100%;
-	display: flex;
-	background-color: #252525;
-	margin: auto;
-	padding: 0px;
-}
-.middle {
-	flex: 15 0 0;
-	flex-direction: row;
-	width: 100%;
-	background:linear-gradient(rgba(17, 16, 16, 0.95), rgba(0, 0, 0, 1)), url("images/nasaimg.png");
-	background-size: cover;
-}
-
-.tbar {
+.titleBar {
+	position: absolute;
+	background-color: gray;
+	right: 0px;
+	top: 0px;
+	left: 0px;
+	height: 38px;
 	-webkit-app-region: drag;
-	box-shadow: 0 0 15px rgba(0,0,0,0.75);
 }
-
-
-.bg {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    padding: 0.5rem 1.5rem;
-    animation: gradient 15s ease infinite;
-    font-variation-settings: 'wght' 500;
-    height: auto;
-    border-radius: 0px 0px 0px 0px;
-    border: none;
-    color: white;
-    font-size: 1.25rem;
-    box-shadow: none;
-    transform: scale(1);
-    margin: 0 0 0rem 0rem;
-	height: 100em;
-	z-index: 0;
-}
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+.creditsBar {
+	position: absolute;
+	background-color: gray;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	height: 38px;
 }
 </style>

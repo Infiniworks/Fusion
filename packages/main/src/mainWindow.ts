@@ -10,8 +10,8 @@ async function createWindow() {
     titleBarStyle: "hidden",
     frame: false,
     transparent: true,
-    width: 1120,
-    height: 680,
+    width: 1300,
+    height: 800,
     show: false,
     resizable: false,
     autoHideMenuBar: true,
@@ -30,6 +30,7 @@ async function createWindow() {
             if (browserWindow.isMaximized()) browserWindow.unmaximize();
             else browserWindow.maximize();
           }
+          else if (arg1 === "minimize") browserWindow.minimize();
           if (arg2) {
             devLog(arg2);
           }
