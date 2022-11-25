@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import TopBar from "./components/TopBar.svelte";
 	import Profiles from "./components/Profiles.svelte";
 	import Login from "./components/Login.svelte";
@@ -9,20 +9,31 @@
 	import InfoBar from "./components/Credits.svelte";
 	import { Tabs } from "attractions";
 	import Credits from "./components/Credits.svelte";
-	let selectedTab = 'Main dishes';
+	import { data } from "./data/localStore.js";
+	let globalData: any;
+	data.subscribe((thing: any) => globalData = thing);
+
+	let items: string[] = ["Home", "Servers", "Settings", "About", "Developer"]
+
+	if ((globalData.selectedTab == "") || (globalData.selectedTab == undefined)) {
+		globalData.selectedTab = items[0];
+	}
+
+	$: data.update((thing) => thing = globalData);
 </script>
 
 
 <main class="font-medium lining-nums">
 	<div class= "titleBar"><TopBar/></div>
 	<span class = "dynamic">
-		
 		<div class= "clientHeader">
-			<Tabs
-			name="menu"
-			items={['Appetizers', 'Main dishes', 'Drinks']}
-			bind:value={selectedTab}
-			/>
+			<span class="Tabs">
+				<Tabs
+				name="menu"
+				items={items}
+				bind:value={globalData.selectedTab}
+				/>
+			</span>
 		</div>
 		<div class= "rocketLauncher"></div>
 		<div class= "usableSpace">
@@ -33,6 +44,7 @@
 </main>
 
 <style>
+
 main {
 	background-color: #23a6d5;
 	position: fixed;
@@ -75,5 +87,15 @@ main {
 	bottom: 0px;
 	left: 0px;
 	height: 38px;
+}
+.clientHeader {
+	background-color: antiquewhite;
+	flex: 15 0 0;
+	
+}
+.Tabs {
+	position: absolute;
+	margin-left: 500px;
+	margin-right: 500px;
 }
 </style>
