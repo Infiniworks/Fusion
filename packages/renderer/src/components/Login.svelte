@@ -2,6 +2,7 @@
 import _ from "lodash"; 
 import { get } from 'svelte/store';
 import { data } from "../data/localStore.js";
+import { onMount } from 'svelte';
 
 let selected;
 
@@ -44,6 +45,13 @@ const logout = async (index) => {
 }
 
 $: data.update((thing) => thing = globalData);
+
+onMount( async () => {
+    const validatedAndRefreshedUsers = 
+    await window.please.get("refreshUsers", globalData.users);
+    globalData.users = validatedAndRefreshedUsers
+});
+
 </script>
 
 <main>

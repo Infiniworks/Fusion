@@ -5,11 +5,13 @@ const { autoUpdater } = require("electron-updater");
 const { app, ipcMain } = require("electron");
 const isSingleInstance = app.requestSingleInstanceLock();
 import * as path from "path";
+const msmc = require("msmc");
+const _ = require("lodash");
 
 import mods from "./mods.json";
 import { disc } from "./modules/tools/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
-import { memoryGet, noHidden } from "./modules/tools/essentials";
+import { devLog, memoryGet, noHidden } from "./modules/tools/essentials";
 import { client, login } from "./modules/client";
 import { iCollection } from "./modules/tools/api";
 import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
@@ -169,6 +171,38 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       }
       await fs.ensureFile(pth);
       return pth;
+    }
+    case "refreshUsers": {
+      const newUsers: unknown[] = [];
+      for (let index = 0; index < arg1.length; ++index) {
+        const user = arg1[index];
+        const gotAuth = await msmc.getMCLC().getAuth(user.data);
+
+        const accountValid = await msmc.getMCLC().validate(gotAuth);
+
+        const refId = accountValid
+        ? `Account ${user.username} Valid.`
+        : `Account ${user.username} Invalid. Refreshing.`;
+
+        devLog(refId);
+
+        const refAuth = accountValid
+        ? gotAuth 
+        : await msmc.getMCLC().refresh(gotAuth);
+
+        
+
+        const prof = await msmc.getMCLC().toProfile(refAuth);
+        user.data.profile = _.merge(user.data.profile,prof);
+        user.data.access_token = prof._msmc.mcToken;
+        newUsers.push(user);
+      }
+      return newUsers;
+    }
+    // arg1 is the whole user from globalData.users that is selected / loaded
+    case "validateUser": {
+      const gotAuth = await require("msmc").getMCLC().getAuth(arg1.data);
+      return await require("msmc").getMCLC().validate(gotAuth);
     }
   }
 });

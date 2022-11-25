@@ -8,7 +8,7 @@ import { timer as Timer } from "./tools/timer";
 
 import { iJava, iCurseforge, iModrinth } from "./tools/api";
 import { disc } from "./tools/hooks";
-import { download } from "./tools/essentials";
+import { devLog, download } from "./tools/essentials";
 import { appFolder, javaLoc } from "./extensions/paths";
 
 const minecraftPath = path.join(appFolder, "minecraft");
@@ -135,10 +135,10 @@ class client {
                 } else if (mod.source === "link") {
                     modFilePath = path.join(modsPath, mod.name + ".jar");
                     if (!(await fs.pathExists(mod.name + ".jar"))) {
-                        console.log(`Special download: ${mod.name}`);
+                        devLog(`Special download: ${mod.name}`);
                         await download(mod.link, modFilePath);
                     } else {
-                        console.log(`Special download already exists: ${mod.name}`);
+                        devLog(`Special download already exists: ${mod.name}`);
                     }
                 }
                 if (mod.overrides) {
@@ -184,7 +184,7 @@ class client {
         launcher.launch(this.options);
         
         launcher.on("debug", (e) => {
-            console.log(e);
+            devLog(e);
         });
         launcher.on("data", (e) => {
             // Full log
@@ -192,7 +192,7 @@ class client {
             if (e.includes("[main/INFO]") || e.includes("[Render thread/INFO]")) {
                 // Skim log
                 fs.appendFileSync(gameLog, e);
-                console.log(e);
+                devLog(e);
             }
             if (e.includes("Sound engine started")) {
                 this.timer.stop();

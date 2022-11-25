@@ -1,9 +1,14 @@
 import got from "got";
+import { isDev } from "../extensions/constants";
 const { createWriteStream } = require("fs-extra");
 const { promisify } = require("util");
 const fs = require("fs-extra");
 const stream = require("stream");
 const path = require("path");
+
+const devLog = (message) => {
+    if (isDev) console.log(message);
+};
 
 const download = async (url, dest) => {
     const pipeline = await promisify(stream.pipeline);
@@ -35,4 +40,4 @@ export const noHidden = item => {
     return basename === "." || basename[0] !== ".";
 };
 
-export { download, memoryGet, capitalizeFirstLetter };
+export { devLog, download, memoryGet, capitalizeFirstLetter };

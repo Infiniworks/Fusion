@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { URL } from "url";
+import { devLog } from "./modules/tools/essentials";
 
 const useDevTools = false;
 
@@ -30,7 +31,7 @@ async function createWindow() {
             else browserWindow.maximize();
           }
           if (arg2) {
-            console.log(arg2);
+            devLog(arg2);
           }
           break;
       }
@@ -38,7 +39,7 @@ async function createWindow() {
     ipcMain.on("reloadPage", () => {
       browserWindow.reload();
     });
-    console.log("Window Loaded");
+    devLog("Window Loaded");
     browserWindow.show();
 
     if (import.meta.env.DEV && useDevTools) {
