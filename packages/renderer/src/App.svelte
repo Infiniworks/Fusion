@@ -1,49 +1,61 @@
 <script lang="ts">
 	import TopBar from "./components/TopBar.svelte";
-	import Profiles from "./components/Profiles.svelte";
-	import Login from "./components/Login.svelte";
-	import Launch from "./components/Launcher.svelte";
-	import Settings from "./components/Settings.svelte";
-	import Servers from "./components/Servers.svelte";
-	import ProfileBar from "./components/ProfileBar.svelte";
-	import InfoBar from "./components/Credits.svelte";
-	import { Tabs } from "attractions";
+	import Settings from "./pages/Settings.svelte";
+	import Servers from "./pages/Servers.svelte";
 	import Credits from "./components/Credits.svelte";
-	import { data } from "./data/localStore.js";
-	let globalData: any;
-	data.subscribe((thing: any) => globalData = thing);
+	import Home from "./pages/Home.svelte";
+	import About from "./pages/About.svelte";
+	import Developer from "./pages/Developer.svelte";
+	import Launcher from "./components/Launcher.svelte";
+	import ClientHeader from "./components/ClientHeader.svelte";
 
-	let items: string[] = ["Home", "Servers", "Settings", "About", "Developer"]
+	let items: string[] = ["Home", "Servers", "Settings", "About", "Developer"];
 
-	if ((globalData.selectedTab == "") || (globalData.selectedTab == undefined)) {
-		globalData.selectedTab = items[0];
-	}
+	import { tab } from "./data/bridge";
 
-	$: data.update((thing) => thing = globalData);
+	let selectedTab = items[0];
+
+	tab.subscribe(value => {
+		selectedTab = value;
+	});
 </script>
 
-
 <main class="font-medium lining-nums">
-	<div class= "titleBar"><TopBar/></div>
+	<div class= "titleBar">
+		<TopBar/>
+	</div>
 	<span class = "dynamic">
 		<div class= "clientHeader">
-			<span class="Tabs">
-				<Tabs
-				name="menu"
-				items={items}
-				bind:value={globalData.selectedTab}
-				/>
-			</span>
+			<ClientHeader/>
 		</div>
-		<div class= "rocketLauncher"></div>
+		<div class= "rocketLauncher">
+			<Launcher/>
+		</div>
 		<div class= "usableSpace">
-			
+			{#if selectedTab == "Home"}
+				<Home/>
+			{:else if selectedTab == "Servers"}
+				<Servers/>
+			{:else if selectedTab == "Settings"}
+				<Settings/>
+			{:else if selectedTab == "About"}
+				<About/>
+			{:else if selectedTab == "Developer"}
+				<Developer/>
+			{/if}
 		</div>
 	</span>
 	<div class= "creditsBar"><Credits/></div>
 </main>
 
 <style>
+
+:root {
+	--topBar: 38px;
+	--bottomBar: 38px;
+	--clientHeader: 40px;
+	--rocketLauncherHeight: 120px;
+}
 
 main {
 	background-color: #23a6d5;
@@ -58,18 +70,25 @@ main {
 	display: inline-block;
     border-radius: 8px;
     overflow: hidden;
-	/* box-shadow: inset 0px -1px 10px 1px #0000002e; */
+}
+.clientHeader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: peru;
+	height: 100px;
 }
 .dynamic {
 	position: absolute;
-	top: 38px;
-	bottom: 38px;
+	top: var(--topBar);
+	bottom: var(--bottomBar);
 	display: flex;
 	flex-direction: column;
-	align-items: stretch;
+	align-content: stretch;
 	margin: auto;
 	padding: 0px;
 	width: 100%;
+	justify-content: center;
 }
 .titleBar {
 	position: absolute;
@@ -77,7 +96,7 @@ main {
 	right: 0px;
 	top: 0px;
 	left: 0px;
-	height: 38px;
+	height: var(--topBar);
 	-webkit-app-region: drag;
 }
 .creditsBar {
@@ -86,16 +105,22 @@ main {
 	right: 0px;
 	bottom: 0px;
 	left: 0px;
-	height: 38px;
+	height: var(--bottomBar);
 }
-.clientHeader {
-	background-color: antiquewhite;
+.rocketLauncher {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	top: calc(var(--topBar)+var(--clientHeader));
+	bottom: calc(var(--topBar)+var(--clientHeader)+var(--rocketLauncherHeight));
+	background-image: url("../images/nasaimg.png");
+	background-position: center; /* Center the image */
+	background-repeat: no-repeat; /* Do not repeat the image */
+	background-size: cover;
+	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+	flex: 11 0 0;
+}
+.usableSpace {
 	flex: 15 0 0;
-	
-}
-.Tabs {
-	position: absolute;
-	margin-left: 500px;
-	margin-right: 500px;
 }
 </style>

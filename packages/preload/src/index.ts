@@ -21,8 +21,8 @@ const db = {
   //   current[key] = data;
   //   await fs.writeJSON(file,current);
   // },
-  overwriteJSON: (file: never, data: never) => {
-    fs.outputFileSync(file,JSON.stringify(data));
+  overwriteJSON: async (file: never, data: never) => {
+    await fs.writeJSON(file,JSON.parse(data));
   },
   appendJSON: async (file: never, key:never, data: never) => {
     await fs.ensureFile(file);

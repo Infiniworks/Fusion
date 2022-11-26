@@ -164,12 +164,14 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     }
     case "ensure": {
       const pth = path.join(resources, arg1);
+      
       try {
         await fs.readJson(pth);
       } catch (err) {
         fs.writeJSON(pth, {});
-      }
+      } 
       await fs.ensureFile(pth);
+
       return pth;
     }
     case "refreshUsers": {

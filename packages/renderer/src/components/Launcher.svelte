@@ -41,37 +41,41 @@ const getAuth = () => {
 </main>
 
 <style>
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .inline {
-    padding: 7px;
+    padding: 25px;
+    width: 350px;
+    height: 65px;
     background-color: #1f2020;
     transition-timing-function: ease-in-out;
     color: rgba(255, 255, 255, 0.503);
+    border-radius: 10px;
     transition: all .8s;
 }
 
 button.launch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #1f2020;
-    color: rgb(197, 197, 197);
-    font-size: 18px;
+    color: rgba(237, 252, 232, 0.868);
+    font-size: 25px;
     font-weight: bold;
-    width: 100%;
-    height: 100%;
-    transition-timing-function: ease-in-out;
     transition: all .8s;
-}
-
-button {
-    padding: 30px;
-    transition-timing-function: ease-in-out;
+    box-shadow: 0 5px 42px rgba(105, 255, 133, 0.743);
+    background-color: rgb(52, 164, 93);
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 .1em 0.2em rgba(0,0,0,0.35);
 }
 
 button.launch:hover {
-    background-color: #0b8fb4;
-    color: #ffffff;
-}
-
-button.disabled {
-    background-color: #a31616;
-    color: rgb(197, 197, 197);
+    background-color:rgb(3, 156, 47);
+    color:rgba(255, 255, 255, 0.911);
+    box-shadow: 0 3px 22px rgba(105, 255, 133, 0.743);
+    transform: scale(1.0333);
 }
 </style>

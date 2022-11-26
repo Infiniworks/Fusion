@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */ 
-// ^ Needed since localStorage is available, but not properly found.
-// src/stores/content.js
 import { writable } from "svelte/store";
 import { database } from "./dataTools.js";
 
@@ -11,7 +8,6 @@ let settings = new database(settingsFile);
 
 export const data = writable(await settings.get());
 
-data.subscribe((value) => {
-    settings.set(JSON.stringify(value));
-    window.dbTools.overwriteJSON(settingsFile, value);
+data.subscribe(async (value) => {
+    await settings.set(JSON.stringify(value));
 });

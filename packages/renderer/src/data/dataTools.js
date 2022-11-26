@@ -10,7 +10,7 @@ export class database {
     async get () {
         return await window.dbTools.readJSON(this.dbPath);
     }
-    set (data) {
-        window.dbTools.overwriteJSON(this.dbPath, data);
+    async set (data) {
+        await window.dbTools.overwriteJSON(this.dbPath, data);
     }
 }
