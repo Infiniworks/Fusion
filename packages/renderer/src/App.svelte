@@ -6,6 +6,7 @@
 	import Settings from "./components/Settings.svelte";
 	import Servers from "./components/Servers.svelte";
 	import ProfileBar from "./components/ProfileBar.svelte";
+	import { Spinner, Button } from 'flowbite-svelte';
 	import InfoBar from "./components/Credits.svelte";
 	import { Tabs } from "attractions";
 	import Credits from "./components/Credits.svelte";
@@ -37,7 +38,6 @@
 		</div>
 		<div class= "rocketLauncher"></div>
 		<div class= "usableSpace">
-			
 		</div>
 	</span>
 	<div class= "creditsBar"><Credits/></div>
