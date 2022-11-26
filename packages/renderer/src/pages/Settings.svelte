@@ -95,21 +95,23 @@
         }}>{client}</button>
         {/each}
     </div>
+
     {/await}
     </main>
     
     <style>
         main {
             position: fixed;
-            top:400px;
+            top:316px;
             right:0px;
             bottom:38px;
             left:0px;
             margin:0px;
-            padding:15px;
+            padding:15px; 
             overflow-y:scroll;
             background-color: #303131;
             z-index: 100;
+            animation: 0.3s ease-out 0s 1 fromBottom;
         }
         
         .button {
@@ -145,5 +147,12 @@
             overflow:hidden;
             text-overflow:ellipsis;
         }
-    
-    </style>
+@keyframes fromBottom {
+    0% {
+        transform: scaleY(50%);
+    }
+    100% {
+        transform: scaleY(100%);
+    }
+}
+</style>

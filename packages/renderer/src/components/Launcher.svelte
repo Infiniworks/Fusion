@@ -66,10 +66,10 @@ button.launch {
     font-size: 25px;
     font-weight: bold;
     transition: all .8s;
-    box-shadow: 0 5px 42px rgba(105, 255, 133, 0.743);
+    box-shadow: 0px 0px 42px rgba(105, 255, 133, 0.743);
     background-color: rgb(52, 164, 93);
-    transition: all 0.3s ease-in-out;
-    text-shadow: 0 .1em 0.2em rgba(0,0,0,0.35);
+    transition: all 0.3s ease-out;
+    text-shadow: 0 0.1em 0.2em rgba(0,0,0,0.35);
 }
 
 button.launch:hover {

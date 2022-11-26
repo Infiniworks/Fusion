@@ -18,7 +18,11 @@ async function login(username) {
         username = data.profile.name;
 
         const userSnippet = { username, data }
-        globalData.users = _.compact(_.concat(globalData.users, userSnippet));
+        globalData.users =  await window.please.get(
+            "refreshUsers",
+            _.reject(_.compact(_.concat(globalData.users, userSnippet)), _.isEmpty)
+            );
+        console.log(globalData)
         globalData.selected = username;
         globalData.selectedIndex = globalData.users.length - 1;
         console.log("Sign-in Successful!");
@@ -55,16 +59,16 @@ onMount( async () => {
 </script>
 
 <main>
-    <button 
+    <!-- <button 
     class:noLogin="{globalData.selected === 'e'}"
     class="login" on:click={
         async () => {
             await login()
         }
-    }>ADD LOGIN</button><br>
+    }>ADD LOGIN</button><br> -->
     <!-- <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/> -->
     {#key globalData.users}
-        {#if globalData.users}
+        {#if (JSON.stringify(globalData.users) !== "{}") && (globalData.users)}
             {#each globalData.users as user, i}
             <div class="inline" class:selected="{user.username == globalData.selected}">
                 <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{user.username}/180.png"/>
@@ -83,6 +87,19 @@ onMount( async () => {
             {/each}
         {/if}
     {/key}
+    <div class="inline">
+        <button class="user" on:click={
+            async () => {
+                await login();
+            }
+        }>Log into an account</button>
+        <button class="logout" on:click={
+            async () => {
+                await login();
+            }
+        }>+</button>
+        <br>
+    </div>
     
 </main>
 

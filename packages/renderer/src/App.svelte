@@ -28,7 +28,8 @@
 		<div class= "clientHeader">
 			<ClientHeader/>
 		</div>
-		<div class= "rocketLauncher">
+		<div class= "rocketLauncher" style=
+		"--flexDown: {selectedTab=="Settings" ? 6 : 11};">
 			<Launcher/>
 		</div>
 		<div class= "usableSpace">
@@ -117,8 +118,9 @@ main {
 	background-position: center; /* Center the image */
 	background-repeat: no-repeat; /* Do not repeat the image */
 	background-size: cover;
-	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
-	flex: 11 0 0;
+	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+	flex: var(--flexDown) 0 0;
+	transition: all 0.3s ease-out;
 }
 .usableSpace {
 	flex: 15 0 0;

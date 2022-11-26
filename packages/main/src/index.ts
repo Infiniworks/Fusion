@@ -175,31 +175,53 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       return pth;
     }
     case "refreshUsers": {
+      // Neutrino Loader v3
+      // v1 normal accounts do things
+      // v2 auto refreshes accounts
+      // v3 removes duplicate accounts and keeps latest
       const newUsers: unknown[] = [];
+
+      if (JSON.stringify(arg1)=="{}" || !arg1) return {};
+
+
+      // Reverse in order to allow the most recent things first
+      arg1 = arg1.reverse();
+      const argxusers: string[] = [];
+
       for (let index = 0; index < arg1.length; ++index) {
         const user = arg1[index];
+        if (JSON.stringify(user) == "{}") continue;
+
+        // Exit out of the cycle if the username is already in the list
+        if (argxusers.includes(user.username)) continue;
+        argxusers.push(user.username);
+
         const gotAuth = await msmc.getMCLC().getAuth(user.data);
 
         const accountValid = await msmc.getMCLC().validate(gotAuth);
 
+        // Console log if account valid or not
         const refId = accountValid
         ? `Account ${user.username} Valid.`
         : `Account ${user.username} Invalid. Refreshing.`;
-
         devLog(refId);
 
+        // If the account is valid, keep it the same
+        // otherwise refresh the token and account.
         const refAuth = accountValid
         ? gotAuth 
         : await msmc.getMCLC().refresh(gotAuth);
 
-        
-
+        // Create then combine the new profile with the object system
+        // we use for authentication
         const prof = await msmc.getMCLC().toProfile(refAuth);
         user.data.profile = _.merge(user.data.profile,prof);
         user.data.access_token = prof._msmc.mcToken;
         newUsers.push(user);
       }
-      return newUsers;
+      // Return the redone list so that the most recent things are last
+      // like they would have been added in the panel.
+      return newUsers.reverse();
     }
     // arg1 is the whole user from globalData.users that is selected / loaded
     case "validateUser": {
