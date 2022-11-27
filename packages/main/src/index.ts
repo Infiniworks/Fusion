@@ -12,7 +12,7 @@ import mods from "./mods.json";
 import { disc } from "./modules/tools/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
 import { devLog, memoryGet, noHidden } from "./modules/tools/essentials";
-import { client, login } from "./modules/client";
+import { client, login, packData } from "./modules/client";
 import { iCollection } from "./modules/tools/api";
 import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
 import { delim, osmac } from "./modules/extensions/constants";
@@ -141,8 +141,9 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
         }
       }
       await thisClient.init(arg1);
-      await thisClient.start();
-      break;
+      const started = await thisClient.start();
+      console.log(started);
+      return started;
     }
     case "version":
       switch (arg1) {
@@ -164,45 +165,72 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     }
     case "ensure": {
       const pth = path.join(resources, arg1);
+      
       try {
         await fs.readJson(pth);
       } catch (err) {
         fs.writeJSON(pth, {});
-      }
+      } 
       await fs.ensureFile(pth);
+
       return pth;
     }
     case "refreshUsers": {
+      // Neutrino Loader v3
+      // v1 normal accounts do things
+      // v2 auto refreshes accounts
+      // v3 removes duplicate accounts and keeps latest
       const newUsers: unknown[] = [];
+
+      if (JSON.stringify(arg1)=="{}" || !arg1) return {};
+
+
+      // Reverse in order to allow the most recent things first
+      arg1 = arg1.reverse();
+      const argxusers: string[] = [];
+
       for (let index = 0; index < arg1.length; ++index) {
         const user = arg1[index];
+        if (JSON.stringify(user) == "{}") continue;
+
+        // Exit out of the cycle if the username is already in the list
+        if (argxusers.includes(user.username)) continue;
+        argxusers.push(user.username);
+
         const gotAuth = await msmc.getMCLC().getAuth(user.data);
 
         const accountValid = await msmc.getMCLC().validate(gotAuth);
 
+        // Console log if account valid or not
         const refId = accountValid
         ? `Account ${user.username} Valid.`
         : `Account ${user.username} Invalid. Refreshing.`;
-
         devLog(refId);
 
+        // If the account is valid, keep it the same
+        // otherwise refresh the token and account.
         const refAuth = accountValid
         ? gotAuth 
         : await msmc.getMCLC().refresh(gotAuth);
 
-        
-
+        // Create then combine the new profile with the object system
+        // we use for authentication
         const prof = await msmc.getMCLC().toProfile(refAuth);
         user.data.profile = _.merge(user.data.profile,prof);
         user.data.access_token = prof._msmc.mcToken;
         newUsers.push(user);
       }
-      return newUsers;
+      // Return the redone list so that the most recent things are last
+      // like they would have been added in the panel.
+      return newUsers.reverse();
     }
     // arg1 is the whole user from globalData.users that is selected / loaded
     case "validateUser": {
       const gotAuth = await require("msmc").getMCLC().getAuth(arg1.data);
       return await require("msmc").getMCLC().validate(gotAuth);
+    }
+    case "data": {
+      return (await packData(arg1));
     }
   }
 });

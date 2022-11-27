@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { URL } from "url";
 import { devLog } from "./modules/tools/essentials";
@@ -25,7 +25,7 @@ async function createWindow() {
     ipcMain.on("greet", (event, command, arg1, arg2) => {
       switch (command) {
         case "window":
-          if (arg1 === "destroy") browserWindow.destroy();
+          if (arg1 === "destroy") app.quit();
           else if (arg1 === "resize") {
             if (browserWindow.isMaximized()) browserWindow.unmaximize();
             else browserWindow.maximize();
