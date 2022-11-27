@@ -1,5 +1,5 @@
 <script>
-import Login from "../Components/Login.svelte";
+import Login from "../components/Login.svelte";
 </script>
 
 <main>
@@ -13,6 +13,9 @@ import Login from "../Components/Login.svelte";
 </main>
 
 <style>
+:root {
+    color-scheme: dark;
+}
 main {
     height: 100%;
     width: 100%;
@@ -20,7 +23,7 @@ main {
     flex-direction: row;
 }
 .login {
-    background-color: brown;
+    background-color: #201f1d;
     flex: 5 0 0;
     border-radius: 8px;
     transform: scale(0.94);
@@ -29,7 +32,7 @@ main {
     height: 361px;
 }
 .info {
-    background-color: cadetblue;
+    background-color: #201f1d;
     flex: 10 0 0;
     border-radius: 8px;
     transform: scale(0.94);

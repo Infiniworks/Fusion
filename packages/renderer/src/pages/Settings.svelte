@@ -38,121 +38,102 @@
     </script>
     
     <main>
-    {#await start()}
-    Waiting for load
-    {:then values}
-    <div class="oop inline">
-        <Slider
-            invalid={globalData.memory >= freeMem}
-            labelText="Memory (MB)"
-            min={128}
-            max={totalMem}
-            maxLabel={totalMem+" MB"}
-            bind:value={globalData.memory}
-            step={10}
-        />
-        Using: {globalData.memory} MB
-    </div>
-    Collections
-    
-    {#if values.collections == ""}
-    <div class="inline">
-    No Collections Installed! Report this error, please!
-    </div>
-    {/if}
-    
-    {#each values.collections as collection_raw}
-    {@const collection = JSON.parse(collection_raw)}
-    {@const collectionName = Object.keys(collection)[0]}  <!--This is the name of the collection wrapper (Defaults)-->
-    {@const collections = Object.keys(collection[collectionName])}
-    <div class="">
-        <p>{collectionName}</p>
-        {#each collections as collxion}
-            {@const collectionData = collection[collectionName][collxion]}
-            {@const name = collectionData.verified == "true" ? collectionData.name + " ✅" : collectionData.name}
-            <div class= "ilModern">
-                <button class="button" on:click={() => {
-                    globalData.client = collectionData.name;
-                    globalData.clientType = "collection";
-                    globalData.collection = collectionName;
-                }}>{name}</button>
-                {collectionData.version}
-                
+        <div class="bigBox">
+            <div class="header">
+                <span class="title"><img class="image" alt="Information Symbol" width="23" src="../../images/iBox.png"/>CLIENT SETTINGS</span>
+                <span class="gametext">MODIFY YOUR CLIENT SETTINGS FOR EPIC GAMING :)</span>
             </div>
-        {/each}
-    </div>
-    {/each}
-    
-    Clients
-    <div class="inline">
-        {#if values.clients == ""}
-        No Clients Installed! Report this error, please!
-        {/if}
-        {#each values.clients as client}
-        <button class="inline button" on:click={() => {
-            globalData.client = client;
-            globalData.clientType = "client";
-        }}>{client}</button>
-        {/each}
-    </div>
-
-    {/await}
+            <div class="content">
+                <div class="flexbox">
+                    {#await start()}
+                    Waiting for load
+                    {:then values}
+                    <div class="oop inline">
+                        <Slider
+                            invalid={globalData.memory >= freeMem}
+                            labelText="Memory (MB)"
+                            min={128}
+                            max={totalMem}
+                            maxLabel={totalMem+" MB"}
+                            bind:value={globalData.memory}
+                            step={10}
+                        />
+                        Using: {globalData.memory} MB
+                    </div>
+                    {/await}
+                </div>
+            </div>
+        </div> 
     </main>
     
-    <style>
-        main {
-            position: fixed;
-            top:316px;
-            right:0px;
-            bottom:38px;
-            left:0px;
-            margin:0px;
-            padding:15px; 
-            overflow-y:scroll;
-            background-color: #303131;
-            z-index: 100;
-            animation: 0.3s ease-out 0s 1 fromBottom;
-        }
-        
-        .button {
-            padding: 7px;
-            background-color: #1f2020;
-            transition-timing-function: ease-in-out;
-            color: rgba(255, 255, 255, 0.503);
-            transition: all .8s;
-        }
-        .inline {
-            border-radius: 5px 5px 5px 5px;
-            display: flex;
-            padding: 7px;
-            margin: 5px;
-            background-color: #1f2020;
-            transition-timing-function: ease-in-out;
-            color: rgba(255, 255, 255, 0.373);
-            transition: all .8s;
-        }
-        .ilModern {
-            border-radius: 5px 5px 5px 5px;
-            display: flex;
-            padding: 7px;
-            margin: 5px;
-            background-color: #1f2020;
-            transition-timing-function: ease-in-out;
-            color: rgba(255, 255, 255, 0.373);
-            transition: all .8s;
-        }
-        div.oop {
-            display: fixed;
-            white-space:nowrap;
-            overflow:hidden;
-            text-overflow:ellipsis;
-        }
-@keyframes fromBottom {
-    0% {
-        transform: scaleY(50%);
+<style>
+    main {
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        align-content: stretch;
+        flex-direction: column;
     }
-    100% {
-        transform: scaleY(100%);
+    
+    .flexbox {
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #181816;
+        transition-timing-function: ease-in-out;
+        color: rgba(255, 255, 255, 0.373);
+        transition: all .8s;
     }
-}
+    
+    .bigBox {
+        display: flex;
+        flex: 1 0 0;
+        position: relative;
+        bottom: 0px;
+        margin: 20px 50px;
+
+        border-radius: 6px;
+        background-color: blue;
+
+        align-items: stretch;
+        justify-content: center;
+        align-content: stretch;
+        flex-direction: column;
+
+        overflow: hidden;
+    }
+    .gametext {
+        display: inline-block;
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        transform: translateY(-2px);
+        text-shadow: 0 0.1em 0.2em rgba(0,0,0,0.35);
+    }
+    .header {
+        padding: 15px;
+        flex: 2 0 0;
+        background-color: rgb(15, 16, 16);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .content {
+        padding: 15px;
+        flex: 9 0 0;
+        background-color: #201f1d;
+        flex-wrap: wrap;
+    }
+    .image {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(22%) saturate(1%) hue-rotate(49deg) brightness(109%) contrast(101%);
+        display: inline; 
+        transform: translateY(-2px);
+        margin: 0 7px;
+    }
+    .title {
+        font-size: 25px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        text-shadow: 0 0.1em 0.2em rgba(0,0,0,0.35);
+    }
 </style>

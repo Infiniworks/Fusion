@@ -8,7 +8,7 @@
         console.log("executed");
     }}>❏</button> -->
     <!-- <button on:click={() => window.please.send("window","minimize")}>_</button> -->
-    <button on:click={() => window.please.send("window","destroy")}>X</button>
+    <!-- <button on:click={() => window.please.send("window","destroy")}>X</button> -->
 </main>
 
 <style>

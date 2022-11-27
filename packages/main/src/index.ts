@@ -12,7 +12,7 @@ import mods from "./mods.json";
 import { disc } from "./modules/tools/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
 import { devLog, memoryGet, noHidden } from "./modules/tools/essentials";
-import { client, login } from "./modules/client";
+import { client, login, packData } from "./modules/client";
 import { iCollection } from "./modules/tools/api";
 import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
 import { delim, osmac } from "./modules/extensions/constants";
@@ -141,8 +141,9 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
         }
       }
       await thisClient.init(arg1);
-      await thisClient.start();
-      break;
+      const started = await thisClient.start();
+      console.log(started);
+      return started;
     }
     case "version":
       switch (arg1) {
@@ -227,6 +228,9 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
     case "validateUser": {
       const gotAuth = await require("msmc").getMCLC().getAuth(arg1.data);
       return await require("msmc").getMCLC().validate(gotAuth);
+    }
+    case "data": {
+      return (await packData(arg1));
     }
   }
 });

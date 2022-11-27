@@ -6,7 +6,18 @@ $: {
 };
 
 </script>
+<h1>Warning... this page may contain sensitive information...</h1>
+<main>
+    {JSON.stringify($data)}<br>
+    {name}
+    <input bind:value={name}/>
+</main>
 
-<p>{JSON.stringify($data)}</p>
-{name}
-<input bind:value={name}/>
+
+<style>
+    main {
+        word-break: break-all;
+        overflow-y: scroll;
+        font-size: 13px;
+    }
+</style>

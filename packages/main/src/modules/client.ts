@@ -180,11 +180,11 @@ class client {
     
         fs.ensureFile(fullLog);
         fs.ensureFile(gameLog);
-
+    
         launcher.launch(this.options);
         
         launcher.on("debug", (e) => {
-            devLog(e);
+            // devLog(e);
         });
         launcher.on("data", (e) => {
             // Full log
@@ -205,16 +205,29 @@ class client {
             if (e.includes("[Render Thread/WARN]")) {
                 console.error(e);
             }
+            return "success";
         });
         launcher.on("close", async (e) => {
             console.log("Closed:", e);
             disc.activity = "Launcher Screen";
+            return "closed";
         });
     };
 }
 
 export const login = async () => {
     return JSON.stringify(await msmc.fastLaunch("electron"));
+};
+
+export const packData = async (unparsedData) => {
+    const arg1 = unparsedData;
+    let pack;
+    if (arg1.clientType == "collection") {
+    pack = await fs.readJSON(path.join(path.join(minecraftPath, "collections", arg1.collection, arg1.client), "pack.json"));
+    } else if (arg1.clientType == "client") {
+    pack = await fs.readJSON(path.join(minecraftPath, "clients", arg1.client));
+    }
+    return pack;
 };
 
 export { client };

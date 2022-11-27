@@ -1,17 +1,17 @@
 <script lang="ts">
 	import TopBar from "./components/TopBar.svelte";
 	import Settings from "./pages/Settings.svelte";
-	import Servers from "./pages/Servers.svelte";
 	import Credits from "./components/Credits.svelte";
 	import Home from "./pages/Home.svelte";
 	import About from "./pages/About.svelte";
 	import Developer from "./pages/Developer.svelte";
 	import Launcher from "./components/Launcher.svelte";
 	import ClientHeader from "./components/ClientHeader.svelte";
-
-	let items: string[] = ["Home", "Servers", "Settings", "About", "Developer"];
-
+	import Clients from "./pages/Clients.svelte";
 	import { tab } from "./data/bridge";
+
+	let items: string[] = ["Home", "Clients", "Settings", "About", "Developer"];
+	let smallBar: string[] = ["Clients", "Settings", "About"];
 
 	let selectedTab = items[0];
 
@@ -29,14 +29,14 @@
 			<ClientHeader/>
 		</div>
 		<div class= "rocketLauncher" style=
-		"--flexDown: {selectedTab=="Settings" ? 6 : 11};">
+		"--flexDown: {smallBar.includes(selectedTab) ? 4.5 : 11};">
 			<Launcher/>
 		</div>
 		<div class= "usableSpace">
 			{#if selectedTab == "Home"}
 				<Home/>
-			{:else if selectedTab == "Servers"}
-				<Servers/>
+			{:else if selectedTab == "Clients"}
+				<Clients/>
 			{:else if selectedTab == "Settings"}
 				<Settings/>
 			{:else if selectedTab == "About"}
@@ -55,11 +55,11 @@
 	--topBar: 38px;
 	--bottomBar: 38px;
 	--clientHeader: 40px;
-	--rocketLauncherHeight: 120px;
+	--rocketLauncherHeight: 100px;
 }
 
 main {
-	background-color: #23a6d5;
+	background-color: #181818;
 	position: fixed;
 	top: 0px;
 	right: 0px;
@@ -76,7 +76,8 @@ main {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: peru;
+	/* background-color: #0a0a0a; */
+	background-color: antiquewhite;
 	height: 100px;
 }
 .dynamic {
@@ -93,7 +94,7 @@ main {
 }
 .titleBar {
 	position: absolute;
-	background-color: gray;
+	background-color: #201f1d;
 	right: 0px;
 	top: 0px;
 	left: 0px;
@@ -102,7 +103,7 @@ main {
 }
 .creditsBar {
 	position: absolute;
-	background-color: gray;
+	background-color: #141414;
 	right: 0px;
 	bottom: 0px;
 	left: 0px;
@@ -118,7 +119,7 @@ main {
 	background-position: center; /* Center the image */
 	background-repeat: no-repeat; /* Do not repeat the image */
 	background-size: cover;
-	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.5);
+	box-shadow: inset 0 0 0 1000px rgba(34, 0, 75, 0.57);
 	flex: var(--flexDown) 0 0;
 	transition: all 0.3s ease-out;
 }
