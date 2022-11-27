@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TopBar from "./components/TopBar.svelte";
 	import Settings from "./pages/Settings.svelte";
+
 	import Credits from "./components/Credits.svelte";
 	import Home from "./pages/Home.svelte";
 	import About from "./pages/About.svelte";
