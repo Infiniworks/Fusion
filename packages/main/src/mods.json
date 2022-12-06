@@ -275,6 +275,279 @@
                     }
                 ]
             },
+            {  
+                "version": "1.19.2",
+                "loaderVersion": "0.14.9",
+                "java": "17",
+                "mods": [
+                    {
+                        "name": "lambdabettergrass",
+                        "slug": "lambdabettergrass",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "alternate-current",
+                        "slug": "alternate-current",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "fast-chest",
+                        "source": "link",
+                        "link": "https://github.com/FakeDomi/FastChest/releases/download/1.3%2B1.19/fast-chest-1.3+1.19.jar"
+                    },
+                    {
+                        "name": "fastanim",
+                        "slug": "fastanim",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "cull-leaves",
+                        "slug": "cull-leaves",
+                        "source": "curseforge"
+                    },                    
+                    {
+                        "name": "better-beds",
+                        "slug": "better-beds",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "entity-collision-fps-fix",
+                        "slug": "entity-collision-fps-fix",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "3d Chunk Loader",
+                        "slug": "better-fps-render-distance-fabric",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "boosted brightness",
+                        "slug": "boosted-brightness",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Kappa",
+                        "usage": "Displays Optifine Capes",
+                        "slug": "kappa",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Enhanced Block Entities",
+                        "usage": "Better block models for entities like chests.",
+                        "slug": "enhanced-block-entities",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Recipe Cache",
+                        "usage": "Caches recipes for faster load times.",
+                        "slug": "recipe-cache",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "logical-zoom",
+                        "slug": "logical-zoom",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "Custom Splash Screen",
+                        "usage": "Displays a custom background on startup.",
+                        "slug": "custom-splash-screen",
+                        "version": "1.18.2",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "c2me-fabric",
+                        "slug": "c2me-fabric",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "cloth-config",
+                        "slug": "cloth-config",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "dashloader",
+                        "slug": "dashloader",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "entityculling",
+                        "slug": "entityculling",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "mixin-conflict-helper",
+                        "slug": "mixin-conflict-helper",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "fabric-api",
+                        "slug": "fabric-api",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "fastload",
+                        "slug": "fastload",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "ferrite-core",
+                        "slug": "ferrite-core",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "iris",
+                        "slug": "iris",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "krypton",
+                        "slug": "krypton",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "lambdynamiclights",
+                        "slug": "lambdynamiclights",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "lazydfu",
+                        "slug": "lazydfu",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "continuity",
+                        "slug": "continuity",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "language-reload",
+                        "slug": "language-reload",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "debugify",
+                        "slug": "debugify",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "cull-less-leaves",
+                        "slug": "cull-less-leaves",
+                        "source": "link",
+                        "link": "https://cdn.modrinth.com/data/iG6ZHsUV/versions/1.0.5/CullLessLeaves-1.0.5.jar"
+                    },
+                    {
+                        "name": "morechathistory",
+                        "slug": "morechathistory",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "borderless-mining",
+                        "slug": "borderless-mining",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "indium",
+                        "slug": "indium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "amecs",
+                        "slug": "amecs",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "appleskin",
+                        "slug": "appleskin",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "reeses-sodium-options",
+                        "slug": "reeses-sodium-options",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "starlight",
+                        "slug": "starlight",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "sodium-extra",
+                        "slug": "sodium-extra",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "sodium",
+                        "slug": "sodium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "smoothboot-fabric",
+                        "slug": "smoothboot-fabric",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "not-enough-animations",
+                        "slug": "not-enough-animations",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "no-chat-reports",
+                        "slug": "no-chat-reports",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "moreculling",
+                        "slug": "moreculling",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "modmenu",
+                        "slug": "modmenu",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "memoryleakfix",
+                        "slug": "memoryleakfix",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "lithium",
+                        "slug": "lithium",
+                        "source": "modrinth"
+                    },
+                    {
+                        "name": "no-fade",
+                        "slug": "no-fade",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "dont-clear-chat-history",
+                        "slug": "dont-clear-chat-history",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "yosbr",
+                        "slug": "yosbr",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "tooltipfix",
+                        "slug": "tooltipfix",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "item-model-fix",
+                        "slug": "item-model-fix",
+                        "source": "curseforge"
+                    },
+                    {
+                        "name": "midnightlib",
+                        "slug": "midnightlib",
+                        "source": "curseforge"
+                    }
+                ]
+            },
             {
                 "version": "1.18.2",
                 "loaderVersion": "0.14.8",
