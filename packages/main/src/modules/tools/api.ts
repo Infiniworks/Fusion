@@ -154,6 +154,47 @@ const iModrinth = async (mod, version, modsPath, loader) => {
     }
 };
 
+const vModrinth = async (modInfo) => {
+    const mod = modInfo.mod;
+    const version = modInfo.version;
+    const loader = modInfo.loader;
+    const modsPath = modInfo.path;
+    const hash = modInfo.hash;
+
+    const url = hash == undefined
+    ? `https://api.modrinth.com/v2/project/${mod}/version?game_versions=["${version}"]&loaders=["${loader}"]` 
+    : `https://api.modrinth.com/v2/version_file/${hash}`;
+
+    console.log(url);
+
+    const response = await got(url);
+    
+    const results = JSON.parse(response.body);
+
+    for (const result in results) {
+        const file = results[result];
+
+        // Use the primary file provided, otherwise just continue.
+        let files = file["files"].filter((x) => x["primary"] == true);
+        if (files.length < 1) {
+            files = file["files"];
+        }
+        
+        const downloadURL = files[0]["url"];
+        const filename = path.join(modsPath, files[0]["filename"]);
+
+        if (!(await fs.pathExists(filename))) {
+            console.error(`Downloading Modrinth ${version} Mod!`);
+            console.log(`${mod} <== (${url})`);
+            await download(downloadURL, filename);
+            return filename;
+        } else {
+            console.error(`File ${filename} already exists!`);
+            return filename;
+        }
+    }
+};
+
 const iCollection = async (collection) => {
     const collectionsPath = path.join(minecraftPath,"collections");
     const filename = `${collection}.zip`;
@@ -166,5 +207,5 @@ const iCollection = async (collection) => {
     await fs.remove(path.join(tempDir, filename));
 };
 
-export { iCollection, iJava, iCurseforge, iModrinth };
+export { iCollection, iJava, iCurseforge, iModrinth, vModrinth };
 
