@@ -39,7 +39,7 @@ app
   .whenReady()
   .then(async () => {
     console.log("App is ready!");
-    // await iCollection("defaults");
+    await iCollection("defaults");
     // await iCollection("performance");
     if (import.meta.env.PROD) {
       console.log("Checking for updates:");
