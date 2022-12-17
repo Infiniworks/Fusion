@@ -1,203 +1,31 @@
-// ES Imports
-import got from "got";
-import * as path from "path";
-import * as util from "minecraft-server-util";
-import { installFabric, getFabricLoaderArtifact} from "@xmcl/installer";
 import { restoreOrCreateWindow } from "/@/mainWindow";
-
-// Const Imports
-const decompress = require("decompress");
-const DiscordRPC = require("discord-rpc-patch");
-const fs = require("fs-extra");
 const mcData = require("minecraft-data");
-const msmc = require("msmc");
-const ngrok = require("ngrok");
 const os = require("os");
-const stream = require("stream");
 const { autoUpdater } = require("electron-updater");
 const { app, ipcMain } = require("electron");
-const { Client } = require("minecraft-launcher-core");
-
-// Download Function
-const { createWriteStream } = require("fs-extra");
-const { promisify } = require("util");
-
-const launcher = new Client();
-const clientId = "1001858478618447952";
-const rpc = new DiscordRPC.Client({ transport: "ipc" });
-const startTimestamp = new Date();
 const isSingleInstance = app.requestSingleInstanceLock();
-const minecraftPath = path.join(__dirname, "..", "..", "..", "minecraft");
-
-let currentVersion, serverUrl, authResult;
+import * as path from "path";
+const msmc = require("msmc");
+const _ = require("lodash");
 
 import mods from "./mods.json";
+import { disc } from "./modules/tools/hooks";
+import { awaitUrl, getServerStats } from "./modules/server";
+import { devLog, memoryGet, noHidden } from "./modules/tools/essentials";
+import { client, login, packData } from "./modules/client";
+import { iCollection } from "./modules/tools/api";
+import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
+import { delim, osmac } from "./modules/extensions/constants";
+const fs = require("fs-extra");
+
+let currentVersion, serverUrl;
+const klaw = require("klaw");
 
 // Checks
 if (!isSingleInstance) {
   app.quit();
   process.exit(0);
 }
-
-// Async Functions
-async function setActivity(activity) {
-  rpc.setActivity({
-    details: `Playing ${activity || "Launcher Screen"}`,
-    buttons: [{ label: "Downloads", url: "https://github.com/AarushX/Fusion" }],
-    startTimestamp,
-    largeImageKey: "fusion",
-  });
-}
-
-const getServerStats = async (server, port) => {
-  console.log(server, port);
-  return await util
-    .status(server, port, {
-      timeout: 1000 * 5,
-      enableSRV: true,
-    })
-    .then((result) => {
-      return result;
-    })
-    .catch((error) => console.error(error));
-};
-
-const login = async () => {
-  await msmc.fastLaunch("electron").then((result) => {
-    authResult = result;
-  });
-  return JSON.stringify(authResult);
-};
-
-
-
-const startClient = async (options) => {
-  const startTime = performance.now();
-
-  const installation = await install("fabric", options.version, options.clientName);
-  const version = installation.versionName;
-  let java = path.join(installation.javaPath, "bin", "javaw");
-  if (process.platform === "darwin") {
-    // MacOS different path
-    java = path.join(installation.javaPath, "Contents", "Home", "bin", "java");
-  }
-
-  const rootDir = path.join(
-    minecraftPath,
-    "instances",
-    options.clientName,
-  );
-
-  const opts = {
-    clientPackage: null,
-    authorization: msmc.getMCLC().getAuth(options.authentication),
-    root: rootDir,
-    version: {
-      number: options.version,
-      custom: version,
-    },
-    memory: {
-      min: options.memMin,
-      max: options.memMax,
-    },
-    javaPath: java,
-    overrides: {
-      maxSockets: options.maxSockets,
-    },
-  };
-  if (options.memMin > options.memMax) {
-    options.memMin = options.memMax;
-  }
-  console.error(`Starting Fusion Client ${version}!`);
-  currentVersion = options.version;
-  await setActivity("Minecraft " + options.version);
-
-  console.error(`Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
-  launcher.launch(opts);
-  launcher.on("debug", (e) => {
-    console.log(e);
-  });
-  launcher.on("data", (e) => {
-    console.log(e);
-    if (e.includes("Sound engine started")) {
-      console.error(`Total Launch Time taken: ${(performance.now() - startTime).toFixed(2)}ms`);
-    }
-  });
-  launcher.on("close", (e) => {
-    console.log("Closed:", e);
-    currentVersion = "Launcher Screen";
-    setActivity(currentVersion);
-  });
-};
-
-const awaitUrl = async () => {
-  const urlServer = await ngrok.connect({
-    proto: "tcp",
-    addr: 25565,
-    authtoken: "1r7Om4dKZGppn414jclOabclLsV_5MfjTVsiTBXmwQqZp7QBK",
-  });
-  if (urlServer) return urlServer;
-  else return "urlServer fetch rejected";
-};
-
-const download = async (url, dest) => {
-  const pipeline = await promisify(stream.pipeline);
-  await fs.ensureFile(dest);
-  const downloadStream = got.stream(url);
-  const fileWriterStream = await createWriteStream(dest);
-  await pipeline(downloadStream, fileWriterStream);
-};
-
-const install = async (modloader, version, instance) => {
-  // Variables
-  let versionName;
-  
-  const arch = process.arch.replace("arm", "aarch");
-  const modloaderMatch = mods.filter(input => input.modloader === modloader)[0];
-  const filteredResult = modloaderMatch.versions.filter(input => {
-      const versionCheck = input.version === version;
-      return versionCheck;
-  });
-
-  const loaderVersion = filteredResult[0].loaderVersion;
-  version = filteredResult[0].version ? filteredResult[0].version : version;
-  const javaVersion  = filteredResult[0].java;
-
-  const mcVersion = version + "";
-  if (modloader == "fabric") {
-    versionName = mcVersion + "-fabric" + loaderVersion;
-  }
-
-  // Paths
-  const instancesPath = path.join(minecraftPath, "instances", instance);
-  const modsPath = path.join(instancesPath, "mods");
-  const javaTemp = path.join(minecraftPath, "java", "temp");
-  const javaPath = path.join(minecraftPath, "java", javaVersion);
-
-  // Install Java
-  await getJava(javaVersion, javaPath, javaTemp, arch).then(() => console.log("Java installed!"));
-
-  // Install Fabric
-  const versionList = await getFabricLoaderArtifact(mcVersion, loaderVersion);
-  await installFabric(versionList, instancesPath).then((result) => {
-    versionName = result;
-    console.log("Fabric installed!");
-  });
-
-  // Install Mods
-  await Promise.allSettled(filteredResult[0].mods.map(async (mod) => {
-    const modVersion = mod.version ? mod.version : version;
-    if (mod.source === "modrinth") await getModrinthMod(mod.slug, modVersion, modsPath);
-    else if (mod.source === "curseforge") await getCurseforgeMod(mod.slug, modVersion, modsPath);
-  })).then(() => console.log("Mods installed!"));
-
-  console.log("Installation complete!");
-
-  return {
-    javaPath,
-    versionName,
-  };
-};
 
 app.on("second-instance", restoreOrCreateWindow);
 
@@ -209,154 +37,115 @@ app.on("activate", restoreOrCreateWindow);
 
 app
   .whenReady()
-  .then(() => {
+  .then(async () => {
     console.log("App is ready!");
+    await iCollection("defaults");
+    // await iCollection("performance");
     if (import.meta.env.PROD) {
       console.log("Checking for updates:");
       autoUpdater.checkForUpdatesAndNotify();
     } else {
       console.log("Running in development mode.");
     }
-
-    restoreOrCreateWindow();
-    getVersions();
+    await restoreOrCreateWindow();
+    await disc.init();
+    
   })
   .catch((e) => console.error("Failed:", e));
 
-DiscordRPC.register(clientId);
 
-rpc.on("ready", () => {
-  setActivity(currentVersion);
-
-  setInterval(() => {
-    setActivity(currentVersion);
-  }, 6e4);
-});
-
-rpc.login({ clientId }).catch(console.error);
-
-const getJava = async (javaVersion, javaPath, javaTemp, arch) => {
-  if (await fs.exists(javaPath)) return;
-  
-  let operatingSystem = process.platform + "";
-  if (operatingSystem == "win32") {
-    operatingSystem = "windows";
-  } else if (operatingSystem == "darwin") {
-    operatingSystem = "mac";
-  }
-  const response = await got(
-    `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&vendor=eclipse&os=${operatingSystem}&architecture=${arch}`,
-  );
-  const info = JSON.parse(response.body)[0];
-  const filename = `jdk-${info.version.semver}-jre`;
-  await download(
-    info.binary.package.link,
-    path.join(javaTemp, `${filename}.zip`),
-  );
-  await decompress(path.join(javaTemp, `${filename}.zip`), javaTemp);
-  await fs.move(path.join(javaTemp, filename), javaPath);
-  await fs.remove(path.join(javaTemp));
-};
-
-const getCurseforgeMod = async (mod, version, modsPath) => {
-  const url = `https://api.curseforge.com/v1/mods/search?gameId=432&gameVersion=${version}&slug=${mod}`;
-  const response = await got(url,{
-    headers: {
-      "x-api-key": "$2a$10$rb7JRBpgV5mt33y9zxOcouYDxQFE4jj9xK5bZsKd.uky8LdZTgTuO",
-    },
-  });
-  const mods = JSON.parse(response.body);
-  const data = mods["data"][0];
-  if (data["slug"] == mod) {
-    const latestFiles = data["latestFiles"];
-    for (const latestFile in latestFiles) {
-      const file = data["latestFiles"][latestFile];
-      if(file["gameVersions"].includes("Fabric") && file["gameVersions"].includes(version)) {
-        const downloadURL = file["downloadUrl"];
-        const name = file["fileName"] || `${mod}-${file["id"]}.jar`;
-        const filename = path.join(modsPath, name);
-        if (!(await fs.pathExists(filename))) {
-          console.error(`Downloading CringeForge ${version} Mod! *CF`);
-          console.log(`${mod} <== npm @ (node-curseforge)`);
-          await download(downloadURL, filename);
-          break;
-        } else {
-          console.error(`File ${filename} already exists! *CF`);
-          break;
-        }
-      }
-    }
-  }
-};
-
-const getModrinthMod = async (mod, version, modsPath) => {
-  const url = `https://api.modrinth.com/v2/project/${mod}/version?game_versions=["${
-    version
-  }"]
-  &loaders=["fabric"]`;
-  const response = await got(url);
-  const results = JSON.parse(response.body);
-  for (const result in results) {
-    const file = results[result];
-    let files = file["files"].filter((x) => x["primary"] == true);
-    if (files.length < 1) {
-      files = file["files"];
-    }
-    const downloadURL = files[0]["url"];
-    const filename = path.join(modsPath, files[0]["filename"]);
-    if (!(await fs.pathExists(filename))) {
-      console.error(
-        `Downloading Modrinth ${version} Mod!`,
-      );
-      console.log(`${mod} <== (${url})`);
-      await download(downloadURL, filename);
-      break;
-    } else {
-      console.error(`File ${filename} already exists!`);
-      break;
-    }
-  }
-};
-
-const getVersions = () => {
-  const versions = mods.filter(data => data.modloader == "fabric")[0].versions;
-  const versionList : string[] = [];
-  versions.forEach((version) => versionList.push(version.version));
-  return versionList;
-};
-
-const memoryGet = async (memory, identifier) => {
-  switch (identifier) {
-    case "B":
-      return memory;
-    case "K":
-      return Math.round(memory / 1024);
-    case "M":
-      return Math.round(memory / 1024 / 1024);
-    case "G":
-      return Math.round(memory / 1024 / 1024 / 1024);
-  }
-};
 
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
   switch (command) {
     case "devmode":
       return process.env.IS_DEV === "true";
-    case "versions":
-      return getVersions();
+    case "clients": {
+      const clients: unknown [] = [];
+      await fs.ensureDir(path.join(minecraftPath,"clients"));
+      for await (const file of klaw(path.join(minecraftPath,"clients"), {depthLimit: 0})) {
+        if (file.path != path.join(minecraftPath,"clients")) {
+          clients.push(file.path.replace(path.join(minecraftPath,"clients"), ""));
+        }
+      }
+      return clients;
+    }
+    case "collections": {
+      const collectionsPath = path.join(minecraftPath,"collections");
+      const collections: string [] = [];
+
+      for await (const folder of klaw(collectionsPath, {depthLimit: 0, filter: noHidden})) {
+        const collectionName = folder.path.replace(collectionsPath, "").replace(delim,"");
+        if (collectionName == "") continue;
+        if (osmac && (collectionName == ".DS_Store")) {
+          continue;
+        }
+        const collectionPath = path.join(collectionsPath, collectionName);
+        const collection = {}; 
+        for await (const collxion of klaw(collectionPath, {depthLimit: 0, filter: noHidden})) {
+          if (collxion.path == collectionPath) continue;
+
+          const subCollectionName = collxion.path
+            .replace(collectionPath, "")
+            .replace(delim,"");
+          if (subCollectionName == "") continue;
+
+          const contents = await fs.readJSON(
+            path.join(
+              collectionPath, subCollectionName, "pack.json",
+              ),
+          );
+          
+          collection[subCollectionName] = {
+            "name": subCollectionName,
+            "version": contents.version,
+            "verified": contents.verified,
+            "info": JSON.stringify(contents),
+          };
+          
+        }
+        collections.push(`{"${collectionName}": ${JSON.stringify(collection)}}`);
+      }
+      return collections;
+    }
     case "serverStats":
       return await getServerStats(arg1, arg2);
     case "minecraftVersions":
       return mcData.versions.pc;
+    case "modloaders":
+      return mods.map((data) => data.modloader);
     case "freeMemory":
       return memoryGet(os.freemem(), arg1);
     case "maxMemory":
       return memoryGet(os.totalmem(), arg1);
     case "login":
       return await login();
-    case "startClient":
-      return await startClient(arg1);
+    case "intercept_and_log": {
+      console.log(command, arg1, arg2);
+      return;
+    }      
+    case "startClient": {
+      arg2 = arg1[1];
+      arg1 = arg1[0];
+      let thisClient;
+      switch (arg2.clientType) {
+        case "collection": {
+          thisClient = new client(path.join(minecraftPath, "collections", arg2.collection, arg2.client));
+          break;
+        }
+        case "client": {
+          thisClient = new client(path.join(minecraftPath, "clients", arg2.client));
+          break;
+        }
+        default: {
+          console.error("Error...");
+        }
+      }
+      await thisClient.init(arg1);
+      const started = await thisClient.start();
+      console.log(started);
+      return started;
+    }
     case "version":
       switch (arg1) {
         case "minecraft":
@@ -369,5 +158,80 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       }
       serverUrl = await awaitUrl();
       return serverUrl;
+    case "defaults": {
+      switch (arg1) {
+        case "res": return resources;
+        default: return appFolder;
+      }
+    }
+    case "ensure": {
+      const pth = path.join(resources, arg1);
+      
+      try {
+        await fs.readJson(pth);
+      } catch (err) {
+        fs.writeJSON(pth, {});
+      } 
+      await fs.ensureFile(pth);
+
+      return pth;
+    }
+    case "refreshUsers": {
+      // Neutrino Loader v3
+      // v1 normal accounts do things
+      // v2 auto refreshes accounts
+      // v3 removes duplicate accounts and keeps latest
+      const newUsers: unknown[] = [];
+
+      if (JSON.stringify(arg1)=="{}" || !arg1) return {};
+
+
+      // Reverse in order to allow the most recent things first
+      arg1 = arg1.reverse();
+      const argxusers: string[] = [];
+
+      for (let index = 0; index < arg1.length; ++index) {
+        const user = arg1[index];
+        if (JSON.stringify(user) == "{}") continue;
+
+        // Exit out of the cycle if the username is already in the list
+        if (argxusers.includes(user.username)) continue;
+        argxusers.push(user.username);
+
+        const gotAuth = await msmc.getMCLC().getAuth(user.data);
+
+        const accountValid = await msmc.getMCLC().validate(gotAuth);
+
+        // Console log if account valid or not
+        const refId = accountValid
+        ? `Account ${user.username} Valid.`
+        : `Account ${user.username} Invalid. Refreshing.`;
+        devLog(refId);
+
+        // If the account is valid, keep it the same
+        // otherwise refresh the token and account.
+        const refAuth = accountValid
+        ? gotAuth 
+        : await msmc.getMCLC().refresh(gotAuth);
+
+        // Create then combine the new profile with the object system
+        // we use for authentication
+        const prof = await msmc.getMCLC().toProfile(refAuth);
+        user.data.profile = _.merge(user.data.profile,prof);
+        user.data.access_token = prof._msmc.mcToken;
+        newUsers.push(user);
+      }
+      // Return the redone list so that the most recent things are last
+      // like they would have been added in the panel.
+      return newUsers.reverse();
+    }
+    // arg1 is the whole user from globalData.users that is selected / loaded
+    case "validateUser": {
+      const gotAuth = await require("msmc").getMCLC().getAuth(arg1.data);
+      return await require("msmc").getMCLC().validate(gotAuth);
+    }
+    case "data": {
+      return (await packData(arg1));
+    }
   }
 });

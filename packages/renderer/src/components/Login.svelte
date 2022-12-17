@@ -1,15 +1,15 @@
 <script>
 import _ from "lodash"; 
+import { get } from 'svelte/store';
+import { data } from "../data/localStore.js";
 import { onMount } from 'svelte';
-import { get } from "svelte/store";
-let users, selected;
+
+let selected;
+
+let globalData = get(data);
 
 async function login(username) {
-    let data;
-    await window.please.get("login")
-    .then((loginData) => {
-        data = JSON.parse(loginData)
-    })
+    let data = JSON.parse(await window.please.get("login"));
     let result = data.type;
     if (result == "Cancelled") {
         console.log("Sign-in Cancelled!")
@@ -17,112 +17,155 @@ async function login(username) {
     else if (result == "Success") {
         username = data.profile.name;
 
-        users = JSON.parse(localStorage.getItem("users"));
-        let userSnippet = JSON.parse(`{"${username}": ${JSON.stringify(data)}}`);
-        users = JSON.stringify(_.merge(users, userSnippet))
-        
-        localStorage.setItem("users", users);
-        localStorage.setItem("selected", username)
-
-        userListify();
+        const userSnippet = { username, data }
+        globalData.users =  await window.please.get(
+            "refreshUsers",
+            _.reject(_.compact(_.concat(globalData.users, userSnippet)), _.isEmpty)
+            );
+        console.log(globalData)
+        globalData.selected = username;
+        globalData.selectedIndex = globalData.users.length - 1;
         console.log("Sign-in Successful!");
     } 
 }
 
-const select = async (name) => {
-    localStorage.setItem("selected", name)
-    selected = localStorage.getItem("selected");
+const select = async (index) => {
+    globalData.selected = globalData.users[index].username;
+    globalData.selectedIndex = index;
+    globalData;
 }
 
-const logout = async (name) => {
-    if (localStorage.getItem("selected") == name) {
-        localStorage.setItem("selected", "")
+const logout = async (index) => {
+    if (globalData.selected == globalData.users[index].username) {
+        if (globalData.users.length > 1) {
+            globalData.selected = globalData.users[1].username;
+            globalData.selectedIndex = 1;
+        } else {
+            globalData.selected = "e";
+        }
     }
-
-    selected = localStorage.getItem("selected");
-
-    users = JSON.parse(localStorage.getItem("users"));
-    delete users[name]
-    
-    localStorage.setItem("users", JSON.stringify(users));
-    userListify();
+    delete globalData.users[index];
+    globalData.users = _.compact(globalData.users);
 }
 
-const userListify = () => {
-    users = Object.entries(JSON.parse(localStorage.getItem("users")));
-    selected = localStorage.getItem("selected");
-    if (!selected) {
-        selected = "e"
-    }
-}
+$: data.update((thing) => thing = globalData);
 
-onMount(() => {
-    userListify();
+onMount( async () => {
+    const validatedAndRefreshedUsers = 
+    await window.please.get("refreshUsers", globalData.users);
+    globalData.users = validatedAndRefreshedUsers
 });
+
 </script>
 
 <main>
-    <button class="login" on:click={
+    <!-- <button 
+    class:noLogin="{globalData.selected === 'e'}"
+    class="login" on:click={
         async () => {
             await login()
         }
-    }>Login</button><br>
-    <img class="userHead" alt="Minecraft Head" src="https://crafthead.net/avatar/{selected}"/>
-    {#key users}
-        {#if users}
-            {#each users as [name, data]}
-            <div class:selected="{name == selected}">
+    }>ADD LOGIN</button><br> -->
+    <!-- <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/> -->
+    {#key globalData.users}
+        {#if (JSON.stringify(globalData.users) !== "{}") && (globalData.users)}
+            {#each globalData.users as user, i}
+            <div class="inline" class:selected="{user.username == globalData.selected}">
+                <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{user.username}/180.png"/>
                 <button class="user" on:click={
                     async () => {
-                        select(name)
+                        select(i)
                     }
-                }>{name}</button>
+                }>{user.username}</button>
                 <button class="logout" on:click={
                     async () => {
-                        logout(name)
+                        logout(i)
                     }
-                }>Logout</button><br>
+                }><img class = "logoutImage" alt="Logout" src="images/xsymb.webp"/></button>
+                <br>
             </div>
             {/each}
         {/if}
     {/key}
+    <div class="inline">
+        <button class="user" on:click={
+            async () => {
+                await login();
+            }
+        }>Log into an account</button>
+        <button class="logout" on:click={
+            async () => {
+                await login();
+            }
+        }>+</button>
+        <br>
+    </div>
+    
 </main>
 
+<!-- <canvas id="skin_container"></canvas> -->
+
 <style>
-.login {
-    background-color: #0d6076;
-    color: white;
-    width:100%;
-    transition: background-color 1.75s;
-}
-.login:hover {
-    background-color: #0d5062;
-    color: white;
-    width:100%;
-}
-.selected {
-    background-color: #0a86a8;
-    box-shadow: 0 0 4px rgba(0,0,0,0.75);
-}
-.userHead {
-    width: 110px;
-    height: 100%;
-    float: left;
-}
-.logout {
-    float:right;
-    background-color: #0b7593;
-    padding: 5px;
-}
-.logout:hover {
-    color: white;
-}
-.user {
-    font-weight: bold;
-    padding: 5px;
-}
-.user:hover {
-    background-color: #08b2e100;
-    color: white;
-}
+    /* .bodyIMG {
+        width: 30%;
+        margin-left: auto;
+        margin-right: auto;
+        float: left;
+    } */
+    .logoutImage {
+        filter: invert(100%);
+        opacity: 0.5;
+        width: 20px;
+        margin: auto;
+        display: block;
+    }
+    .inline {
+        border-radius: 5px 5px 5px 5px;
+        display: flex;
+        padding: 7px;
+        margin: 5px;
+        background-color: #181816;
+        transition-timing-function: ease-in-out;
+        color: rgba(255, 255, 255, 0.503);
+        transition: all .8s;
+        
+    }
+    .selected {
+        color: rgba(255, 255, 255, 0.803);
+        background-color: rgb(59, 59, 59);
+    }
+    .logout {
+        border-radius: 5px 5px 5px 5px;
+        float: right;
+        flex: 1 0;
+        height: 50px;
+        width: 50px;
+        aspect-ratio: 1 / 1;
+        background-color: black;
+        padding: 5px;
+        text-align: center;
+    }
+    .logout:hover {
+        color: white;
+    }
+    .user {
+        flex: 10 0;
+        padding: 5px;
+        text-align: left;
+        font-size: 20px;
+    }
+    .user:hover {
+        background-color: #08b2e100;
+        color: white;
+    }
+    .noLogin {
+        font-size: 20px;
+        padding: 10px;
+        background-color: rgba(255, 0, 0, 0.287);
+    }
+    .userHead {
+        border-radius: 5px 5px 5px 5px;
+        height: 50px;
+        aspect-ratio: 1 / 1;
+    }
 </style>

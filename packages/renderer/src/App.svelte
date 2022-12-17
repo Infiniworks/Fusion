@@ -1,101 +1,130 @@
-<script>
-import TopBar from "./components/TopBar.svelte";
-import Profiles from "./components/Profiles.svelte";
-import Login from "./components/Login.svelte";
-import Launch from "./components/Launch.svelte";
-import Settings from "./components/Settings.svelte";
-import Servers from "./components/Servers.svelte";
-import ProfileBar from "./components/ProfileBar.svelte";
-import MainPage from "./components/MainPage.svelte";
+<script lang="ts">
+	import TopBar from "./components/TopBar.svelte";
+	import Settings from "./pages/Settings.svelte";
+
+	import Credits from "./components/Credits.svelte";
+	import Home from "./pages/Home.svelte";
+	import About from "./pages/About.svelte";
+	import Developer from "./pages/Developer.svelte";
+	import Launcher from "./components/Launcher.svelte";
+	import ClientHeader from "./components/ClientHeader.svelte";
+	import Clients from "./pages/Clients.svelte";
+	import { tab } from "./data/bridge";
+
+	let items: string[] = ["Home", "Clients", "Settings", "About", "Developer"];
+	let smallBar: string[] = ["Clients", "Settings", "About"];
+
+	let selectedTab = items[0];
+
+	tab.subscribe(value => {
+		selectedTab = value;
+	});
 </script>
 
-<main class="body font-medium lining-nums">
-	<div class="topBar"><TopBar /></div>
-	<div class="top" style="flex: 1 0;">
-		<div class="login bg-cyan-700" style="flex: 4 0">
-			<Login></Login>
-		</div>
-		<div class="profiles bg-cyan-600"style="flex: 8 0">
-			Profiles Go Here<Profiles></Profiles>
-		</div>
-		<div class="launch bg-cyan-700"style="flex: 2 0">
-			<Launch></Launch>
-		</div>
+<main class="font-medium lining-nums">
+	<div class= "titleBar">
+		<TopBar/>
 	</div>
-	<div class="main" style="flex: 4 0;">
-		<div class="left bg-cyan-600" style="flex: 4 0;">
-			<div class="settings">
-				<Settings></Settings>	
-			</div>
-			<div class="servers">
-				Servers Here<Servers></Servers>
-			</div>
+	<span class = "dynamic">
+		<div class= "clientHeader">
+			<ClientHeader/>
 		</div>
-
-		<div class="right bg-cyan-500" style="flex: 8 0;">
-			<div>Profile Bar Here<ProfileBar></ProfileBar></div>
-			<div>Actual Page Here<MainPage></MainPage></div>
+		<div class= "rocketLauncher" style=
+		"--flexDown: {smallBar.includes(selectedTab) ? 4.5 : 11};">
+			<Launcher/>
 		</div>
-	</div>
+		<div class= "usableSpace">
+			{#if selectedTab == "Home"}
+				<Home/>
+			{:else if selectedTab == "Clients"}
+				<Clients/>
+			{:else if selectedTab == "Settings"}
+				<Settings/>
+			{:else if selectedTab == "About"}
+				<About/>
+			{:else if selectedTab == "Developer"}
+				<Developer/>
+			{/if}
+		</div>
+	</span>
+	<div class= "creditsBar"><Credits/></div>
 </main>
-<TopBar/>
 
 <style>
-main {
-	background-color: rgb(0, 0, 0);
-	position: fixed;
-	top:0px;
-	right:0px;
-	bottom:0px;
-	left:0px;
-	margin:0px;
-	padding:0px;
-	color: rgb(194, 214, 234);
-}
-.main {
-	display: flex;
-	flex-direction: row;
-}
-.body {
-	display: flex;
-	flex-direction: column;
-	flex: 1 0;
-	align-items: stretch;
-	margin: auto;
-	padding:0;
-}
-.top {
-	display: inline-flex;
-	background-color: #4d25eb;
-	box-shadow: 0 0 15px rgba(0,0,0,0.75);
-	clip-path: inset(0px 0px -15px 0px);
-}
-.left {
-	display: inline-flex;
-	flex-direction: column;
-	padding:10px;
-	/* background-color: #2d65bf; */
-}
-.right {
-	display: inline-flex;
-	flex-direction: column;
-	padding:10px;
-	/* background-color: #3e7ed7; */
+
+:root {
+	--topBar: 38px;
+	--bottomBar: 38px;
+	--clientHeader: 40px;
+	--rocketLauncherHeight: 100px;
 }
 
-.topBar {
+main {
+	background-color: #181818;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+	color: rgb(194, 214, 234);
+	display: inline-block;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.clientHeader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* background-color: #0a0a0a; */
+	background-color: antiquewhite;
+	height: 100px;
+}
+.dynamic {
+	position: absolute;
+	top: var(--topBar);
+	bottom: var(--bottomBar);
+	display: flex;
+	flex-direction: column;
+	align-content: stretch;
+	margin: auto;
+	padding: 0px;
+	width: 100%;
+	justify-content: center;
+}
+.titleBar {
+	position: absolute;
+	background-color: #201f1d;
+	right: 0px;
+	top: 0px;
+	left: 0px;
+	height: var(--topBar);
 	-webkit-app-region: drag;
-	box-shadow: 0 0 15px rgba(0,0,0,0.75);
-	clip-path: inset(0px 0px -15px 0px);
 }
-.login {
-	justify-content: center;
+.creditsBar {
+	position: absolute;
+	background-color: #141414;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	height: var(--bottomBar);
 }
-.launch {
+.rocketLauncher {
+	display: flex;
+	flex-direction: column;
 	justify-content: center;
+	top: calc(var(--topBar)+var(--clientHeader));
+	bottom: calc(var(--topBar)+var(--clientHeader)+var(--rocketLauncherHeight));
+	background-image: url("../images/nasaimg.png");
+	background-position: center; /* Center the image */
+	background-repeat: no-repeat; /* Do not repeat the image */
+	background-size: cover;
+	box-shadow: inset 0 0 0 1000px rgba(34, 0, 75, 0.57);
+	flex: var(--flexDown) 0 0;
+	transition: all 0.3s ease-out;
 }
-.profiles {
-	padding:10px;
-	justify-content: center;
+.usableSpace {
+	flex: 15 0 0;
 }
 </style>

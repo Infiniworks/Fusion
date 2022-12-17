@@ -1,30 +1,21 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Pandesoft\.node\corepack\yarn\1.22.15\bin\yarn.js add @material
+  C:\Program Files\nodejs\node.exe C:\Users\Aarush\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
 
 PATH: 
-  C:\Python310\Scripts\;C:\Python310\;c:\program files (x86)\vmware\vmware workstation\bin\;c:\program files (x86)\vmware\vmware workstation\bin;c:\program files\common files\oracle\java\javapath;c:\program files (x86)\common files\oracle\java\javapath;c:\windows\system32;c:\windows;c:\windows\system32\wbem;c:\windows\system32\windowspowershell\v1.0;c:\windows\system32\openssh;c:\program files\nvidia corporation\nvidia nvdlisr;c:\program files\dotnet;c:\windows\system32;c:\windows;c:\windows\system32\wbem;c:\windows\system32\windowspowershell\v1.0\;c:\windows\system32\openssh\;c:\program files\dotnet\;c:\program files\putty\;c:\program files (x86)\windows kits\10\windows performance toolkit\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Python310\Scripts\;C:\Python310\;c:\program files (x86)\vmware\vmware workstation\bin\;c:\program files (x86)\vmware\vmware workstation\bin;c:\program files\common files\oracle\java\javapath;c:\program files (x86)\common files\oracle\java\javapath;c:\windows\system32;c:\windows;c:\windows\system32\wbem;c:\windows\system32\windowspowershell\v1.0;c:\windows\system32\openssh;c:\program files\nvidia corporation\nvidia nvdlisr;c:\program files\dotnet;c:\windows\system32;c:\windows;c:\windows\system32\wbem;c:\windows\system32\windowspowershell\v1.0\;c:\windows\system32\openssh\;c:\program files\dotnet\;c:\program files\putty\;c:\program files (x86)\windows kits\10\windows performance toolkit\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Git\cmd;C:\Python310\Scripts\;C:\Python310\;c:\program files (x86)\vmware\vmware workstation\bin\;c:\program files (x86)\vmware\vmware workstation\bin;c:\program files\common files\oracle\java\javap;C:\Users\Pandesoft\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Pandesoft\AppData\Local\spicetify
+  C:\Program Files\Python310\Scripts\;C:\Program Files\Python310\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\IntelSGXPSW\bin\x64\Release\;C:\Program Files\Intel\IntelSGXPSW\bin\win32\Release\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\nodejs\;C:\Users\Aarush\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\IntelliJ IDEA 2021.3.2\bin;;C:\Users\Aarush\AppData\Local\GitHubDesktop\bin;C:\ProgramData\Aarush\GitHubDesktop\bin;C:\Users\Aarush\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Aarush\AppData\Roaming\npm
 
 Yarn version: 
-  1.22.15
+  1.22.19
 
 Node version: 
-  18.2.0
+  16.15.0
 
 Platform: 
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@material: Request "https://registry.yarnpkg.com/@material" returned a 405
-      at params.callback [as _callback] (C:\Users\Pandesoft\.node\corepack\yarn\1.22.15\lib\cli.js:66149:18)
-      at self.callback (C:\Users\Pandesoft\.node\corepack\yarn\1.22.15\lib\cli.js:140885:22)
-      at Request.emit (node:events:527:28)
-      at Request.<anonymous> (C:\Users\Pandesoft\.node\corepack\yarn\1.22.15\lib\cli.js:141857:10)
-      at Request.emit (node:events:527:28)
-      at IncomingMessage.<anonymous> (C:\Users\Pandesoft\.node\corepack\yarn\1.22.15\lib\cli.js:141779:12)
-      at Object.onceWrapper (node:events:641:28)
-      at IncomingMessage.emit (node:events:539:35)
-      at endReadableNT (node:internal/streams/readable:1344:12)
-      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:71:26)
 
 npm manifest: 
   {
@@ -85,6 +76,7 @@ npm manifest:
       "@rgossiaux/svelte-heroicons": "^0.1.2",
       "@smui/linear-progress": "^6.0.0",
       "@smui/select": "^6.0.0",
+      "@smui/slider": "^6.0.0",
       "@typescript-eslint/parser": "^5.30.6",
       "@xmcl/core": "^2.10.1",
       "@xmcl/installer": "^4.4.0",

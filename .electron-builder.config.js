@@ -1,4 +1,4 @@
-import 'dotenv/config'
+// import 'dotenv/config'
 
 if (process.env.VITE_APP_VERSION === undefined) {
   const now = new Date;

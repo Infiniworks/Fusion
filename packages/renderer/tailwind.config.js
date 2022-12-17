@@ -6,6 +6,7 @@ module.exports = {
   content: [
     path.join(__dirname, "./index.html"),
     path.join(__dirname, "./src/**/*.{ts,html,js,svelte}"),
+    "../../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
   ],
   theme: {
     extend: {
@@ -14,5 +15,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require("flowbite/plugin"),
+  ],
 };
