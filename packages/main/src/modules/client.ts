@@ -6,7 +6,7 @@ const { Client } = require("minecraft-launcher-core");
 const launcher = new Client();
 import { timer as Timer } from "./tools/timer";
 
-import { iJava, iCurseforge, iModrinth } from "./tools/api";
+import { iJava, iCurseforge, iModrinth, vModrinth } from "./tools/api";
 import { disc } from "./tools/hooks";
 import { devLog, download } from "./tools/essentials";
 import { appFolder, javaLoc } from "./extensions/paths";
@@ -119,11 +119,14 @@ class client {
                 const modVersion = mod.version;
                 
                 if (mod.source === "modrinth") {
-                    modFilePath = await iModrinth(
-                        mod.slug,
-                        modVersion,
-                        modsPath,
-                        this.pack.modloader,
+                    modFilePath = await vModrinth(
+                        {
+                            mod: mod.slug,
+                            version: modVersion,
+                            loader: this.pack.modloader,
+                            path: modsPath,
+                            hash: mod.hash,
+                        },
                     );
                 } else if (mod.source === "curseforge") {
                     modFilePath = await iCurseforge(
