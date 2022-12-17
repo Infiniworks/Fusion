@@ -3940,10 +3940,10 @@ min-indent@^1.0.0:
   resolved "https://registry.npmjs.org/min-indent/-/min-indent-1.0.1.tgz"
   integrity sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
 
-minecraft-data@^3.5.1:
-  version "3.9.1"
-  resolved "https://registry.npmjs.org/minecraft-data/-/minecraft-data-3.9.1.tgz"
-  integrity sha512-Wbgq2cRaebaq3zExTuV3Knyjtnm1tIKvJxyu6cVmwbQpbX0z2qgh9fTr3ZJXF8lRP1PwHCCHr1zaU8PikmIO5g==
+minecraft-data@^3.20.0:
+  version "3.20.0"
+  resolved "https://registry.yarnpkg.com/minecraft-data/-/minecraft-data-3.20.0.tgz#b832abcc48be89cd1f485e3cfcd779092bc6fe7c"
+  integrity sha512-xBQZwY0FoVq7jirFTD8mexNatSddP72CpDYweISHKE3J0co+CgfjtvQ94ykdQW+QPTMgrIIlATxVGIlk0Xjm8w==
 
 minecraft-launcher-core@^3.16.13:
   version "3.16.13"
