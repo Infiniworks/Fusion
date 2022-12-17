@@ -65,7 +65,7 @@
     "@xmcl/installer": "^4.4.0",
     "adm-zip": "^0.5.9",
     "async": "^3.2.4",
-    "autoprefixer": "^10.4.8",
+    "autoprefixer": "^10.4.13",
     "carbon-components-svelte": "^0.70.13",
     "core-js": "^3.24.0",
     "decompress": "^4.2.1",
