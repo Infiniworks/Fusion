@@ -1,47 +1,9 @@
 /**
  * @module preload
  */
-export {};
 import { contextBridge, ipcRenderer } from "electron";
+import * as fs from "fs-extra";
 
-// const api = {
-//   isDevMode: () => {
-//     return ipcRenderer.invoke("getDevmode");
-//   },
-//   titlebar: (action: unknown) => {
-//     ipcRenderer.send("titlebar", action);
-//   },
-//   getUrl: () => {
-//     return ipcRenderer.invoke("startServerV3");
-//   },
-//   checkUrl: () => {
-//     return ipcRenderer.invoke("startServerV3");
-//   },
-//   getServerStats: (server: string, port: number) => {
-//     return ipcRenderer.invoke("getServerStats", server, port);
-//   },
-//   getMods: (client: string) => {
-//     return ipcRenderer.invoke("getMods", client);
-//   },
-//   login: () => {
-//     return ipcRenderer.invoke("login");
-//   },
-//   startClient: (o: JSON) => {
-//     ipcRenderer.send("startClient", o);
-//   },
-//   totalMemory: () => {
-//     return ipcRenderer.invoke("maxMemory");
-//   },
-//   getVersions: () => {
-//     return ipcRenderer.invoke("getVersions");
-//   },
-//   getConsoleLogs: () => {
-//     return ipcRenderer.invoke("getConsoleLogs");
-//   },
-//   reloadPage: () => {
-//     ipcRenderer.send("reloadPage");
-//   },
-// };
 const please = {
   get: (arg1: never, arg2: never) => {
     return ipcRenderer.invoke("get", arg1, arg2);
@@ -52,5 +14,36 @@ const please = {
   onConsole: (callback: never) => ipcRenderer.on("consoleData", callback),
 };
 
-// contextBridge.exposeInMainWorld("api", api);
+const db = {
+  // writeJSON: async (file: never, key:never, data: never) => {
+  //   await fs.ensureFile(file);
+  //   const current = {};
+  //   current[key] = data;
+  //   await fs.writeJSON(file,current);
+  // },
+  overwriteJSON: async (file: never, data: never) => {
+    await fs.writeJSON(file,JSON.parse(data));
+  },
+  appendJSON: async (file: never, key:never, data: never) => {
+    await fs.ensureFile(file);
+    const current:JSON = await fs.readJSON(file);
+    current[key] = data;
+    await fs.writeFile(file,JSON.stringify(current, null, "\t"));
+    return;
+  },
+  readJSON: async (file: never) => {
+    await fs.ensureFile(file);
+    return await fs.readJSON(file);
+  },
+  prepareJSON: (file: never) => {
+    fs.ensureFileSync(file);
+    const current = fs.readFileSync(file);
+    if (current.toString() == "") {
+      fs.writeSync(file,"{}");
+    }
+    return;
+  },
+};
+
 contextBridge.exposeInMainWorld("please", please);
+contextBridge.exposeInMainWorld("dbTools", db);

@@ -1,6 +1,7 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { URL } from "url";
+import { devLog } from "./modules/tools/essentials";
 
 const useDevTools = false;
 
@@ -9,8 +10,8 @@ async function createWindow() {
     titleBarStyle: "hidden",
     frame: false,
     transparent: true,
-    width: 1120,
-    height: 680,
+    width: 1300,
+    height: 800,
     show: false,
     resizable: false,
     autoHideMenuBar: true,
@@ -24,19 +25,22 @@ async function createWindow() {
     ipcMain.on("greet", (event, command, arg1, arg2) => {
       switch (command) {
         case "window":
-          if (arg1 === "destroy") browserWindow.destroy();
+          if (arg1 === "destroy") app.quit();
           else if (arg1 === "resize") {
             if (browserWindow.isMaximized()) browserWindow.unmaximize();
             else browserWindow.maximize();
           }
-          arg2;
+          else if (arg1 === "minimize") browserWindow.minimize();
+          if (arg2) {
+            devLog(arg2);
+          }
           break;
       }
     });
     ipcMain.on("reloadPage", () => {
       browserWindow.reload();
     });
-    console.log("Window Loaded");
+    devLog("Window Loaded");
     browserWindow.show();
 
     if (import.meta.env.DEV && useDevTools) {
