@@ -13,8 +13,7 @@ import { disc } from "./modules/tools/hooks";
 import { awaitUrl, getServerStats } from "./modules/server";
 import { devLog, memoryGet, noHidden } from "./modules/tools/essentials";
 import { client, login, packData } from "./modules/client";
-import { iCollection } from "./modules/tools/api";
-import { appFolder, minecraftPath, resources } from "./modules/extensions/paths";
+import { appFolder, minecraftPath, resources, mcResourcesPath } from "./modules/extensions/paths";
 import { delim, osmac } from "./modules/extensions/constants";
 const fs = require("fs-extra");
 
@@ -39,8 +38,6 @@ app
   .whenReady()
   .then(async () => {
     console.log("App is ready!");
-    await iCollection("defaults");
-    // await iCollection("performance");
     if (import.meta.env.PROD) {
       console.log("Checking for updates:");
       autoUpdater.checkForUpdatesAndNotify();
@@ -49,6 +46,13 @@ app
     }
     await restoreOrCreateWindow();
     await disc.init();
+    await fs.ensureDir(path.join(mcResourcesPath, "resourcepacks"));
+    await fs.ensureDir(path.join(mcResourcesPath, "saves"));
+    await fs.ensureDir(path.join(mcResourcesPath, "shaderpacks"));
+    await fs.ensureDir(path.join(mcResourcesPath, "config"));
+    await fs.ensureDir(path.join(mcResourcesPath, "runtimeRoot"));
+    await fs.ensureDir(path.join(mcResourcesPath, "screenshots"));
+
     
   })
   .catch((e) => console.error("Failed:", e));
@@ -142,9 +146,10 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
         }
       }
       await thisClient.init(arg1);
-      const started = await thisClient.start();
-      console.log(started);
-      return started;
+      // const started = await thisClient.start();
+      // console.log(started);
+      // return started;
+      break;
     }
     case "version":
       switch (arg1) {
@@ -177,14 +182,9 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       return pth;
     }
     case "refreshUsers": {
-      // Neutrino Loader v3
-      // v1 normal accounts do things
-      // v2 auto refreshes accounts
-      // v3 removes duplicate accounts and keeps latest
       const newUsers: unknown[] = [];
 
       if (JSON.stringify(arg1)=="{}" || !arg1) return {};
-
 
       // Reverse in order to allow the most recent things first
       arg1 = arg1.reverse();

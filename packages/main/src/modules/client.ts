@@ -6,16 +6,15 @@ const { Client } = require("minecraft-launcher-core");
 const launcher = new Client();
 import { timer as Timer } from "./tools/timer";
 
-import { iJava, iCurseforge, iModrinth, vModrinth } from "./tools/api";
+import { iJava, iCurseforge, vModrinth } from "./tools/api";
 import { disc } from "./tools/hooks";
 import { devLog, download } from "./tools/essentials";
-import { appFolder, javaLoc } from "./extensions/paths";
+import { appFolder, javaLoc, mcResourcesPath } from "./extensions/paths";
 
 const minecraftPath = path.join(appFolder, "minecraft");
 const resourcesPath = path.join(minecraftPath, "resources");
 
 class client {
-    private credentials;
     public creation_time = new Date();
     public timer = new Timer();
     
@@ -31,6 +30,13 @@ class client {
         this.pack = fs.readJSONSync(path.join(this.clientDirectory, "pack.json"));
     }
 
+    // Get new pack data.
+    public refresh () {
+        fs.ensureDirSync(this.clientDirectory);
+        this.pack = fs.readJSONSync(path.join(this.clientDirectory, "pack.json"));
+    }
+
+    // Creates the options that MCLC needs to launch minecraft.
     private patchOptions (options, java) {
         this.options = {
             clientPackage: null,
@@ -74,18 +80,21 @@ class client {
         };
     }
 
+    // Gets mods, java, modloader, prepares the client.
     public init = async (options) => {
     
         this.gameDirectory = path.join(this.clientDirectory, "runtime");
 
+        // Java
         const javaPath = await iJava(this.pack.java, javaLoc);
-        
         const java = process.platform === "darwin" ? 
             path.join(javaPath, "Contents", "Home", "bin", "java") : 
             path.join(javaPath, "bin", "javaw");
-        
+    
+        // Get Options
         this.patchOptions(options, java);
 
+        // Modloaders
         if (this.pack.modloader == "fabric") {
             const versionList = getFabricLoaderArtifact(
                 this.pack.version,
@@ -105,8 +114,8 @@ class client {
             this.options["forge"] = path.join(this.gameDirectory, "forge.jar");
         }
         
+        // Mods
         const mods = await fs.readJSON(path.join(this.clientDirectory,"mods.json"));
-
         const modsPath = path.join(this.clientDirectory,"resources","mods");
         await Promise.allSettled(
             mods.map(async (mod) => {
@@ -155,21 +164,58 @@ class client {
                         modFilePath = newFilename;
                     }
                 }
-                await fs.ensureSymlink(
+
+                // Symlink the mod from the resources folder to the actual runtime folder.
+                await fs.createSymlink(
                     modFilePath,
                     path.join(this.gameDirectory, "mods", path.basename(modFilePath)),
                     "file",
                 );
             }),
         );
+
+        await this.mcsymlinker("resourcepacks", options.resourcePackSlot);
+        await this.mcsymlinker("shaderpacks", options.shaderPackSlot);
+        await this.mcsymlinker("config", options.configSlot);
+        await this.mcsymlinker("screenshots", -1);
+        await this.mcsymlinker("saves", options.saveSlot);
+
+        console.log(options);
     };
 
+    public mcsymlinker = async (folder, slot) => {
+        if (slot != 0 && !await fs.pathExists(path.join(this.gameDirectory, `${folder}_old`))
+        ) {
+            await fs.move(
+                path.join(this.gameDirectory, folder), 
+                path.join(this.gameDirectory, `${folder}_old`),
+                );
+        } else if (slot != 0 && await fs.pathExists(path.join(this.gameDirectory, folder))) {
+            await fs.remove(path.join(this.gameDirectory, folder));
+        }
+        if (slot == -1) {
+            await fs.createSymlink(
+                path.join(mcResourcesPath, folder),
+                path.join(this.gameDirectory, folder),
+            "dir");
+        }
+        else if (slot != 0) {
+            await fs.createSymlink(
+                path.join(mcResourcesPath, folder, String(slot)),
+                path.join(this.gameDirectory, folder),
+            "dir");
+        }
+    }
+    // Function that actually starts the client 
     public start = async () => {
+        // Utilities (Start)
         this.timer.start();
-    
         console.error(`Starting Fusion Client ${this.pack.version}!`);
+
+        // Discord
         disc.activity = "Minecraft " + this.pack.version;
     
+        // Logs
         const fullLog = path.join(
             resourcesPath,
             "logs",
@@ -180,15 +226,13 @@ class client {
             "logs",
             Date.now() + "_" + this.pack.version + ".log",
         );
-    
         fs.ensureFile(fullLog);
         fs.ensureFile(gameLog);
     
+        // Launch
         launcher.launch(this.options);
-        
-        launcher.on("debug", (e) => {
-            // devLog(e);
-        });
+
+        // Utilities / Data Collection
         launcher.on("data", (e) => {
             // Full log
             fs.appendFileSync(fullLog, e);

@@ -3,7 +3,9 @@ import _ from "lodash";
 import { get } from 'svelte/store';
 import { data } from "../data/localStore.js";
 import { onMount } from 'svelte';
-
+  import { ExpandableTile } from "carbon-components-svelte";
+  import { Button, Modal } from "carbon-components-svelte";
+  
 let selected;
 
 let globalData = get(data);
@@ -56,17 +58,31 @@ onMount( async () => {
     globalData.users = validatedAndRefreshedUsers
 });
 
+  
+    let open = false;
 </script>
 
+  
+  <Button on:click={() => (open = true)}>Create database</Button>
+  
+  <Modal
+    bind:open
+    modalHeading="Create database"
+    primaryButtonText="Confirm"
+    secondaryButtonText="Cancel"
+    on:click:button--secondary={() => (open = false)}
+    on:open
+    on:close
+    on:submit
+  >
+    <p>Create a new Cloudant database in the US South region.</p>
+  </Modal>
+  
 <main>
-    <!-- <button 
-    class:noLogin="{globalData.selected === 'e'}"
-    class="login" on:click={
-        async () => {
-            await login()
-        }
-    }>ADD LOGIN</button><br> -->
-    <!-- <img class="inline bodyIMG" src="https://mc-heads.net/body/{selected}" alt="Your Minecraft Body"/> -->
+    <ExpandableTile>
+        <div slot="above" style="height: 10rem">Above the fold content here</div>
+        <div slot="below" style="height: 10rem">Below the fold content here</div>
+    </ExpandableTile>
     {#key globalData.users}
         {#if (JSON.stringify(globalData.users) !== "{}") && (globalData.users)}
             {#each globalData.users as user, i}

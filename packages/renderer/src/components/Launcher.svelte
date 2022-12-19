@@ -1,7 +1,7 @@
 <script>
     import { data } from "../data/localStore.js";
     import { InlineLoading } from "carbon-components-svelte";
-  import Login from "./Login.svelte";
+    import Login from "./Login.svelte";
 
     let globalData;
     let progressBar = "false";
@@ -21,7 +21,10 @@
                 memory: globalData["memory"]+"M",
                 authentication: getAuth(),
                 maxSockets: 10,
-                online: !globalData["skipMods"] || true,
+                resourcePackSlot: globalData?.resourcePackSlot || 0,
+                shaderPackSlot: globalData?.shaderPackSlot || 0,
+                configSlot: globalData?.configSlot || 0,
+                saveSlot: globalData?.saveSlot || 0,
             }
         }
         

@@ -7,8 +7,9 @@ const storageFolder = process.env.APPDATA ||
 
 const appFolder = path.join(storageFolder,app_name);
 const minecraftPath = path.join(appFolder,"minecraft");
+const mcResourcesPath = path.join(appFolder,"minecraft", "resources");
 const resources = path.join(appFolder,"resources");
 const javaLoc = path.join(resources, "java");
 const tempDir = path.join(resources, "temp");
 
-export { appFolder, minecraftPath, javaLoc, tempDir, resources };
+export { appFolder, minecraftPath, javaLoc, tempDir, resources, mcResourcesPath };

@@ -10,7 +10,7 @@ async function createWindow() {
     titleBarStyle: "hidden",
     frame: false,
     transparent: true,
-    width: 1300,
+    width: 1380,
     height: 800,
     show: false,
     resizable: false,
