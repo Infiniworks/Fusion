@@ -1,20 +1,4 @@
 <script lang="ts">
-	import TopBar from "./components/TopBar.svelte";
-	import Settings from "./pages/Settings.svelte";
-
-	import Credits from "./components/Credits.svelte";
-	import Home from "./pages/Home.svelte";
-	import About from "./pages/About.svelte";
-	import Developer from "./pages/Developer.svelte";
-	import Launcher from "./components/Launcher.svelte";
-	import ClientHeader from "./components/ClientHeader.svelte";
-	import Clients from "./pages/Clients.svelte";
-	import { tab } from "./data/bridge";
-
-	let items: string[] = ["Home", "Clients", "Settings", "About", "Developer"];
-	let smallBar: string[] = ["Clients", "Settings", "About"];
-
-	let selectedTab = items[0];
 import Launcher from "./components/Launcher.svelte";
 import Login from "./components/Login.svelte";
 import "carbon-components-svelte/css/g80.css";
