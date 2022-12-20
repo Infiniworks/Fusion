@@ -57,7 +57,13 @@ app
   })
   .catch((e) => console.error("Failed:", e));
 
-
+const getClientData = async (clientDir) => {
+  const file = clientDir?.[1] !== undefined ? clientDir?.[1] : "pack.json";
+  const contents = await fs.readJSON(
+    path.join(clientDir[0], file),
+  );
+  return contents;
+};
 
 // Big Daddy Handler v1
 ipcMain.handle("get", async (event, command, arg1, arg2) => {
@@ -66,11 +72,22 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       return process.env.IS_DEV === "true";
     case "clients": {
       const clients: unknown [] = [];
-      await fs.ensureDir(path.join(minecraftPath,"clients"));
-      for await (const file of klaw(path.join(minecraftPath,"clients"), {depthLimit: 0})) {
-        if (file.path != path.join(minecraftPath,"clients")) {
-          clients.push(file.path.replace(path.join(minecraftPath,"clients"), ""));
-        }
+      const clientsFolder = path.join(minecraftPath,"clients");
+      await fs.ensureDir(clientsFolder);
+      for await (const file of klaw(path.join(minecraftPath,"clients"), {depthLimit: 0, filter: noHidden})) {
+        const clientDirName = file.path.replace(clientsFolder, "").replace(delim,"");
+        const clientDir = file.path;
+        if (file.path == path.join(minecraftPath,"clients")) continue;
+        
+        const client_data = await getClientData([clientDir]);
+        const mods_data = await getClientData([clientDir, "mods.json"]);
+        clients.push({
+          directory_name: clientDirName,
+          path: file.path,
+          config: path.join(file.path,"config.json"),
+          pack_data: client_data,
+          mods: mods_data,
+        });
       }
       return clients;
     }

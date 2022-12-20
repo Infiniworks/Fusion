@@ -9,7 +9,7 @@
 	import Launcher from "./components/Launcher.svelte";
 	import ClientHeader from "./components/ClientHeader.svelte";
 	import Clients from "./pages/Clients.svelte";
-	import { tab } from "../data/bridge";
+	import { tab } from "../lib/data/bridge";
 
 	let items: string[] = ["Home", "Clients", "Settings", "About", "Developer"];
 	let smallBar: string[] = ["Clients", "Settings", "About"];

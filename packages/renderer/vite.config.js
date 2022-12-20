@@ -6,6 +6,12 @@ import {svelte} from "@sveltejs/vite-plugin-svelte";
 import {renderer} from "unplugin-auto-expose";
 
 const PACKAGE_ROOT = __dirname;
+const ROOT = join(PACKAGE_ROOT, "src") + "/";
+const DOCU_ROOT = PACKAGE_ROOT + "/";
+
+const getPath = (ROOT, path_from_root) => {
+  return join(ROOT, path_from_root)+ "/";
+};
 
 /**
  * @type {import('vite').UserConfig}
@@ -16,7 +22,12 @@ const config = {
   root: PACKAGE_ROOT,
   resolve: {
     alias: {
-      "/@/": join(PACKAGE_ROOT, "src") + "/",
+      "@/": DOCU_ROOT,
+      "$/": ROOT,
+      "$lib/": getPath(ROOT, "lib"),
+      "$comps/": getPath(ROOT, "components"),
+      "$data/": getPath(ROOT, "lib/data"),
+      "$imgs/": getPath(DOCU_ROOT, "images"),
     },
   },
   base: "",

@@ -1,11 +1,10 @@
 <script>
-    import { data } from "../data/localStore.js";
+    import { data } from "$data/localStore.js";
     import { InlineLoading } from "carbon-components-svelte";
-    import Login from "./Login.svelte";
-
     let globalData;
     let progressBar = "false";
     let progressStatus = "";
+    export let profileData;
 
     data.subscribe((thing) => globalData = thing);
 
@@ -39,10 +38,11 @@
     {#if globalData.selected == "e"}
         <button class="disabled inline">Login First!</button>
     {:else}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class="button inline" on:click={async () => {
             progressBar = "true";
             const opts = await getGameOpts();
-            if (typeof opts.result !== "undefined") {
+            if (typeof opts?.result !== "undefined") {
                 progressStatus = opts.reason;
                 progressBar = opts.result;
             } else {

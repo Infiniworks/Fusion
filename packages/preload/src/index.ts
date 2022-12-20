@@ -3,6 +3,9 @@
  */
 import { contextBridge, ipcRenderer } from "electron";
 import * as fs from "fs-extra";
+import { JsonDB, Config } from "node-json-db";
+
+let memory:JSON = {};
 
 const please = {
   get: (arg1: never, arg2: never) => {
@@ -21,8 +24,21 @@ const db = {
   //   current[key] = data;
   //   await fs.writeJSON(file,current);
   // },
-  overwriteJSON: async (file: never, data: never) => {
+  create: async (name: never, path: never) => {
+    memory[name] = new JsonDB(new Config(path, true, true, "/"));
+  },
+  push: async (name:never, key:never, data: never) => {
+    (memory[name]).push(key, data);
+  },
+  get: async (name) => {
+    return memory;
+    return await (memory[name]).getData("/");
+  },
+  overwriteSTRJSON: async (file: never, data: never) => {
     await fs.writeJSON(file,JSON.parse(data));
+  },
+  overwriteJSON: async (file: never, data: never) => {
+    await fs.writeJSON(file, data);
   },
   appendJSON: async (file: never, key:never, data: never) => {
     await fs.ensureFile(file);
@@ -30,6 +46,16 @@ const db = {
     current[key] = data;
     await fs.writeFile(file,JSON.stringify(current, null, "\t"));
     return;
+  },
+  readJSONS: async (file: never, safety: never) => {
+    await fs.ensureFile(file);
+    if (safety) {
+      const jitTripping = await fs.readJSON(file);
+      if (jitTripping.toString() == "") {
+        await fs.writeJSON(file,JSON.parse("{}"));
+      }
+    }
+    return await fs.readJSON(file);
   },
   readJSON: async (file: never) => {
     await fs.ensureFile(file);
