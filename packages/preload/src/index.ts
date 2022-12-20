@@ -5,7 +5,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import * as fs from "fs-extra";
 import { JsonDB, Config } from "node-json-db";
 
-let memory:JSON = {};
+let memory: JsonDB;
 
 const please = {
   get: (arg1: never, arg2: never) => {
@@ -25,14 +25,13 @@ const db = {
   //   await fs.writeJSON(file,current);
   // },
   create: async (name: never, path: never) => {
-    memory[name] = new JsonDB(new Config(path, true, true, "/"));
+    memory = new JsonDB(new Config(path, true, true, "/"));
   },
   push: async (name:never, key:never, data: never) => {
-    (memory[name]).push(key, data);
+    memory.push(key, data);
   },
   get: async (name) => {
-    return memory;
-    return await (memory[name]).getData("/");
+    return await memory.getData(name);
   },
   overwriteSTRJSON: async (file: never, data: never) => {
     await fs.writeJSON(file,JSON.parse(data));

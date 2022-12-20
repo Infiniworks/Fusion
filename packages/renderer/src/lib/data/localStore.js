@@ -9,5 +9,5 @@ let settings = new database(settingsFile);
 export const data = writable(await settings.get());
 
 data.subscribe(async (value) => {
-    await settings.set(JSON.stringify(value));
+    await settings.set(value);
 });

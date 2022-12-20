@@ -20,7 +20,7 @@ export class database {
         await window.dbTools.create(name, path);
     }
     async getR (name) {
-        await window.dbTools.get(name);
+        return await window.dbTools.get(name);
     }
     async push (name, key, data) {
         await window.dbTools.push(name, key, data);

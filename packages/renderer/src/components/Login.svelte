@@ -90,7 +90,7 @@ const parseUserData = () => {
                     <DropdownSkeleton />
                 {:else}
                     <span class="inline content left">
-                        <img class="userHead outside" alt="Minecraft Head" src="https://mc-heads.net/avatar/{globalData.selected}/180.png"/>
+                        <img class="userHead outside" alt="Minecraft Head" src="https://mc-heads.net/avatar/{globalData.selected}/200.png"/>
                         <Dropdown
                             style=
                             "flex: 8;
@@ -106,7 +106,7 @@ const parseUserData = () => {
                                         select(item.numId)
                                     }
                                 }>
-                                    <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{item.id}/180.png"/>
+                                    <img class="userHead" alt="Minecraft Head" src="https://mc-heads.net/avatar/{item.id}/200.png"/>
                                     <br>{item.id}
                                 </button>
                                 <button class="logout" on:click={
