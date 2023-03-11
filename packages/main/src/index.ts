@@ -146,27 +146,14 @@ ipcMain.handle("get", async (event, command, arg1, arg2) => {
       return;
     }      
     case "startClient": {
-      arg2 = arg1[1];
-      arg1 = arg1[0];
-      let thisClient;
-      switch (arg2.clientType) {
-        case "collection": {
-          thisClient = new client(path.join(minecraftPath, "collections", arg2.collection, arg2.client));
-          break;
-        }
-        case "client": {
-          thisClient = new client(path.join(minecraftPath, "clients", arg2.client));
-          break;
-        }
-        default: {
-          console.error("Error...");
-        }
-      }
+      arg2 = arg1[1]; // Set the global data to arg 2
+      arg1 = arg1[0]; // Set the Options to arg 1
+
+      let thisClient = new client(path.join(minecraftPath, "clients", arg2.client));
+
       await thisClient.init(arg1);
-      // const started = await thisClient.start();
-      // console.log(started);
-      // return started;
-      break;
+      const started = await thisClient.start();
+      return started;
     }
     case "version":
       switch (arg1) {

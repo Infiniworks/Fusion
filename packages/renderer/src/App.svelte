@@ -5,6 +5,10 @@
 	import Container from "./components/Container.svelte";
 	import { ContentSwitcher, Switch } from "carbon-components-svelte";
 
+	import { get } from 'svelte/store';
+	import { data } from "$data/localStore.js";
+
+	let globalData = get(data);
 
 	let selectedIndex = 0;
 	let selectedPack = 0;
@@ -13,10 +17,13 @@
 		console.log(await window.please.get("clients"));
 	})
 
+	$: data.update((thing) => thing = globalData);
+
 	const getClients = async () => {
-		const clients = await window.please.get("clients")
+		const clients = await window.please.get("clients");
+		console.log(clients);
 		return clients;
-	}	
+	}
 </script>
 
 <main class="font-medium lining-nums">
@@ -30,7 +37,7 @@
 			{clients[selectedPack].pack_data.name}
 		</div>
 		<div class="login">
-			<Login/>
+			<Login globalData/>
 		</div>
 	</div>
 	<span class="mainPage">
@@ -60,7 +67,7 @@
 				<Switch text="Mods" />
 				<Switch text="Settings" />
 			</ContentSwitcher>
-			<Container profileData={clients[selectedPack]} selectedIndex={selectedIndex}></Container>
+			<Container globalData selectedPack={selectedPack} profileData={clients[selectedPack]} selectedIndex={selectedIndex}></Container>
 		</span>
 	</span>
 	{/await}

@@ -7,6 +7,8 @@
     import Settings from "./Settings.svelte";
     export let selectedIndex;
     export let profileData;
+    export let selectedPack;
+    export let globalData;
     
     import { database as db } from "$data/dataTools.js";
     import { onMount } from "svelte";
@@ -34,7 +36,7 @@
         {#if selectedIndex==0}
         {@const pd = profileData.pack_data}
         {#await dbOps([profileData, pd]) then result}
-        {cloggedSink(result)}
+            {cloggedSink(result)}
         {/await}
         {pd.name}<br>
         {pd.modloader}<br>

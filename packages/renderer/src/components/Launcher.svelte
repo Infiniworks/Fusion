@@ -35,9 +35,6 @@
 </script>
 
 <main>
-    {#if globalData.selected == "e"}
-        <button class="disabled inline">Login First!</button>
-    {:else}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class="button inline" on:click={async () => {
             progressBar = "true";
@@ -62,28 +59,24 @@
             }
         }}>
             <span class="title">LAUNCH {globalData.client}</span>
-            {#key globalData.client}
             {#await window.please.get("data", globalData)}
-            Loading Client Data...
+                Loading Client Data...
             {:then results}
-            <span class="game">
-                {#if progressBar != "false"}
-                    <span class="InlineLoading">
-                        <InlineLoading status={progressBar == "true" ? "active" : progressBar} description={progressBar == "true" ? "Loading..." : progressStatus} />   
-                    </span>
-                {:else}
-                    <img class="image" alt={results.name} width="13" src="../../images/iBox.png"/>
-                    {results.name}
-                {/if}
-            </span>
+                <span class="game">
+                    {#if progressBar != "false"}
+                        <span class="InlineLoading">
+                            <InlineLoading 
+                            status={progressBar == "true" ? "active" : progressBar} 
+                            description={progressBar == "true" ? "Loading..." : progressStatus} 
+                            />   
+                        </span>
+                        {results.name}
+                    {/if}
+                </span>
             {:catch error}
-            {error}
+                {error}
             {/await}
-            {/key}
         </div>
-    {/if}
-
-    
 </main>
 
 <style>

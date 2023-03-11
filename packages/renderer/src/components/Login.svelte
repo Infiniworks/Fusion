@@ -1,18 +1,19 @@
 <script>
 import _ from "lodash"; 
-import { get } from 'svelte/store';
-import { data } from "$data/localStore.js";
+
 import { onMount } from 'svelte';
 import { Dropdown, DropdownSkeleton } from "carbon-components-svelte";
 
-let loading = false;
+export let globalData;
 
-let globalData = get(data);
+let loading = false;
+let data;
+
 console.dir(globalData);
 
 async function login(username) {
     loading = true;
-    let data = JSON.parse(await window.please.get("login"));
+    data = JSON.parse(await window.please.get("login"));
     let result = data.type;
     if (result == "Cancelled") {
         console.log("Sign-in Cancelled!")
@@ -56,8 +57,6 @@ const logout = (index) => {
     globalData.users = _.compact(globalData.users);
     loading = false;
 }
-
-$: data.update((thing) => thing = globalData);
 
 onMount( async () => {
     loading = true;

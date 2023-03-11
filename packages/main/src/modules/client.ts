@@ -266,15 +266,8 @@ export const login = async () => {
     return JSON.stringify(await msmc.fastLaunch("electron"));
 };
 
-export const packData = async (unparsedData) => {
-    const arg1 = unparsedData;
-    let pack;
-    if (arg1.clientType == "collection") {
-    pack = await fs.readJSON(path.join(path.join(minecraftPath, "collections", arg1.collection, arg1.client), "pack.json"));
-    } else if (arg1.clientType == "client") {
-    pack = await fs.readJSON(path.join(minecraftPath, "clients", arg1.client));
-    }
-    return pack;
+export const packData = async (data) => {
+    return await fs.readJSON(path.join(minecraftPath, "clients", data.client), "pack.json");
 };
 
 export { client };
